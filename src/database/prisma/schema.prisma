@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Docente {
+  id       Int     @id @default(autoincrement())
+  nombre   String
+  aPaterno String
+  aMaterno String
+  estado   String
+  telefono Int
+  clases   Clase[]
+}
+
+model Sucursal {
+  id        Int     @id @default(autoincrement())
+  nombre    String
+  direccion String
+  clases    Clase[]
+  gastos    Gasto[]
+}
+
+model Clase {
+  id         Int           @id @default(autoincrement())
+  sucursal   Sucursal      @relation(fields: [idSucursal], references: [id])
+  idSucursal Int
+  docente    Docente       @relation(fields: [idDocente], references: [id])
+  idDocente  Int
+  nombre     String
+  cupoMax    Int
+  dias       String
+  hora       String
+  alumnos    AlumnoClase[]
+}
+
+model Alumno {
+  id       Int           @id @default(autoincrement())
+  nombre   String
+  aPaterno String
+  aMaterno String
+  tutor    String
+  contacto String
+  edad     Int
+  activo   Boolean
+  clases   AlumnoClase[]
+  pagos    Pagos[]
+}
+
+model AlumnoClase {
+  alumno   Alumno @relation(fields: [alumnoId], references: [id])
+  alumnoId Int
+  clase    Clase  @relation(fields: [claseId], references: [id])
+  claseId  Int
+
+  @@id([alumnoId, claseId])
+}
+
+model Pagos {
+  id       Int    @id @default(autoincrement())
+  monto    Float
+  metodo   String
+  alumno   Alumno @relation(fields: [idAlumno], references: [id])
+  idAlumno Int
+  concepto String
+  fecha    String
+}
+
+model Gasto {
+  id         Int      @id @default(autoincrement())
+  sucursal   Sucursal @relation(fields: [idSucursal], references: [id])
+  idSucursal Int
+  titulo     String
+  decripcion String?
+  monto      Float
+  concepto   String
+  fecha      String
+}
+
+model User {
+  id         Int    @id @default(autoincrement())
+  nombre     String @unique
+  correo     String @unique
+  contrasena String
+}
+
+model MasterKey {
+  value String @id
+}
