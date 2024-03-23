@@ -17,7 +17,8 @@ export async function fetchAllSucursals() {
 }
 
 /*
-* @param data: recibe data, la cual tiene dentro 
+* @param data: recibe data, la cual tiene dentro el nombre y direccion
+de la sucursal que se creará
 */ 
 export async function fetchCreateSucursal(data: any){
   const sucursal = await createSucursal(data)

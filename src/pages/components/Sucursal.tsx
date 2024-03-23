@@ -1,5 +1,9 @@
 import React from "react";
 
+/*@Param: sucursal, el objeto tipo sucursal que llega desde sucursales.tsx
+este objeto contiene la información de la sucursal (nombre y dirección)
+
+este componente solo muestra la información de la sucursal y sus opciones de borrar y editar.*/
 const Sucursal = ({ sucursal }) => {
   return (
     <>
