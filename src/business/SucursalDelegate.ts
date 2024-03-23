@@ -1,4 +1,4 @@
-import { getAllSucursals } from "../persistence/SucursalDao";
+import { createSucursal, getAllSucursals } from "../persistence/SucursalDao";
 
 /**
  * Obtiene todas las sucursales.
@@ -14,4 +14,12 @@ export async function fetchAllSucursals() {
   }
 
   return sucursals;
+}
+
+/*
+* @param data: recibe data, la cual tiene dentro 
+*/ 
+export async function fetchCreateSucursal(data: any){
+  const sucursal = await createSucursal(data)
+  return sucursal;
 }

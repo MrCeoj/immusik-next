@@ -1,4 +1,4 @@
-import { fetchAllSucursals } from "@/business/SucursalDelegate";
+import { fetchAllSucursals, fetchCreateSucursal } from "@/business/SucursalDelegate";
 
 /**
  * Maneja la solicitud HTTP para recuperar todas las sucursales.
@@ -17,7 +17,15 @@ export default async function handler(req: any, res: any) {
     } else {
       res.status(200).json(result);
     }
-  } else {
+  } else if(req.method === "POST"){
+    const {nombre,direccion} = req.body
+    const data = {
+      nombre: nombre,
+      direccion: direccion
+    }
+    const result = await fetchCreateSucursal(data)
+    res.status(200).json(result)
+  }else{
     res.status(405).send({ message: "Method not allowed" });
   }
 }
