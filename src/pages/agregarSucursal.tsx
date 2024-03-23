@@ -22,7 +22,7 @@ const agregarSucursal = () => {
     }
     setError(false);
 
-    /*Si no hay errores se sigue con el flujo haciendo petición fecth PUT
+    /*Si no hay errores se sigue con el flujo haciendo petición fecth POST
     para crear una nueva sucursal, enviando nombre y dirección*/
     fetch("api/Sucursal", {
       method: "POST",
@@ -35,8 +35,9 @@ const agregarSucursal = () => {
       }),
     }).then((response) => {
       if (response.ok) {
-        alert("Se registró la sucursal exitosamente.");
-        return response.json();
+        return response.json().then((data) => {
+          alert(data.message);
+        });
       } else {
         alert("Hubo un problema al registrar la sucursal.");
       }
@@ -67,14 +68,14 @@ const agregarSucursal = () => {
             className="mb-3 bg-gray-100 p-2 shadow-md rounded-md"
             placeholder="Nombre de la sucursal"
             value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            onChange={(e) => setNombre(e.target.value.toUpperCase())}
           />
           <label className="py-1">Direccion</label>
           <input
             className="mb-3 bg-gray-100 p-2 shadow-md rounded-md"
             placeholder="Dirección de la sucursal"
             value={direccion}
-            onChange={(e) => setDireccion(e.target.value)}
+            onChange={(e) => setDireccion(e.target.value.toUpperCase())}
           />
           <div className="flex justify-center items-center">
             <button
