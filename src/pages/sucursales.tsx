@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Sucursal from "./components/Sucursal";
+import Sucursal from "../components/Sucursal";
 import MasterKeyVerificacion from "./components/MasterKeyVerificacion";
 
 // Componente de React básico que compone  y muestra la lista de sucursales

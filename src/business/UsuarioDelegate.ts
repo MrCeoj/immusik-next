@@ -1,5 +1,5 @@
 import { User } from '@prisma/client'
-import { crearUsuario, obtenerUsuario } from '../persistence/UsuarioDao'
+import { crearUsuario, obtenerUsuario } from '@/persistence/UsuarioDao'
 import { obtenerContrasenaMaestra } from '@/persistence/MasterKeyDao'
 import bcrypt from 'bcrypt'
 
