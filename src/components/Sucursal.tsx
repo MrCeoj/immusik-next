@@ -1,10 +1,11 @@
-import React from "react";
+import { Sucursal } from '@prisma/client'
 
-/*@Param: sucursal, el objeto tipo sucursal que llega desde sucursales.tsx
-este objeto contiene la información de la sucursal (nombre y dirección)
+/**
+ * @param: sucursal, el objeto tipo sucursal que llega desde sucursales.tsx
+ * este objeto contiene la información de la sucursal (nombre y dirección)
+ * este componente solo muestra la información de la sucursal y sus opciones de borrar y editar.*/
 
-este componente solo muestra la información de la sucursal y sus opciones de borrar y editar.*/
-const Sucursal = ({ sucursal }) => {
+const Sucursal = ({ sucursal }: { sucursal: any }) => {
   return (
     <>
       <div className="grid grid-cols-3 bg-blue-100 py-2 rounded-md shadow-sm mb-3">

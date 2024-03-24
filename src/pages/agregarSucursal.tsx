@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import router from "next/router";
 import React, { useState } from "react";
 
-const agregarSucursal = () => {
+const AgregarSucursal = () => {
   //useStates que manejan si hay errores y un mensaje de error cambiante
   const [error, setError] = useState(false);
   const [mensajeDeError, setMensajeDeError] = useState("");
@@ -92,4 +92,4 @@ const agregarSucursal = () => {
   );
 };
 
-export default agregarSucursal;
+export default AgregarSucursal;

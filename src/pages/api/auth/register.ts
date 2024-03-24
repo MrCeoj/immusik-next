@@ -1,5 +1,5 @@
-import { registrarUsuario } from '@/business/UsuarioDelegate'
-import { NextApiRequest, NextApiResponse } from 'next'
+import { registrarUsuario } from "@/business/UsuarioDelegate";
+import { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * Maneja la solicitud HTTP para registrar un usuario.
@@ -10,21 +10,24 @@ import { NextApiRequest, NextApiResponse } from 'next'
  */
 
 export default async function handler(
-	request: NextApiRequest,
-	response: NextApiResponse
+  request: NextApiRequest,
+  response: NextApiResponse
 ) {
-	if (request.method !== 'POST') {
-		return response.status(405).json({ message: 'Método no permitido' })
-	}
+  if (request.method !== "POST") {
+    return response.status(405).json({ message: "Método no permitido" });
+  }
 
-	try {
-		const { usuario, contrasenaMaestra } = request.body
-		const respuestaRegistro = await registrarUsuario(usuario, contrasenaMaestra)
+  try {
+    const { usuario, contrasenaMaestra } = request.body;
+    const respuestaRegistro = await registrarUsuario(
+      usuario,
+      contrasenaMaestra
+    );
 
-		return response.status(200).json({
-			message: `Usuario registrado: ${respuestaRegistro.nombre} ${respuestaRegistro.correo}`
-		})
-	} catch (error) {
-		return response.status(500).json(error)
-	}
+    return response.status(200).json({
+      message: `Usuario registrado: ${respuestaRegistro.nombre} ${respuestaRegistro.correo}`,
+    });
+  } catch (error) {
+    return response.status(500).json(error);
+  }
 }

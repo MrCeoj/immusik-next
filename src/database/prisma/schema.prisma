@@ -13,7 +13,7 @@ model Docente {
   aPaterno String
   aMaterno String
   estado   String
-  telefono Int
+  telefono String
   clases   Clase[]
 }
 
