@@ -35,8 +35,9 @@ export default function RegisterForm() {
 	})
 
 	return (
-		<form onSubmit={onSubmit} className="flex flex-col gap-4">
-			<div className="flex flex-col max-w-72">
+		<form onSubmit={onSubmit} className="flex flex-col gap-4 bg-gray-300 p-10 rounded-md">
+			<div className="flex flex-col max-w-82 min-w-72">
+				<h2 className="font-bold">Nombre de usuario</h2>
 				<input
 					type="text"
 					id="nombre"
@@ -55,12 +56,13 @@ export default function RegisterForm() {
 				/>
 				{errors.nombre && <Error error={errors?.nombre.message?.toString()} />}
 			</div>
-			<div className="flex flex-col max-w-72">
+			<div className="flex flex-col max-w-82 min-w-72">
+			<h2 className="font-bold">Correo Electrónico</h2>
 				<input
 					type="email"
 					id="correo"
 					placeholder="Correo electrónico"
-					className="text-gray-800 px-2 py-1 rounded-md"
+					className="text-gray-800 px-2 py-1 rounded-md "
 					{...register('correo', {
 						required: {
 							value: true,
@@ -74,7 +76,8 @@ export default function RegisterForm() {
 				/>
 				{errors.correo && <Error error={errors?.correo.message?.toString()} />}
 			</div>
-			<div className="flex flex-col max-w-72">
+			<div className="flex flex-col max-w-82 min-w-72">
+			<h2 className="font-bold">Contraseña</h2>
 				<input
 					type="password"
 					id="contrasena"
@@ -100,7 +103,8 @@ export default function RegisterForm() {
 					<Error error={errors?.contrasena.message?.toString()} />
 				)}
 			</div>
-			<div className="flex flex-col max-w-72">
+			<div className="flex flex-col max-w-82 min-w-72">
+			<h2 className="font-bold">Contraseña maestra</h2>
 				<input
 					type="password"
 					id="contrasenaMaestra"
@@ -118,7 +122,7 @@ export default function RegisterForm() {
 				)}
 			</div>
 			{serverError && <Error error={serverError} />}
-			<button className="rounded-md bg-primary px-4 py-2 font-bold">
+			<button className="rounded-md bg-primary px-4 py-2 font-bold text-white shadow-md transition-all duration-300 hover:shadow-lg hover:bg-pink-300">
 				Aceptar
 			</button>
 		</form>
