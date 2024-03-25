@@ -10,8 +10,8 @@ import bcrypt from 'bcrypt'
  * @param contrasenaMaestra - La contraseña maestra para registrar al usuario.
  * @returns Una promesa que se resuelve en el objeto que representa el usuario registrado.
  * @throws Si la contraseña maestra no es válida.
- * @throws Si los datos del usuario no son válidos
  * @throws Si el usuario ya existe.
+ * @throws Si el correo ya está registrado.
  */
 
 export async function registrarUsuario(
@@ -40,23 +40,14 @@ export async function registrarUsuario(
 		throw { error: 'El nombre de usuario ya existe.' }
 	}
 
+	// Código para verificar si el correo ya está registrado
+	const correoEncontrado = await obtenerUsuario(usuarioFormateado.correo)
+
+	if (correoEncontrado) {
+		throw { error: 'El correo ya está registrado.' }
+	}
+
 	// Código para crear un usuario en la base de datos
 	const usuarioCreado = await crearUsuario(usuarioFormateado)
 	return usuarioCreado
-}
-
-/**
- * Obtiene el usuario con el nombre de usuario especificado.
- *
- * @param nombre - El nombre de usuario del usuario a obtener.
- * @returns Una promesa que se resuelve en el objeto que representa el usuario o un objeto con un mensaje si no se encontró el usuario.
- */
-
-export async function buscarUsuario(nombre: string) {
-	const usuario = await obtenerUsuario(nombre)
-	if (usuario) {
-		return usuario
-	}
-
-	return { error: 'Usuario no encontrado' }
 }
