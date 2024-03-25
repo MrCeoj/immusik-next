@@ -2,6 +2,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import FormRegistro from '@/components/form-registro'
 
+export function getServerSideProps() {
+	return {
+		props: { title: 'Registro' }
+	}
+}
+
 // Página de registro de usuario
 export default function RegistroUsuario() {
 	return (
