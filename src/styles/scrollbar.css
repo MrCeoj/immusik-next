@@ -1,0 +1,15 @@
+/* Estilo del scrollbar */
+::-webkit-scrollbar {
+    width: 8px; /* Ancho del scrollbar */
+}
+  
+::-webkit-scrollbar-thumb {
+    background-color: rgba(111, 111, 111, 0.6); /* Color de fondo del thumb */
+    border-radius: 4px; /* Radio de borde del thumb */
+}
+  
+  /* Cambiar el color cuando el thumb está activo */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(111, 111, 111, 0.8); /* Color de fondo del thumb al pasar el mouse */
+}
+  
