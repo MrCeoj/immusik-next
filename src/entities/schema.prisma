@@ -1,10 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider     = "prisma-client-js"
-  output       = "../../entities"
-  migrationDir = "../../database/migrations"
+  provider = "prisma-client-js"
+  output = "../../entities"
 }
 
 datasource db {
@@ -18,7 +14,7 @@ model Docente {
   aPaterno String
   aMaterno String
   estado   String
-  telefono Int
+  telefono String
   clases   Clase[]
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import router from "next/router";
+import { Docente } from "@/entities/index";
 
 // Pagina principal de docentes, contiene todos los docentes registrados y los obtiene con api, los muestra con useeffect al cargar
 const Index = () => {
@@ -30,9 +31,14 @@ const Index = () => {
         <p>No se encontraron docentes</p>
       ) : (
         <ul>
-          {docentes.map((docente: any) => (
-            <li key={docente.id}>
-              {docente.nombre} {docente.aPaterno} {docente.aMaterno} {docente.telefono} {docente.estado}
+          {docentes.map((docente: Docente) => (
+            // Mapeo de los docentes para mostrarlos en la lista
+            <li className="flex gap-5" key={docente.id}>
+              {docente.nombre} {docente.aPaterno} {docente.aMaterno}{" "}
+              {docente.telefono} {docente.estado}
+              <button className="bg-pink-400" onClick={() => router.push(`/docente/${docente.id}`)}>
+                Detalles
+              </button>
             </li>
           ))}
         </ul>

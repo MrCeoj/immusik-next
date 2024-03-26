@@ -1,13 +1,17 @@
-import { Docente } from "@prisma/client";
-import { createDocente, getAllDocentes } from "@/persistence/DocenteDao";
+import { Docente } from "@/entities/index";
+import {
+  createDocente,
+  getAllDocentes,
+  getDocente,
+  modDocente,
+} from "@/persistence/DocenteDao";
 
 /**
  * Registra un docente en la base de datos.
  * @param data - Los datos del docente a registrar.
- * @returns Una promesa que se resuelve en el objeto que representa el docente creado.
+ * @returns Una promesa que se resuelve en el objeto que informa sobre el docente creado.
  */
 export async function registrarDocente(data: any) {
-
   // Formatear los datos del docente
   const docenteFormat = {
     nombre: data.docente.nombre.toUpperCase(),
@@ -17,26 +21,25 @@ export async function registrarDocente(data: any) {
     estado: data.docente.estado.toUpperCase(),
   } as Docente;
 
-  if(docenteFormat.telefono.toString().length !== 10) {
+  if (docenteFormat.telefono.toString().length !== 10) {
     throw new Error("El número de teléfono debe tener 10 dígitos.");
   }
 
-  if(docenteFormat.nombre.length === 0) {
+  if (docenteFormat.nombre.length === 0) {
     throw new Error("El nombre del docente no puede estar vacío.");
   }
 
-  if(docenteFormat.aPaterno.length === 0) {
+  if (docenteFormat.aPaterno.length === 0) {
     throw new Error("El apellido paterno del docente no puede estar vacío.");
   }
 
-  if(docenteFormat.aMaterno.length === 0) {
+  if (docenteFormat.aMaterno.length === 0) {
     throw new Error("El apellido materno del docente no puede estar vacío.");
   }
 
   const docenteCreado = await createDocente(docenteFormat);
   return docenteCreado;
 }
-
 
 /**
  * Obtiene todos los docentes registrados en la base de datos.
@@ -47,7 +50,59 @@ export async function obtenerDocentes() {
     const docentes = await getAllDocentes();
     return docentes;
   } catch (error) {
-    console.error('Error fetching all docentes:', error);
+    console.error("Error fetching all docentes:", error);
     throw error; // Lanzar de nuevo el error para que la api lo muestre
+  }
+}
+
+/**
+ * Obtiene un docente de la base de datos.
+ * @param id - El ID del docente a buscar.
+ * @returns Una promesa que se resuelve en el objeto que representa el docente encontrado.
+ */
+export async function obtenerDocente(id: number) {
+  try {
+    const docente = await getDocente(id);
+    return docente;
+  } catch (error) {
+    console.error("Error al buscar docente:", error);
+    throw error;
+  }
+}
+
+/**
+ * Modifica un docente en la base de datos.
+ * @param data - Los datos del docente a modificar.
+ * @returns Una promesa que se resuelve en el objeto que informa sobre el docente modificado.
+ */
+export async function modificarDocente(data: any){
+  const docenteFormat = {
+    id: data.id,
+    nombre: data.nombre.toUpperCase(),
+    aPaterno: data.aPaterno.toUpperCase(),
+    aMaterno: data.aMaterno.toUpperCase(),
+    telefono: data.telefono,
+  } as Docente;
+
+  if (docenteFormat.telefono.toString().length !== 10) {
+    throw new Error("El número de teléfono debe tener 10 dígitos.");
+  }
+
+  if (docenteFormat.nombre.length === 0) {
+    throw new Error("El nombre del docente no puede estar vacío.");
+  }
+
+  if (docenteFormat.aPaterno.length === 0) {
+    throw new Error("El apellido paterno del docente no puede estar vacío.");
+  }
+
+  if (docenteFormat.aMaterno.length === 0) {
+    throw new Error("El apellido materno del docente no puede estar vacío.");
+  }
+  try{
+    const docenteModificado = await modDocente(docenteFormat);
+    return docenteModificado;
+  }catch(error){
+    console.error("Error al modificar docente:", error);
   }
 }
