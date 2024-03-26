@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import FormRegistro from '@/components/form-registro'
 
+// Función que establece el título de la página
 export function getServerSideProps() {
 	return {
 		props: { title: 'Registro' }
