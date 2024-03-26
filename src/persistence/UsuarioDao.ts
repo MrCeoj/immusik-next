@@ -4,12 +4,23 @@ const prisma = new PrismaClient()
 
 /**
  * Obtiene un usuario por su nombre.
- * @param nombre - El nombre del usuario a buscar.
+ * @param busqueda - El nombre o correo del usuario a buscar.
  * @returns Una promesa que se resuelve en el objeto que representa el usuario encontrado.
  */
 
-export async function obtenerUsuario(nombre: string) {
-	return await prisma.user.findUnique({ where: { nombre } })
+export async function obtenerUsuario(busqueda: string) {
+	return await prisma.user.findFirst({
+		where: {
+			OR: [
+				{
+					nombre: busqueda
+				},
+				{
+					correo: busqueda
+				}
+			]
+		}
+	})
 }
 
 /**
