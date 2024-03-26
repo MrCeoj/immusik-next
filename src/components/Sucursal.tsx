@@ -1,27 +1,59 @@
-import { Sucursal } from '@prisma/client'
+import { Sucursal } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import EditarSucursal from "./EditarSucursal";
 
 /**
  * @param: sucursal, el objeto tipo sucursal que llega desde sucursales.tsx
  * este objeto contiene la información de la sucursal (nombre y dirección)
- * este componente solo muestra la información de la sucursal y sus opciones de borrar y editar.*/
+ * este componente solo muestra la información de la sucursal y sus opciones de borrar y editar.
+ * @param cambio estado (verdadero o falso) se utiliza cuando se edita la información de una sucursal, para que el useEffect
+ * en sucursales.tsx se actualice.
+ * @param setCambio cambia la variable cambio de true a false y viceversa.
+ *
+ * */
 
-const SucursalInfo = ({ sucursal }: { sucursal: Sucursal }) => {
-	return (
-		<>
-			<div className="grid grid-cols-3 bg-blue-100 py-2 rounded-md shadow-sm mb-3">
-				<div className="flex justify-center items-center mx-3">
-					{sucursal.nombre}
-				</div>
-				<div className="flex justify-center items-center mx-3">
-					{sucursal.direccion}
-				</div>
-				<div className="flex justify-center items-center">
-					<div className="mx-1">borrar</div>
-					<div className="mx-1">editar</div>
-				</div>
-			</div>
-		</>
-	)
-}
+const SucursalInfo = ({ sucursal, cambio, setCambio }) => {
+  const router = useRouter();
+  //Editar se usa para mostrar o no la pantalla donde se registran los cambios de la sucursal a editar.
+  const [editar, setEditar] = useState(false);
 
-export default SucursalInfo
+  //Cambia el valor de editar a true, mostrando el componente EditarSucursal.
+  const handleEditar = () => {
+    setEditar(true);
+  };
+
+  //CONTENIDO: Se muestra un renglón con el nombre, dirección y un botón para gestionar.
+  return (
+    //Si editar es True, este muestra un componente de EditarSucursal
+    <>
+      {editar && (
+        <EditarSucursal
+          //Se envia la sucursal, la variable editar y su set al igual que cambio.
+          sucursal={sucursal}
+          setEditar={setEditar}
+          cambio={cambio}
+          setCambio={setCambio}
+        />
+      )}
+      <div className="grid grid-cols-3 bg-blue-100 py-2 rounded-md shadow-sm mb-3">
+        <div className="flex justify-center items-center mx-3">
+          {sucursal.nombre}
+        </div>
+        <div className="flex justify-center items-center mx-3">
+          {sucursal.direccion}
+        </div>
+        <div className="flex justify-center items-center">
+          <button
+            className="mx-1 bg-blue-500 text-white py-1 px-2 rounded-md hover:bg-blue-700"
+            onClick={handleEditar} //Si se presiona el botón se ejecuta la función handleEditar
+          >
+            Gestionar
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default SucursalInfo;

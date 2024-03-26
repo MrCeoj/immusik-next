@@ -1,4 +1,5 @@
-import { fetchAllSucursals, fetchCreateSucursal } from "@/business/SucursalDelegate";
+import {fetchEditarSucursal, fetchAllSucursals, fetchCreateSucursal } from "@/business/SucursalDelegate";
+
 
 /**
  * Maneja la solicitud HTTP para recuperar todas las sucursales.
@@ -25,6 +26,16 @@ export default async function handler(req: any, res: any) {
     }
     const result = await fetchCreateSucursal(data)
     res.status(200).json(result)
+    //----------------------BLOQUE DE PATCH-------------------------------------------
+  }else if(req.method==="PATCH"){ 
+    const {id,nombre,direccion} = req.body //1. Se obtiene la información desde req.
+    const data = { //2. Se crea un objeto data con la información
+      id: id,
+      nombre: nombre,
+      direccion: direccion
+    }
+    const result = await fetchEditarSucursal(data) //3. Se manda llamar el método enviando data
+    res.status(200).json(result) //4. Se declara como exitosa la comunicación con backend
   }else{
     res.status(405).send({ message: "Method not allowed" });
   }

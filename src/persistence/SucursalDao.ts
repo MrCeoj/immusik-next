@@ -19,6 +19,17 @@ export async function createSucursal(data: any) {
     return await prisma.sucursal.create({ data });
 }
 
+/*
+* @params id: id de la sucursal a editar
+* @params data: información a actualizar
+*  */
+export async function editSucursal(id: any,data: any){
+    return await prisma.sucursal.update({ //Se manda llamar el metodo de prisma para actualizar registro. 
+        where: {id},
+        data: {nombre: data.nombre, direccion: data.direccion}
+    })
+}
+
 /**
  * Elimina una sucursal por su ID.
  * @param id - El ID de la sucursal a eliminar.
