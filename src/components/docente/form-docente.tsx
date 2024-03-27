@@ -1,5 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
+import Label from "../form-label";
+import Input from "../form-input";
 
 // Formulario para registrar un docente
 const FormDocente = () => {
@@ -36,100 +39,128 @@ const FormDocente = () => {
   });
 
   return (
-    <form onSubmit={onSubmit} className="">
-      <div className="flex flex-col gap-8">
-        <input
-          type="text"
-          id="nombre"
-          placeholder="Nombre del docente"
-          {...register("nombre", {
-            required: {
-              value: true,
-              message: "El nombre del docente es requerido.",
-            },
-          })}
-        />
-        {errors.nombre && <Error error={errors?.nombre.message?.toString()} />}
-        <input
-          type="text"
-          id="aPaterno"
-          placeholder="Apellido Paterno"
-          {...register("aPaterno", {
-            required: {
-              value: true,
-              message: "El apellido paterno es requerido.",
-            },
-          })}
-        />
-        {errors.aPaterno && (
-          <Error error={errors?.aPaterno.message?.toString()} />
-        )}
-        <input
-          type="text"
-          id="aMaterno"
-          placeholder="Apellido Materno"
-          {...register("aMaterno", {
-            required: {
-              value: true,
-              message: "El apellido materno es requerido.",
-            },
-          })}
-        />
-        {errors.aMaterno && (
-          <Error error={errors?.aMaterno.message?.toString()} />
-        )}
-        <input
-          type="number"
-          id="telefono"
-          placeholder="Telefono"
-          value={telefono}
-          {...register("telefono", {
-            required: {
-              value: true,
-              message: "El teléfono es requerido.",
-            },
-            minLength: {
-              value: 10,
-              message: "El teléfono debe tener 10 dígitos.",
-            },
-          })}
-          onKeyDown={(e) => {
-            if (
-              !/[0-9]/.test(e.key) &&
-              e.key !== "Backspace" &&
-              e.key !== "Delete" &&
-              e.key !== "ArrowLeft" &&
-              e.key !== "ArrowRight" &&
-              e.key !== "Tab"
-            ) {
-              e.preventDefault();
-            }
-          }}
-          maxLength={10}
-          onChange={(e) => {
-            if (e.target.value.length <= 10) {
-              setTelefono(e.target.value);
-            }
-          }}
-        />
-        {errors.telefono && (
-          <Error error={errors?.telefono.message?.toString()} />
-        )}
-      </div>
+    <>
+      <ToastContainer />
+      <form
+        onSubmit={onSubmit}
+        className="flex flex-col gap-4 bg-gray-300 p-8 rounded-md"
+      >
+        <div className="flex flex-col max-w-82 min-w-72 relative">
+          <Label
+            htmlFor="nombre"
+            label="Nombre del docente"
+            error={Boolean(errors.nombre?.type === "required")}
+          />
+          <Input
+            type="text"
+            id="nombre"
+            placeholder="Nombre del docente"
+            error={errors.nombre}
+            register={register("nombre", {
+              required: {
+                value: true,
+                message: "El nombre del docente es requerido.",
+              },
+            })}
+          />
+        </div>
+        <div className="flex flex-col max-w-82 min-w-72 relative">
+          <Label
+            htmlFor="aPaterno"
+            label="Apellido Paterno"
+            error={Boolean(errors.aPaterno?.type === "required")}
+          />
+          <Input
+            type="text"
+            id="aPaterno"
+            placeholder="Apellido Paterno"
+            error={errors.aPaterno}
+            register={register("aPaterno", {
+              required: {
+                value: true,
+                message: "El apellido paterno es requerido.",
+              },
+            })}
+          />
+        </div>
+        <div className="flex flex-col max-w-82 min-w-72 relative">
+          <Label
+            htmlFor="aMaterno"
+            label="Apellido Materno"
+            error={Boolean(errors.aMaterno?.type === "required")}
+          />
+          <Input
+            type="text"
+            id="aMaterno"
+            placeholder="Apellido Materno"
+            error={errors.aMaterno}
+            register={register("aMaterno", {
+              required: {
+                value: true,
+                message: "El apellido materno es requerido.",
+              },
+            })}
+          />
+        </div>
+        <div className="flex flex-col max-w-82 min-w-72 relative">
+          <Label
+            htmlFor="telefono"
+            label="Teléfono"
+            error={Boolean(errors.telefono?.type === "required")}
+          />
+          <input
+            className="text-gray-800 px-2 py-1 pr-6 rounded-md border-2"
+            type="number"
+            id="telefono"
+            placeholder="Telefono"
+            value={telefono}
+            {...register("telefono", {
+              required: {
+                value: true,
+                message: "El teléfono es requerido.",
+              },
+              minLength: {
+                value: 10,
+                message: "El teléfono debe tener 10 dígitos.",
+              },
+            })}
+            onKeyDown={(e) => {
+              if (
+                !/[0-9]/.test(e.key) &&
+                e.key !== "Backspace" &&
+                e.key !== "Delete" &&
+                e.key !== "ArrowLeft" &&
+                e.key !== "ArrowRight" &&
+                e.key !== "Tab"
+              ) {
+                e.preventDefault();
+              }
+            }}
+            maxLength={10}
+            onChange={(e) => {
+              if (e.target.value.length <= 10) {
+                setTelefono(e.target.value);
+              }
+            }}
+          />
+        </div>
 
-      {/* Cuidado con este componente, cuando las validaciones de aqui por 
-          x motivo no funcionan este muestra las validaciones del servidor 
-          La idea es cambiar este componente por otro como un popup
-          NO USAR el mismo componente que está hasta abajo, es solo un ejemplo
-      */}
+        {/* Cuidado con este componente, cuando las validaciones de aqui por 
+            x motivo no funcionan este muestra las validaciones del servidor 
+            La idea es cambiar este componente por otro como un popup
+            NO USAR el mismo componente que está hasta abajo, es solo un ejemplo
+        */}
 
-      {serverError && <Error error={serverError} />}
+        {serverError && <Error error={serverError} />}
 
-
-      <button className="bg-pink-400" type="submit">
-        Registrar
-      </button>
-    </form>
+        <button
+          className="rounded-md bg-primary px-4 py-2 mt-4 font-bold text-white shadow-md transition-all duration-300 hover:shadow-lg hover:bg-pink-300"
+          type="submit"
+        >
+          Registrar
+        </button>
+      </form>
+    </>
   );
 };
 
