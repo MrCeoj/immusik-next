@@ -1,5 +1,14 @@
 import React from "react";
 
+/*
+ * Componente para validar la eliminación de la sucursal
+ * @param sucursal: la sucursal a eliminar
+ * @param setEliminar: permite cambiar el estado de eliminar a false o true
+ * @param cambio: variable que si cambia el useEffect en sucursales.tsx se actualiza, actualizando
+ * los registros de las sucursales
+ * @param setCambio: modifica el valor de cambio de true a false o viceversa
+ * @param setEditar: cambia el valor de editar a false o true.
+ *  */
 const ConfirmacionEliminar = ({
   sucursal,
   setEliminar,
@@ -7,15 +16,17 @@ const ConfirmacionEliminar = ({
   setCambio,
   setEditar,
 }) => {
+  //Si se presiona eliminar se ejecuta el siguiente comando
   const handleEliminar = () => {
     let id = sucursal.id;
     fetch("api/Sucursal/", {
-      method: "DELETE",
+      //Se hace fetch a sucursal
+      method: "DELETE", //metodo: DELETE
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        //Se mandan id, nombre y dirección.
+        //Se manda id
         id,
       }),
     })
@@ -42,10 +53,16 @@ const ConfirmacionEliminar = ({
     setEliminar(false);
   };
 
+  //Cierra este componente, regresando a la pantalla de editar
   const handleCancelar = () => {
     setEliminar(false);
   };
 
+  /*CUERPO DEL COMPONENTE:
+  Un componente que se muestra frente al resto del programa donde se le pregunta al
+  usuario por confirmación de si quiere realmente eliminar la sucursal, puede presionar cancelar
+  para no eliminarla o eliminar para confirmar la eliminación.
+  */
   return (
     <div className="h-screen w-screen absolute z-10 flex justify-center items-center top-0 left-0 bg-black bg-opacity-50">
       <div className="bg-white p-5 flex flex-col justify-center items-center rounded-lg shadow-lg">

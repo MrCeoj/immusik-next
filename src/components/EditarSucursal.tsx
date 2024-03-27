@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import ConfirmacionEliminar from "./ConfirmacionEliminar";
 /*
- * @params sucursal: la sucursal que se va a editar
- * @params setEditar: cambia el valor de Editar, esto para desaparecer este mismo componente
- * @params cambio: si su valor cambia, el useEffect en sucursales.tsx se actualiza y muestra
+ * @param sucursal: la sucursal que se va a editar
+ * @param setEditar: cambia el valor de Editar, esto para desaparecer este mismo componente
+ * @param cambio: si su valor cambia, el useEffect en sucursales.tsx se actualiza y muestra
  * los cambios que se hicieron
- * @params setCambio: cambia el valor de cambio.
+ * @param setCambio: cambia el valor de cambio.
  *  */
 const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
   //useStates que cambian el valor de los campos que se registran por parte del usuario
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
 
-  //useState para detección de errores.
-  const [error, setError] = useState(false);
-
+  //useState para mostrar o no la pantalla de error
   const [eliminar, setEliminar] = useState(false);
 
   //Cambia el valor de editar a false, ocultando este componente.
@@ -43,13 +41,10 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
     //Validación de no dejar espacios en blanco
     if (nombre === "" || direccion === "") {
       alert("No deje espacios en blanco!");
-      setError(true);
       return; //Se corta el flujo
     }
 
     //Continua el flujo
-    setError(false);
-
     //Petición fetch tipo PATCH para actualizar datos.
     fetch("api/Sucursal/", {
       method: "PATCH",

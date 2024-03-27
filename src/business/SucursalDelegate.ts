@@ -49,6 +49,10 @@ export async function fetchCreateSucursal(data: any){
   return response
 }
 
+/*
+* Se edita o actualiza la información de una sucursal
+* @param data: información que se actualizará en la sucursal.
+*  */
 export async function fetchEditarSucursal(data: any){
   let response = { //1. Se crea una response con un mensaje
     success: false,
@@ -68,6 +72,11 @@ export async function fetchEditarSucursal(data: any){
   return response //4. Se regresa la respuesta.
 }
 
+/**
+ * 
+ * @param data data solo contiene la id de la sucursal a eliminar
+ * @returns la respuesta con el mensaje indicado dependiendo de lo que ocurra en el flujo
+ */
 export async function fetchEliminarSucursal(data:any) {
   let response = { //1. Se declara un objeto response
     success: false,
