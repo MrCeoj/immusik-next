@@ -20,8 +20,8 @@ export async function createSucursal(data: any) {
 }
 
 /*
-* @params id: id de la sucursal a editar
-* @params data: información a actualizar
+* @param id: id de la sucursal a editar
+* @param data: información a actualizar
 *  */
 export async function editSucursal(id: any,data: any){
     return await prisma.sucursal.update({ //Se manda llamar el metodo de prisma para actualizar registro. 

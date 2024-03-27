@@ -1,4 +1,8 @@
-import { createSucursal, editSucursal, getAllSucursals } from "../persistence/SucursalDao";
+import { deleteClase, getAllClases } from "@/persistence/ClaseDao";
+import { createSucursal, deleteSucursal, editSucursal, getAllSucursals } from "../persistence/SucursalDao";
+import { getAllAlumnoClase } from "@/persistence/AlumnoClaseDao";
+import { deleteClasesDeDeterminadaSucursal, getClasesDeDeterminadaSucursal } from "./ClaseDelegate";
+import borrarAlumnoClaseConDeterminadaClase from "./AlumnoClaseDelegate";
 
 /**
  * Obtiene todas las sucursales.
@@ -62,4 +66,34 @@ export async function fetchEditarSucursal(data: any){
   } 
 
   return response //4. Se regresa la respuesta.
+}
+
+export async function fetchEliminarSucursal(data:any) {
+  let response = { //1. Se declara un objeto response
+    success: false,
+    message: ""
+  }
+
+  //Se obtienen todas las sucursales
+  const sucursalesTemp = await getAllSucursals()
+
+  //Se verifica que la sucursal a borrar si exista
+  const existe = sucursalesTemp.some(sucursalTemp => sucursalTemp.id === data.id)
+  
+  if(!existe){ //Si no existe se declara un mensaje de error.
+    //console.log("No existe la sucursal")
+    response.message = "No existe la sucursal a eliminar."
+  }else{ //Si existe se realiza el siguiente proceso.
+    //console.log("Existe la sucursal")
+    const clasesAEliminar = await getClasesDeDeterminadaSucursal(data.id) //Se consiguen las clases relacionadas a la sucursal.
+    //console.log(clasesAEliminar)
+    for(const clase of clasesAEliminar){ //Por cada clase se elimina el registro alumno-clase de dicha clase
+      await borrarAlumnoClaseConDeterminadaClase(clase.id)
+    }
+    await deleteClasesDeDeterminadaSucursal(data.id) //Se borran las clases despues de borrar los registros alumno-clase
+    await deleteSucursal(data.id) //Finalmente se borra la sucursal
+    response.message = "Sucursal eliminada exitosamente." //Mensaje de exito
+  }
+
+  return response
 }
