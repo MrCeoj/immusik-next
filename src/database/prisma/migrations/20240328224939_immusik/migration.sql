@@ -43,10 +43,9 @@ CREATE TABLE "Alumno" (
 
 -- CreateTable
 CREATE TABLE "AlumnoClase" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "alumnoId" INTEGER NOT NULL,
     "claseId" INTEGER NOT NULL,
-
-    PRIMARY KEY ("alumnoId", "claseId"),
     CONSTRAINT "AlumnoClase_alumnoId_fkey" FOREIGN KEY ("alumnoId") REFERENCES "Alumno" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "AlumnoClase_claseId_fkey" FOREIGN KEY ("claseId") REFERENCES "Clase" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
