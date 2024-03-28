@@ -20,7 +20,7 @@ export default async function handler(
   try {
     // Convertir lo que recibimos del Form en un objeto JSON para enviarlo al delegate
     const docente = req.body;
-
+    console.log("api recibido: ", docente)
     // Llamar al delegate para registrar el docente
     const docenteCreado = await registrarDocente(docente);
 

@@ -1668,6 +1668,7 @@ export namespace Prisma {
     aMaterno: string | null
     estado: string | null
     telefono: string | null
+    curp: string | null
   }
 
   export type DocenteMaxAggregateOutputType = {
@@ -1677,6 +1678,7 @@ export namespace Prisma {
     aMaterno: string | null
     estado: string | null
     telefono: string | null
+    curp: string | null
   }
 
   export type DocenteCountAggregateOutputType = {
@@ -1686,6 +1688,7 @@ export namespace Prisma {
     aMaterno: number
     estado: number
     telefono: number
+    curp: number
     _all: number
   }
 
@@ -1705,6 +1708,7 @@ export namespace Prisma {
     aMaterno?: true
     estado?: true
     telefono?: true
+    curp?: true
   }
 
   export type DocenteMaxAggregateInputType = {
@@ -1714,6 +1718,7 @@ export namespace Prisma {
     aMaterno?: true
     estado?: true
     telefono?: true
+    curp?: true
   }
 
   export type DocenteCountAggregateInputType = {
@@ -1723,6 +1728,7 @@ export namespace Prisma {
     aMaterno?: true
     estado?: true
     telefono?: true
+    curp?: true
     _all?: true
   }
 
@@ -1819,6 +1825,7 @@ export namespace Prisma {
     aMaterno: string
     estado: string
     telefono: string
+    curp: string
     _count: DocenteCountAggregateOutputType | null
     _avg: DocenteAvgAggregateOutputType | null
     _sum: DocenteSumAggregateOutputType | null
@@ -1847,6 +1854,7 @@ export namespace Prisma {
     aMaterno?: boolean
     estado?: boolean
     telefono?: boolean
+    curp?: boolean
     clases?: boolean | Docente$clasesArgs<ExtArgs>
     _count?: boolean | DocenteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["docente"]>
@@ -1858,6 +1866,7 @@ export namespace Prisma {
     aMaterno?: boolean
     estado?: boolean
     telefono?: boolean
+    curp?: boolean
   }
 
   export type DocenteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1878,6 +1887,7 @@ export namespace Prisma {
       aMaterno: string
       estado: string
       telefono: string
+      curp: string
     }, ExtArgs["result"]["docente"]>
     composites: {}
   }
@@ -2263,6 +2273,7 @@ export namespace Prisma {
     readonly aMaterno: FieldRef<"Docente", 'String'>
     readonly estado: FieldRef<"Docente", 'String'>
     readonly telefono: FieldRef<"Docente", 'String'>
+    readonly curp: FieldRef<"Docente", 'String'>
   }
     
 
@@ -10028,7 +10039,8 @@ export namespace Prisma {
     aPaterno: 'aPaterno',
     aMaterno: 'aMaterno',
     estado: 'estado',
-    telefono: 'telefono'
+    telefono: 'telefono',
+    curp: 'curp'
   };
 
   export type DocenteScalarFieldEnum = (typeof DocenteScalarFieldEnum)[keyof typeof DocenteScalarFieldEnum]
@@ -10182,6 +10194,7 @@ export namespace Prisma {
     aMaterno?: StringFilter<"Docente"> | string
     estado?: StringFilter<"Docente"> | string
     telefono?: StringFilter<"Docente"> | string
+    curp?: StringFilter<"Docente"> | string
     clases?: ClaseListRelationFilter
   }
 
@@ -10192,11 +10205,13 @@ export namespace Prisma {
     aMaterno?: SortOrder
     estado?: SortOrder
     telefono?: SortOrder
+    curp?: SortOrder
     clases?: ClaseOrderByRelationAggregateInput
   }
 
   export type DocenteWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    curp?: string
     AND?: DocenteWhereInput | DocenteWhereInput[]
     OR?: DocenteWhereInput[]
     NOT?: DocenteWhereInput | DocenteWhereInput[]
@@ -10206,7 +10221,7 @@ export namespace Prisma {
     estado?: StringFilter<"Docente"> | string
     telefono?: StringFilter<"Docente"> | string
     clases?: ClaseListRelationFilter
-  }, "id">
+  }, "id" | "curp">
 
   export type DocenteOrderByWithAggregationInput = {
     id?: SortOrder
@@ -10215,6 +10230,7 @@ export namespace Prisma {
     aMaterno?: SortOrder
     estado?: SortOrder
     telefono?: SortOrder
+    curp?: SortOrder
     _count?: DocenteCountOrderByAggregateInput
     _avg?: DocenteAvgOrderByAggregateInput
     _max?: DocenteMaxOrderByAggregateInput
@@ -10232,6 +10248,7 @@ export namespace Prisma {
     aMaterno?: StringWithAggregatesFilter<"Docente"> | string
     estado?: StringWithAggregatesFilter<"Docente"> | string
     telefono?: StringWithAggregatesFilter<"Docente"> | string
+    curp?: StringWithAggregatesFilter<"Docente"> | string
   }
 
   export type SucursalWhereInput = {
@@ -10694,6 +10711,7 @@ export namespace Prisma {
     aMaterno: string
     estado: string
     telefono: string
+    curp: string
     clases?: ClaseCreateNestedManyWithoutDocenteInput
   }
 
@@ -10704,6 +10722,7 @@ export namespace Prisma {
     aMaterno: string
     estado: string
     telefono: string
+    curp: string
     clases?: ClaseUncheckedCreateNestedManyWithoutDocenteInput
   }
 
@@ -10713,6 +10732,7 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     estado?: StringFieldUpdateOperationsInput | string
     telefono?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     clases?: ClaseUpdateManyWithoutDocenteNestedInput
   }
 
@@ -10723,6 +10743,7 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     estado?: StringFieldUpdateOperationsInput | string
     telefono?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     clases?: ClaseUncheckedUpdateManyWithoutDocenteNestedInput
   }
 
@@ -10732,6 +10753,7 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     estado?: StringFieldUpdateOperationsInput | string
     telefono?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
   }
 
   export type DocenteUncheckedUpdateManyInput = {
@@ -10741,6 +10763,7 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     estado?: StringFieldUpdateOperationsInput | string
     telefono?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
   }
 
   export type SucursalCreateInput = {
@@ -11154,6 +11177,7 @@ export namespace Prisma {
     aMaterno?: SortOrder
     estado?: SortOrder
     telefono?: SortOrder
+    curp?: SortOrder
   }
 
   export type DocenteAvgOrderByAggregateInput = {
@@ -11167,6 +11191,7 @@ export namespace Prisma {
     aMaterno?: SortOrder
     estado?: SortOrder
     telefono?: SortOrder
+    curp?: SortOrder
   }
 
   export type DocenteMinOrderByAggregateInput = {
@@ -11176,6 +11201,7 @@ export namespace Prisma {
     aMaterno?: SortOrder
     estado?: SortOrder
     telefono?: SortOrder
+    curp?: SortOrder
   }
 
   export type DocenteSumOrderByAggregateInput = {
@@ -12254,6 +12280,7 @@ export namespace Prisma {
     aMaterno: string
     estado: string
     telefono: string
+    curp: string
   }
 
   export type DocenteUncheckedCreateWithoutClasesInput = {
@@ -12263,6 +12290,7 @@ export namespace Prisma {
     aMaterno: string
     estado: string
     telefono: string
+    curp: string
   }
 
   export type DocenteCreateOrConnectWithoutClasesInput = {
@@ -12324,6 +12352,7 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     estado?: StringFieldUpdateOperationsInput | string
     telefono?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
   }
 
   export type DocenteUncheckedUpdateWithoutClasesInput = {
@@ -12333,6 +12362,7 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     estado?: StringFieldUpdateOperationsInput | string
     telefono?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
   }
 
   export type AlumnoClaseUpsertWithWhereUniqueWithoutClaseInput = {

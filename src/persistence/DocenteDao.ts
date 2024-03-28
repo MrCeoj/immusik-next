@@ -1,6 +1,5 @@
-import { Docente, PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { Docente } from "@/entities/index";
+import prisma from "@/utils/Prisma";
 
 /**
  * Crea un nuevo docente
@@ -40,6 +39,7 @@ export async function getDocente(id: number) {
  * @returns Una promesa que se resuelve en el objeto que representa el docente modificado.
  */
 export async function modDocente(data: Docente){
+  console.log("DAO",data)
   return await prisma.docente.update({
     where: {
       id: data.id,
@@ -48,6 +48,7 @@ export async function modDocente(data: Docente){
       nombre: data.nombre,
       aPaterno: data.aPaterno,
       aMaterno: data.aMaterno,
+      curp: data.curp,
       telefono: data.telefono,
     },
   });

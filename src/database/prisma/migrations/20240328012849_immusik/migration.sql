@@ -4,14 +4,16 @@ CREATE TABLE "Docente" (
     "nombre" TEXT NOT NULL,
     "aPaterno" TEXT NOT NULL,
     "aMaterno" TEXT NOT NULL,
-    "phone" INTEGER NOT NULL
+    "estado" TEXT NOT NULL,
+    "telefono" TEXT NOT NULL,
+    "curp" TEXT NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "Sucursal" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "nombre" TEXT NOT NULL,
-    "address" TEXT NOT NULL
+    "direccion" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -61,11 +63,23 @@ CREATE TABLE "Pagos" (
 );
 
 -- CreateTable
+CREATE TABLE "Gasto" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "idSucursal" INTEGER NOT NULL,
+    "titulo" TEXT NOT NULL,
+    "decripcion" TEXT,
+    "monto" REAL NOT NULL,
+    "concepto" TEXT NOT NULL,
+    "fecha" TEXT NOT NULL,
+    CONSTRAINT "Gasto_idSucursal_fkey" FOREIGN KEY ("idSucursal") REFERENCES "Sucursal" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "User" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "userName" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "password" TEXT NOT NULL
+    "nombre" TEXT NOT NULL,
+    "correo" TEXT NOT NULL,
+    "contrasena" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -74,7 +88,10 @@ CREATE TABLE "MasterKey" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_userName_key" ON "User"("userName");
+CREATE UNIQUE INDEX "Docente_curp_key" ON "Docente"("curp");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_nombre_key" ON "User"("nombre");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_correo_key" ON "User"("correo");

@@ -17,6 +17,7 @@ const Modificacion = () => {
         nombre: data.nombre as string,
         aPaterno: data.aPaterno as string,
         aMaterno: data.aMaterno as string,
+        curp: data.curp as string,
         telefono: data.telefono as string,
         estado: data.estado as string,
       });

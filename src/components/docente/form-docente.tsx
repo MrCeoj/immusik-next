@@ -16,6 +16,7 @@ const FormDocente = () => {
 
   // Función que se ejecuta al enviar el formulario, consume la api para registrar un docente
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data)
     const response = await fetch("/api/docente/registerDocente", {
       method: "POST",
       headers: {
@@ -26,6 +27,7 @@ const FormDocente = () => {
           nombre: data.nombre,
           aPaterno: data.aPaterno,
           aMaterno: data.aMaterno,
+          curp: data.curp,
           telefono: data.telefono,
           estado: "INACTIVO",
         },
@@ -79,6 +81,27 @@ const FormDocente = () => {
           <Error error={errors?.aMaterno.message?.toString()} />
         )}
         <input
+          type="text"
+          id="curp"
+          placeholder="CURP"
+          maxLength={18}
+          {...register("curp", {
+            required: { 
+              value: true,
+              message: "El CURP es requerido.",
+            },
+            maxLength: {
+              value: 18,
+              message: "El CURP debe tener exactamente 18 caracteres.",
+            },
+            minLength: {
+              value: 18,
+              message: "El CURP debe tener exactamente 18 caracteres.",
+            },
+          })}
+        />
+        {errors.CURP && <Error error={errors?.CURP.message?.toString()} />}
+        <input
           type="number"
           id="telefono"
           placeholder="Telefono"
@@ -124,7 +147,6 @@ const FormDocente = () => {
       */}
 
       {serverError && <Error error={serverError} />}
-
 
       <button className="bg-pink-400" type="submit">
         Registrar

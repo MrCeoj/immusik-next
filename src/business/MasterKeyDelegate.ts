@@ -1,4 +1,4 @@
-import { getAllMasterKeys } from "@/persistence/MasterKeyDao";
+import { obtenerContrasenaMaestra } from "@/persistence/MasterKeyDao";
 
 export async function fetchAllMasterKeys(){
     let response = {
@@ -6,9 +6,9 @@ export async function fetchAllMasterKeys(){
         message: "",
     }
 
-    const masterKeys = await getAllMasterKeys();
+    const masterKeys = await obtenerContrasenaMaestra();
 
-    if(masterKeys.length===0){
+    if(masterKeys === null){
         response.message="No existen contrasenas"
     }else{
         response.message="Existen contrasenas"

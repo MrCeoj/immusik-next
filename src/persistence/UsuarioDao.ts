@@ -1,6 +1,5 @@
-import { PrismaClient, User } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { User } from '@/entities/index'
+import prisma from "@/utils/Prisma";
 
 /**
  * Obtiene un usuario por su nombre.

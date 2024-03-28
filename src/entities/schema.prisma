@@ -15,6 +15,7 @@ model Docente {
   aMaterno String
   estado   String
   telefono String
+  curp     String  @unique
   clases   Clase[]
 }
 

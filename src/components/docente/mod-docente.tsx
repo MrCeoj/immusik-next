@@ -18,10 +18,12 @@ const FormMod = (docente: Docente) => {
   } = useForm();
 
   useEffect(() => {
+    console.log(docente)
     if (docente) {
       setValue("nombre", docente.nombre || "");
       setValue("aPaterno", docente.aPaterno || "");
       setValue("aMaterno", docente.aMaterno || "");
+      setValue("curp", docente.curp || "");
       setTelefono(docente.telefono || "");
     }
   }, [docente, setValue]);
@@ -106,6 +108,27 @@ const FormMod = (docente: Docente) => {
           {errors.aMaterno && (
             <Error error={errors?.aMaterno.message?.toString()} />
           )}
+          <input
+            type="text"
+            id="curp"
+            placeholder="CURP"
+            maxLength={18}
+            {...register("curp", {
+              required: {
+                value: true,
+                message: "El CURP es requerido.",
+              },
+              maxLength: {
+                value: 18,
+                message: "El CURP debe tener exactamente 18 caracteres.",
+              },
+              minLength: {
+                value: 18,
+                message: "El CURP debe tener exactamente 18 caracteres.",
+              },
+            })}
+          />
+          {errors.CURP && <Error error={errors?.CURP.message?.toString()} />}
           <input
             type="number"
             id="telefono"

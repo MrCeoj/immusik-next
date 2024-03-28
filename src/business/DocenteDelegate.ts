@@ -13,13 +13,17 @@ import {
  */
 export async function registrarDocente(data: any) {
   // Formatear los datos del docente
+  console.log("delegate recibido: ", data)
   const docenteFormat = {
     nombre: data.docente.nombre.toUpperCase(),
     aPaterno: data.docente.aPaterno.toUpperCase(),
     aMaterno: data.docente.aMaterno.toUpperCase(),
+    curp: data.docente.curp.toUpperCase(),
     telefono: data.docente.telefono,
     estado: data.docente.estado.toUpperCase(),
   } as Docente;
+
+  console.log("delegate formateado: ", docenteFormat)
 
   if (docenteFormat.telefono.toString().length !== 10) {
     throw new Error("El número de teléfono debe tener 10 dígitos.");
@@ -35,6 +39,10 @@ export async function registrarDocente(data: any) {
 
   if (docenteFormat.aMaterno.length === 0) {
     throw new Error("El apellido materno del docente no puede estar vacío.");
+  }
+
+  if (docenteFormat.curp.length !== 18) {
+    throw new Error("El CURP del docente debe tener 18 caracteres.");
   }
 
   const docenteCreado = await createDocente(docenteFormat);
@@ -76,14 +84,16 @@ export async function obtenerDocente(id: number) {
  * @returns Una promesa que se resuelve en el objeto que informa sobre el docente modificado.
  */
 export async function modificarDocente(data: any){
+  console.log("delegate recibido: ", data)
   const docenteFormat = {
     id: data.id,
     nombre: data.nombre.toUpperCase(),
     aPaterno: data.aPaterno.toUpperCase(),
     aMaterno: data.aMaterno.toUpperCase(),
+    curp: data.curp.toUpperCase(),
     telefono: data.telefono,
   } as Docente;
-
+  console.log("delegate formateado: ", docenteFormat)
   if (docenteFormat.telefono.toString().length !== 10) {
     throw new Error("El número de teléfono debe tener 10 dígitos.");
   }
@@ -99,6 +109,11 @@ export async function modificarDocente(data: any){
   if (docenteFormat.aMaterno.length === 0) {
     throw new Error("El apellido materno del docente no puede estar vacío.");
   }
+
+  if(docenteFormat.curp.length !== 18){
+    throw new Error("El CURP del docente debe tener 18 caracteres.");
+  }
+
   try{
     const docenteModificado = await modDocente(docenteFormat);
     return docenteModificado;

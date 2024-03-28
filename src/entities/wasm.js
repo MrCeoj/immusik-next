@@ -122,7 +122,8 @@ exports.Prisma.DocenteScalarFieldEnum = {
   aPaterno: 'aPaterno',
   aMaterno: 'aMaterno',
   estado: 'estado',
-  telefono: 'telefono'
+  telefono: 'telefono',
+  curp: 'curp'
 };
 
 exports.Prisma.SucursalScalarFieldEnum = {

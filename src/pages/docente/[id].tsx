@@ -27,6 +27,7 @@ const Detalles = () => {
           <p>Apellido materno: {docente.aMaterno}</p>
           <p>Telefono: {docente.telefono}</p>
           <p>Estado: {docente.estado}</p>
+          <p>CURP: {docente.curp}</p>
           <button
             className="bg-pink-400"
             onClick={() => {
