@@ -81,7 +81,7 @@ export async function autenticarUsuario(usuarioIngresado: {
 
 	return {
 		id: usuario.id.toString(),
-		nombre: usuario.nombre,
-		correo: usuario.correo
+		name: usuario.nombre,
+		email: usuario.correo
 	}
 }

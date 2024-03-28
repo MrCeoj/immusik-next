@@ -1,4 +1,4 @@
-import {fetchEditarSucursal, fetchAllSucursals, fetchCreateSucursal } from "@/business/SucursalDelegate";
+import {fetchEditarSucursal, fetchAllSucursals, fetchCreateSucursal, fetchEliminarSucursal } from "@/business/SucursalDelegate";
 
 
 /**
@@ -36,6 +36,14 @@ export default async function handler(req: any, res: any) {
     }
     const result = await fetchEditarSucursal(data) //3. Se manda llamar el método enviando data
     res.status(200).json(result) //4. Se declara como exitosa la comunicación con backend
+    //------------------BLOQUE DE DELETE--------------------------------
+  }else if(req.method==="DELETE"){
+    const {id} = req.body //se obtiene la id de body
+    const data = { //se arma un objeto data con la id
+      id:id
+    }
+    const result = await fetchEliminarSucursal(data) //se envía al método eliminar sucursal
+    res.status(200).json(result) //Se regresa respuesta exitosa
   }else{
     res.status(405).send({ message: "Method not allowed" });
   }

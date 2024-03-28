@@ -36,7 +36,7 @@ const SucursalInfo = ({ sucursal, cambio, setCambio }) => {
           setCambio={setCambio}
         />
       )}
-      <div className="grid grid-cols-3 bg-blue-100 py-2 rounded-md shadow-sm mb-3">
+      <div className="grid grid-cols-3 bg-pink-100 py-2 rounded-md shadow-sm mb-3 text-lg">
         <div className="flex justify-center items-center mx-3">
           {sucursal.nombre}
         </div>
@@ -45,7 +45,7 @@ const SucursalInfo = ({ sucursal, cambio, setCambio }) => {
         </div>
         <div className="flex justify-center items-center">
           <button
-            className="mx-1 bg-blue-500 text-white py-1 px-2 rounded-md hover:bg-blue-700"
+            className="mx-1 bg-pink-500 text-white py-1 px-2 rounded-md hover:bg-pink-700"
             onClick={handleEditar} //Si se presiona el botón se ejecuta la función handleEditar
           >
             Gestionar

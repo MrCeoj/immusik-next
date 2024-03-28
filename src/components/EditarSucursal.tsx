@@ -1,18 +1,19 @@
 import React, { useState } from "react";
+import ConfirmacionEliminar from "./ConfirmacionEliminar";
 /*
- * @params sucursal: la sucursal que se va a editar
- * @params setEditar: cambia el valor de Editar, esto para desaparecer este mismo componente
- * @params cambio: si su valor cambia, el useEffect en sucursales.tsx se actualiza y muestra
+ * @param sucursal: la sucursal que se va a editar
+ * @param setEditar: cambia el valor de Editar, esto para desaparecer este mismo componente
+ * @param cambio: si su valor cambia, el useEffect en sucursales.tsx se actualiza y muestra
  * los cambios que se hicieron
- * @params setCambio: cambia el valor de cambio.
+ * @param setCambio: cambia el valor de cambio.
  *  */
 const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
   //useStates que cambian el valor de los campos que se registran por parte del usuario
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
 
-  //useState para detección de errores.
-  const [error, setError] = useState(false);
+  //useState para mostrar o no la pantalla de error
+  const [eliminar, setEliminar] = useState(false);
 
   //Cambia el valor de editar a false, ocultando este componente.
   const handleCancelar = () => {
@@ -29,6 +30,10 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
     }
   };
 
+  const handleEliminar = () => {
+    setEliminar(true);
+  };
+
   //Al presionar editar se ejecuta la función
   const handleEditar = () => {
     let id = sucursal.id; //Obtención de id
@@ -36,13 +41,10 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
     //Validación de no dejar espacios en blanco
     if (nombre === "" || direccion === "") {
       alert("No deje espacios en blanco!");
-      setError(true);
       return; //Se corta el flujo
     }
 
     //Continua el flujo
-    setError(false);
-
     //Petición fetch tipo PATCH para actualizar datos.
     fetch("api/Sucursal/", {
       method: "PATCH",
@@ -77,7 +79,16 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
   pide al usuario ingresar la información nueva.*/
   return (
     <>
-      <div className="h-screen w-screen bg-gray-100 absolute top-0 left-0 flex justify-center items-center">
+      {eliminar && (
+        <ConfirmacionEliminar
+          sucursal={sucursal}
+          setEliminar={setEliminar}
+          cambio={cambio}
+          setCambio={setCambio}
+          setEditar={setEditar}
+        />
+      )}
+      <div className="h-screen w-screen bg-gray-100 absolute top-0 left-0 flex justify-center items-center z-100">
         <div className="bg-white flex flex-col items-center w-1/2 h-1/2 justify-center rounded-lg shadow-lg">
           <h1 className="text-3xl font-bold mb-7">
             SUCURSAL {sucursal.nombre}
@@ -104,19 +115,27 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
               </div>
             </form>
           </div>
-          <div className="flex w-full justify-end mt-5 mr-20">
+          <div className="flex w-full mt-7 justify-between px-10">
             <button
               onClick={handleCancelar}
-              className="bg-gray-500 text-white py-1 px-10 rounded-lg text-lg mr-2"
+              className="bg-gray-500 text-white py-1 px-10 rounded-lg text-lg hover:bg-gray-700"
             >
               Cancelar
             </button>
-            <button
-              onClick={handleEditar}
-              className="bg-pink-500 text-white py-1 px-10 rounded-lg text-lg"
-            >
-              Editar
-            </button>
+            <div>
+              <button
+                onClick={handleEditar}
+                className="bg-pink-500 text-white py-1 px-10 rounded-lg text-lg mr-4 hover:bg-pink-700"
+              >
+                Editar
+              </button>
+              <button
+                onClick={handleEliminar}
+                className="bg-red-500 text-white py-1 px-10 rounded-lg text-lg hover:bg-red-700"
+              >
+                Eliminar
+              </button>
+            </div>
           </div>
         </div>
       </div>
