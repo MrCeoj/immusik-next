@@ -16,7 +16,7 @@ export async function getAllSucursals() {
  * @returns Una promesa que se resuelve en el objeto que representa la sucursal creada.
  */
 export async function createSucursal(data: any) {
-	return await prisma.sucursal.create({ data })
+	return await prisma.sucursal.create({data: {nombre:data.nombre,direccion:data.direccion}})
 }
 
 /*

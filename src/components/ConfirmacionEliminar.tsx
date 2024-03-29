@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 /*
  * Componente para validar la eliminación de la sucursal
@@ -16,8 +16,24 @@ const ConfirmacionEliminar = ({
   setCambio,
   setEditar,
 }) => {
+  //useState para la contraseña Maestra
+  const [contrasena, setContrasena] = useState("");
+
+  const toggleCambio = () => {
+    if (cambio) {
+      setCambio(false);
+    } else {
+      setCambio(true);
+    }
+  };
+
   //Si se presiona eliminar se ejecuta el siguiente comando
   const handleEliminar = () => {
+    if (contrasena === "") {
+      alert("¡Ingrese la Contraseña Maestra!");
+      return;
+    }
+
     let id = sucursal.id;
     fetch("api/Sucursal/", {
       //Se hace fetch a sucursal
@@ -26,31 +42,26 @@ const ConfirmacionEliminar = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        //Se manda id
+        //Se manda id y contraseña maestra
         id,
+        contrasena,
       }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json(); //Si hay una respuesta valida se regresa en formato json.
-        } else {
-          alert("Hubo un problema al eliminar la sucursal.");
-        }
-      })
-      .then((data) => {
-        //Se lee la respuesta
-        alert(data.message);
-        if (data.message === "Sucursal eliminada exitosamente.") {
-          setEliminar(false);
-          if (cambio) {
-            setCambio(false);
+    }).then((response) => {
+      if (response.ok) {
+        return response.json().then((data) => {
+          if (data.message === "Sucursal eliminada exitosamente.") {
+            alert(data.message);
+            setEliminar(false);
+            setEditar(false);
+            toggleCambio();
           } else {
-            setCambio(true);
+            alert(data.message);
           }
-          setEditar(false);
-        }
-      });
-    setEliminar(false);
+        }); //Si hay una respuesta valida se regresa en formato json.
+      } else {
+        alert("Hubo un problema al eliminar la sucursal.");
+      }
+    });
   };
 
   //Cierra este componente, regresando a la pantalla de editar
@@ -72,6 +83,19 @@ const ConfirmacionEliminar = ({
         <p className="text-lg mt-3">
           Esto eliminará todas las clases dentro de esta sucursal y se
           desasignaran estas clases a los alumnos.
+        </p>
+        <form className="mt-2">
+          <label className="text-lg mr-1">Contraseña Maestra</label>
+          <input
+            className="ml-1 bg-gray-100 py-1 px-2 text-lg rounded-md"
+            type="password"
+            placeholder="Contraseña Maestra"
+            value={contrasena}
+            onChange={(e) => setContrasena(e.target.value)}
+          ></input>
+        </form>
+        <p className="text-sm text-red-500">
+          (Es necesaria la Contraseña Maestra para eliminar la sucursal)
         </p>
         <div className="mt-5">
           <button

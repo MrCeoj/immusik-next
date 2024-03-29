@@ -19,31 +19,34 @@ export default async function handler(req: any, res: any) {
       res.status(200).json(result);
     }
   } else if(req.method === "POST"){
-    const {nombre,direccion} = req.body
+    const {nombre,direccion,contrasena} = req.body
     const data = {
       nombre: nombre,
-      direccion: direccion
+      direccion: direccion,
+      contrasena: contrasena
     }
     const result = await fetchCreateSucursal(data)
     res.status(200).json(result)
     //----------------------BLOQUE DE PATCH-------------------------------------------
   }else if(req.method==="PATCH"){ 
-    const {id,nombre,direccion} = req.body //1. Se obtiene la información desde req.
+    const {id,nombre,direccion,contrasena} = req.body //1. Se obtiene la información desde req.
     const data = { //2. Se crea un objeto data con la información
       id: id,
       nombre: nombre,
-      direccion: direccion
+      direccion: direccion,
+      contrasena: contrasena
     }
     const result = await fetchEditarSucursal(data) //3. Se manda llamar el método enviando data
     res.status(200).json(result) //4. Se declara como exitosa la comunicación con backend
     //------------------BLOQUE DE DELETE--------------------------------
   }else if(req.method==="DELETE"){
-    const {id} = req.body //se obtiene la id de body
+    const {id,contrasena} = req.body //se obtiene la id de body
     const data = { //se arma un objeto data con la id
-      id:id
+      id:id,
+      contrasena:contrasena
     }
     const result = await fetchEliminarSucursal(data) //se envía al método eliminar sucursal
-    res.status(200).json(result) //Se regresa respuesta exitosa
+    res.status(200).json(result)
   }else{
     res.status(405).send({ message: "Method not allowed" });
   }

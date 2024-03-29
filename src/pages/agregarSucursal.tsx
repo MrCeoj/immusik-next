@@ -10,6 +10,7 @@ const AgregarSucursal = () => {
   //useStates que manejan los datos de la sucursal
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
+  const [contrasena, setContrasena] = useState("");
 
   const handleCancelar = () => {
     router.push("/sucursales");
@@ -36,6 +37,7 @@ const AgregarSucursal = () => {
       body: JSON.stringify({
         nombre, //Se envían como cuerpo el nombre y dirección de la nueva sucursal
         direccion,
+        contrasena,
       }),
     }).then((response) => {
       //Se obtiene la respuesta
@@ -43,12 +45,13 @@ const AgregarSucursal = () => {
         return response.json().then((data) => {
           //Si la respuesta es exitosa se convierte en json y se regresa
           alert(data.message);
+          if (data.message === "Se registró correcamente la sucursal")
+            router.push("/sucursales"); //Se regresa a sucursales.
         });
       } else {
         alert("Hubo un problema al registrar la sucursal.");
       }
     });
-    router.push("/sucursales"); //Se regresa a sucursales.
   };
 
   /*Cuerpo de la página, un form donde se ingresan los datos, al presionar
@@ -84,6 +87,16 @@ const AgregarSucursal = () => {
                 placeholder="Dirección de la sucursal"
                 value={direccion}
                 onChange={(e) => setDireccion(e.target.value.toUpperCase())}
+              />
+            </div>
+            <div className="text-lg">
+              <label className="py-1">Contraseña Maestra</label>
+              <input
+                type="password"
+                className="mb-3 bg-gray-100 p-2 ml-2 rounded-md"
+                placeholder="Contraseña Maestra"
+                value={contrasena}
+                onChange={(e) => setContrasena(e.target.value)}
               />
             </div>
           </form>
