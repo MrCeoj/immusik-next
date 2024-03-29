@@ -11,6 +11,7 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
   //useStates que cambian el valor de los campos que se registran por parte del usuario
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
+  const [contrasena, setContrasena] = useState("");
 
   //useState para mostrar o no la pantalla de error
   const [eliminar, setEliminar] = useState(false);
@@ -39,7 +40,7 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
     let id = sucursal.id; //Obtención de id
 
     //Validación de no dejar espacios en blanco
-    if (nombre === "" || direccion === "") {
+    if (nombre === "" || direccion === "" || contrasena === "") {
       alert("No deje espacios en blanco!");
       return; //Se corta el flujo
     }
@@ -56,23 +57,23 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
         id,
         nombre,
         direccion,
+        contrasena,
       }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json(); //Si hay una respuesta valida se regresa en formato json.
-        } else {
-          alert("Hubo un problema al modificar la sucursal.");
-        }
-      })
-      .then((data) => {
-        //Se lee la respuesta
-        alert(data.message);
-        if (data.message === "Se ha modificado la sucursal correctamente.")
-          //Si el mensaje es de exito se cierra este componente
-          setEditar(false);
-        toggleCambio();
-      });
+    }).then((response) => {
+      if (response.ok) {
+        return response.json().then((data) => {
+          if (data.message === "Se ha modificado la sucursal correctamente.") {
+            setEditar(false);
+            alert(data.message);
+            toggleCambio();
+          } else {
+            alert(data.message);
+          }
+        }); //Si hay una respuesta valida se regresa en formato json.
+      } else {
+        alert("Hubo un problema al modificar la sucursal.");
+      }
+    });
   };
 
   /*CONTENIDO: Form donde se tiene como placeholder la información actual de la sucursal, donde se le
@@ -89,7 +90,7 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
         />
       )}
       <div className="h-screen w-screen bg-gray-100 absolute top-0 left-0 flex justify-center items-center z-100">
-        <div className="bg-white flex flex-col items-center w-1/2 h-1/2 justify-center rounded-lg shadow-lg">
+        <div className="bg-white p-7 pt-10 flex flex-col items-center w-1/2 h-1/2 justify-center rounded-lg shadow-lg">
           <h1 className="text-3xl font-bold mb-7">
             SUCURSAL {sucursal.nombre}
           </h1>
@@ -113,9 +114,19 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
                   onChange={(e) => setDireccion(e.target.value.toUpperCase())}
                 />
               </div>
+              <div className="mt-5">
+                <label className="text-2xl mr-7">Contraseña Maestra</label>
+                <input
+                  type="password"
+                  placeholder="Contraseña Maestra"
+                  className="text-2xl bg-gray-100 py-1 px-2 rounded-lg"
+                  value={contrasena}
+                  onChange={(e) => setContrasena(e.target.value)}
+                />
+              </div>
             </form>
           </div>
-          <div className="flex w-full mt-7 justify-between px-10">
+          <div className="flex w-full mt-7 justify-between px-10 mb-5">
             <button
               onClick={handleCancelar}
               className="bg-gray-500 text-white py-1 px-10 rounded-lg text-lg hover:bg-gray-700"

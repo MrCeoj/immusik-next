@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 // Componente que contiene el formulario de inicio de sesión
 export default function LoginUsuario() {
@@ -46,10 +47,12 @@ export default function LoginUsuario() {
 						label="Usuario"
 						error={Boolean(errors.nombre?.type === 'required')}
 					/>
+					<div className="border-2 border-gray-500 rounded-lg flex">
+					<Image src={require("@/img/user.png")} alt={''} width={30} className="p-1 opacity-40" />
 					<Input
 						type="text"
 						id="nombre"
-						placeholder="Nombre de usuario"
+						placeholder="Usuario"
 						error={errors.nombre}
 						register={register('nombre', {
 							required: {
@@ -61,7 +64,8 @@ export default function LoginUsuario() {
 								message: 'Nombre de usuario debe tener mínimo 6 caracteres.'
 							}
 						})}
-					/>
+						/>
+					</div>
 				</div>
 				<div className="flex flex-col max-w-82 min-w-72 relative">
 					<Label
@@ -69,6 +73,8 @@ export default function LoginUsuario() {
 						label="Contraseña"
 						error={Boolean(errors.contrasena?.type === 'required')}
 					/>
+					<div className="border-2 border-gray-500 rounded-lg flex">
+					<Image src={require("@/img/key.png")} alt={''} width={30} className="p-1 opacity-50" />
 					<Input
 						type="password"
 						id="contrasena"
@@ -89,7 +95,9 @@ export default function LoginUsuario() {
 									'La contraseña debe tener al menos una mayúscula, una minúscula y un número.'
 							}
 						})}
-					/>
+					/>			
+					</div>
+						
 				</div>
 				<button className="rounded-md bg-primary px-4 py-2 mt-4 font-bold text-white shadow-md transition-all duration-300 hover:shadow-lg hover:bg-pink-300">
 					Acceder

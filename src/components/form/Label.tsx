@@ -8,7 +8,7 @@ const Label = ({
 	error: boolean
 }) => {
 	return (
-		<label htmlFor={htmlFor} className="font-bold">
+		<label htmlFor={htmlFor} className="">
 			{label} {error && <span className="text-red-600">*</span>}
 		</label>
 	)

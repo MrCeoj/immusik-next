@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import Image from 'next/image'
 import {
 	FieldError,
 	FieldErrorsImpl,
@@ -38,11 +39,11 @@ const Input = ({
 			type={type}
 			id={id}
 			placeholder={placeholder}
-			className={`text-gray-800 px-2 py-1 pr-6 rounded-md border-2 ${
+			className={`text-gray-800 bg-transparent px-1 py-1 rounded-lg w-full ${
 				error ? 'border-red-600 outline-red-600' : 'border-transparent'
 			}`}
 			{...register}
-		/>
+			/>
 	)
 }
 
