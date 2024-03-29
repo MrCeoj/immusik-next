@@ -3753,7 +3753,7 @@ export namespace Prisma {
   export type ClaseGroupByOutputType = {
     id: number
     idSucursal: number
-    idDocente: number
+    idDocente: number | null
     nombre: string
     cupoMax: number
     dias: string
@@ -3788,7 +3788,7 @@ export namespace Prisma {
     dias?: boolean
     hora?: boolean
     sucursal?: boolean | SucursalDefaultArgs<ExtArgs>
-    docente?: boolean | DocenteDefaultArgs<ExtArgs>
+    docente?: boolean | Clase$docenteArgs<ExtArgs>
     alumnos?: boolean | Clase$alumnosArgs<ExtArgs>
     _count?: boolean | ClaseCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["clase"]>
@@ -3805,7 +3805,7 @@ export namespace Prisma {
 
   export type ClaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     sucursal?: boolean | SucursalDefaultArgs<ExtArgs>
-    docente?: boolean | DocenteDefaultArgs<ExtArgs>
+    docente?: boolean | Clase$docenteArgs<ExtArgs>
     alumnos?: boolean | Clase$alumnosArgs<ExtArgs>
     _count?: boolean | ClaseCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3815,13 +3815,13 @@ export namespace Prisma {
     name: "Clase"
     objects: {
       sucursal: Prisma.$SucursalPayload<ExtArgs>
-      docente: Prisma.$DocentePayload<ExtArgs>
+      docente: Prisma.$DocentePayload<ExtArgs> | null
       alumnos: Prisma.$AlumnoClasePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       idSucursal: number
-      idDocente: number
+      idDocente: number | null
       nombre: string
       cupoMax: number
       dias: string
@@ -4177,7 +4177,7 @@ export namespace Prisma {
 
     sucursal<T extends SucursalDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SucursalDefaultArgs<ExtArgs>>): Prisma__SucursalClient<$Result.GetResult<Prisma.$SucursalPayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
 
-    docente<T extends DocenteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DocenteDefaultArgs<ExtArgs>>): Prisma__DocenteClient<$Result.GetResult<Prisma.$DocentePayload<ExtArgs>, T, 'findUniqueOrThrow'> | Null, Null, ExtArgs>;
+    docente<T extends Clase$docenteArgs<ExtArgs> = {}>(args?: Subset<T, Clase$docenteArgs<ExtArgs>>): Prisma__DocenteClient<$Result.GetResult<Prisma.$DocentePayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
 
     alumnos<T extends Clase$alumnosArgs<ExtArgs> = {}>(args?: Subset<T, Clase$alumnosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AlumnoClasePayload<ExtArgs>, T, 'findMany'> | Null>;
 
@@ -4512,6 +4512,22 @@ export namespace Prisma {
      * Filter which Clases to delete
      */
     where?: ClaseWhereInput
+  }
+
+
+  /**
+   * Clase.docente
+   */
+  export type Clase$docenteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Docente
+     */
+    select?: DocenteSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: DocenteInclude<ExtArgs> | null
+    where?: DocenteWhereInput
   }
 
 
@@ -5575,26 +5591,31 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseAvgAggregateOutputType = {
+    id: number | null
     alumnoId: number | null
     claseId: number | null
   }
 
   export type AlumnoClaseSumAggregateOutputType = {
+    id: number | null
     alumnoId: number | null
     claseId: number | null
   }
 
   export type AlumnoClaseMinAggregateOutputType = {
+    id: number | null
     alumnoId: number | null
     claseId: number | null
   }
 
   export type AlumnoClaseMaxAggregateOutputType = {
+    id: number | null
     alumnoId: number | null
     claseId: number | null
   }
 
   export type AlumnoClaseCountAggregateOutputType = {
+    id: number
     alumnoId: number
     claseId: number
     _all: number
@@ -5602,26 +5623,31 @@ export namespace Prisma {
 
 
   export type AlumnoClaseAvgAggregateInputType = {
+    id?: true
     alumnoId?: true
     claseId?: true
   }
 
   export type AlumnoClaseSumAggregateInputType = {
+    id?: true
     alumnoId?: true
     claseId?: true
   }
 
   export type AlumnoClaseMinAggregateInputType = {
+    id?: true
     alumnoId?: true
     claseId?: true
   }
 
   export type AlumnoClaseMaxAggregateInputType = {
+    id?: true
     alumnoId?: true
     claseId?: true
   }
 
   export type AlumnoClaseCountAggregateInputType = {
+    id?: true
     alumnoId?: true
     claseId?: true
     _all?: true
@@ -5714,6 +5740,7 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseGroupByOutputType = {
+    id: number
     alumnoId: number
     claseId: number
     _count: AlumnoClaseCountAggregateOutputType | null
@@ -5738,6 +5765,7 @@ export namespace Prisma {
 
 
   export type AlumnoClaseSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
     alumnoId?: boolean
     claseId?: boolean
     alumno?: boolean | AlumnoDefaultArgs<ExtArgs>
@@ -5745,6 +5773,7 @@ export namespace Prisma {
   }, ExtArgs["result"]["alumnoClase"]>
 
   export type AlumnoClaseSelectScalar = {
+    id?: boolean
     alumnoId?: boolean
     claseId?: boolean
   }
@@ -5762,6 +5791,7 @@ export namespace Prisma {
       clase: Prisma.$ClasePayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
+      id: number
       alumnoId: number
       claseId: number
     }, ExtArgs["result"]["alumnoClase"]>
@@ -5856,8 +5886,8 @@ export namespace Prisma {
      * // Get first 10 AlumnoClases
      * const alumnoClases = await prisma.alumnoClase.findMany({ take: 10 })
      * 
-     * // Only select the `alumnoId`
-     * const alumnoClaseWithAlumnoIdOnly = await prisma.alumnoClase.findMany({ select: { alumnoId: true } })
+     * // Only select the `id`
+     * const alumnoClaseWithIdOnly = await prisma.alumnoClase.findMany({ select: { id: true } })
      * 
     **/
     findMany<T extends AlumnoClaseFindManyArgs<ExtArgs>>(
@@ -6145,6 +6175,7 @@ export namespace Prisma {
    * Fields of the AlumnoClase model
    */ 
   interface AlumnoClaseFieldRefs {
+    readonly id: FieldRef<"AlumnoClase", 'Int'>
     readonly alumnoId: FieldRef<"AlumnoClase", 'Int'>
     readonly claseId: FieldRef<"AlumnoClase", 'Int'>
   }
@@ -10083,6 +10114,7 @@ export namespace Prisma {
 
 
   export const AlumnoClaseScalarFieldEnum: {
+    id: 'id',
     alumnoId: 'alumnoId',
     claseId: 'claseId'
   };
@@ -10307,20 +10339,20 @@ export namespace Prisma {
     NOT?: ClaseWhereInput | ClaseWhereInput[]
     id?: IntFilter<"Clase"> | number
     idSucursal?: IntFilter<"Clase"> | number
-    idDocente?: IntFilter<"Clase"> | number
+    idDocente?: IntNullableFilter<"Clase"> | number | null
     nombre?: StringFilter<"Clase"> | string
     cupoMax?: IntFilter<"Clase"> | number
     dias?: StringFilter<"Clase"> | string
     hora?: StringFilter<"Clase"> | string
     sucursal?: XOR<SucursalRelationFilter, SucursalWhereInput>
-    docente?: XOR<DocenteRelationFilter, DocenteWhereInput>
+    docente?: XOR<DocenteNullableRelationFilter, DocenteWhereInput> | null
     alumnos?: AlumnoClaseListRelationFilter
   }
 
   export type ClaseOrderByWithRelationInput = {
     id?: SortOrder
     idSucursal?: SortOrder
-    idDocente?: SortOrder
+    idDocente?: SortOrderInput | SortOrder
     nombre?: SortOrder
     cupoMax?: SortOrder
     dias?: SortOrder
@@ -10336,20 +10368,20 @@ export namespace Prisma {
     OR?: ClaseWhereInput[]
     NOT?: ClaseWhereInput | ClaseWhereInput[]
     idSucursal?: IntFilter<"Clase"> | number
-    idDocente?: IntFilter<"Clase"> | number
+    idDocente?: IntNullableFilter<"Clase"> | number | null
     nombre?: StringFilter<"Clase"> | string
     cupoMax?: IntFilter<"Clase"> | number
     dias?: StringFilter<"Clase"> | string
     hora?: StringFilter<"Clase"> | string
     sucursal?: XOR<SucursalRelationFilter, SucursalWhereInput>
-    docente?: XOR<DocenteRelationFilter, DocenteWhereInput>
+    docente?: XOR<DocenteNullableRelationFilter, DocenteWhereInput> | null
     alumnos?: AlumnoClaseListRelationFilter
   }, "id">
 
   export type ClaseOrderByWithAggregationInput = {
     id?: SortOrder
     idSucursal?: SortOrder
-    idDocente?: SortOrder
+    idDocente?: SortOrderInput | SortOrder
     nombre?: SortOrder
     cupoMax?: SortOrder
     dias?: SortOrder
@@ -10367,7 +10399,7 @@ export namespace Prisma {
     NOT?: ClaseScalarWhereWithAggregatesInput | ClaseScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Clase"> | number
     idSucursal?: IntWithAggregatesFilter<"Clase"> | number
-    idDocente?: IntWithAggregatesFilter<"Clase"> | number
+    idDocente?: IntNullableWithAggregatesFilter<"Clase"> | number | null
     nombre?: StringWithAggregatesFilter<"Clase"> | string
     cupoMax?: IntWithAggregatesFilter<"Clase"> | number
     dias?: StringWithAggregatesFilter<"Clase"> | string
@@ -10453,6 +10485,7 @@ export namespace Prisma {
     AND?: AlumnoClaseWhereInput | AlumnoClaseWhereInput[]
     OR?: AlumnoClaseWhereInput[]
     NOT?: AlumnoClaseWhereInput | AlumnoClaseWhereInput[]
+    id?: IntFilter<"AlumnoClase"> | number
     alumnoId?: IntFilter<"AlumnoClase"> | number
     claseId?: IntFilter<"AlumnoClase"> | number
     alumno?: XOR<AlumnoRelationFilter, AlumnoWhereInput>
@@ -10460,6 +10493,7 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseOrderByWithRelationInput = {
+    id?: SortOrder
     alumnoId?: SortOrder
     claseId?: SortOrder
     alumno?: AlumnoOrderByWithRelationInput
@@ -10467,7 +10501,7 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseWhereUniqueInput = Prisma.AtLeast<{
-    alumnoId_claseId?: AlumnoClaseAlumnoIdClaseIdCompoundUniqueInput
+    id?: number
     AND?: AlumnoClaseWhereInput | AlumnoClaseWhereInput[]
     OR?: AlumnoClaseWhereInput[]
     NOT?: AlumnoClaseWhereInput | AlumnoClaseWhereInput[]
@@ -10475,9 +10509,10 @@ export namespace Prisma {
     claseId?: IntFilter<"AlumnoClase"> | number
     alumno?: XOR<AlumnoRelationFilter, AlumnoWhereInput>
     clase?: XOR<ClaseRelationFilter, ClaseWhereInput>
-  }, "alumnoId_claseId">
+  }, "id">
 
   export type AlumnoClaseOrderByWithAggregationInput = {
+    id?: SortOrder
     alumnoId?: SortOrder
     claseId?: SortOrder
     _count?: AlumnoClaseCountOrderByAggregateInput
@@ -10491,6 +10526,7 @@ export namespace Prisma {
     AND?: AlumnoClaseScalarWhereWithAggregatesInput | AlumnoClaseScalarWhereWithAggregatesInput[]
     OR?: AlumnoClaseScalarWhereWithAggregatesInput[]
     NOT?: AlumnoClaseScalarWhereWithAggregatesInput | AlumnoClaseScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"AlumnoClase"> | number
     alumnoId?: IntWithAggregatesFilter<"AlumnoClase"> | number
     claseId?: IntWithAggregatesFilter<"AlumnoClase"> | number
   }
@@ -10813,14 +10849,14 @@ export namespace Prisma {
     dias: string
     hora: string
     sucursal: SucursalCreateNestedOneWithoutClasesInput
-    docente: DocenteCreateNestedOneWithoutClasesInput
+    docente?: DocenteCreateNestedOneWithoutClasesInput
     alumnos?: AlumnoClaseCreateNestedManyWithoutClaseInput
   }
 
   export type ClaseUncheckedCreateInput = {
     id?: number
     idSucursal: number
-    idDocente: number
+    idDocente?: number | null
     nombre: string
     cupoMax: number
     dias: string
@@ -10834,14 +10870,14 @@ export namespace Prisma {
     dias?: StringFieldUpdateOperationsInput | string
     hora?: StringFieldUpdateOperationsInput | string
     sucursal?: SucursalUpdateOneRequiredWithoutClasesNestedInput
-    docente?: DocenteUpdateOneRequiredWithoutClasesNestedInput
+    docente?: DocenteUpdateOneWithoutClasesNestedInput
     alumnos?: AlumnoClaseUpdateManyWithoutClaseNestedInput
   }
 
   export type ClaseUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     idSucursal?: IntFieldUpdateOperationsInput | number
-    idDocente?: IntFieldUpdateOperationsInput | number
+    idDocente?: NullableIntFieldUpdateOperationsInput | number | null
     nombre?: StringFieldUpdateOperationsInput | string
     cupoMax?: IntFieldUpdateOperationsInput | number
     dias?: StringFieldUpdateOperationsInput | string
@@ -10859,7 +10895,7 @@ export namespace Prisma {
   export type ClaseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     idSucursal?: IntFieldUpdateOperationsInput | number
-    idDocente?: IntFieldUpdateOperationsInput | number
+    idDocente?: NullableIntFieldUpdateOperationsInput | number | null
     nombre?: StringFieldUpdateOperationsInput | string
     cupoMax?: IntFieldUpdateOperationsInput | number
     dias?: StringFieldUpdateOperationsInput | string
@@ -10943,6 +10979,7 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseUncheckedCreateInput = {
+    id?: number
     alumnoId: number
     claseId: number
   }
@@ -10953,6 +10990,7 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
     alumnoId?: IntFieldUpdateOperationsInput | number
     claseId?: IntFieldUpdateOperationsInput | number
   }
@@ -10962,6 +11000,7 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
     alumnoId?: IntFieldUpdateOperationsInput | number
     claseId?: IntFieldUpdateOperationsInput | number
   }
@@ -11277,20 +11316,36 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type SucursalRelationFilter = {
     is?: SucursalWhereInput
     isNot?: SucursalWhereInput
   }
 
-  export type DocenteRelationFilter = {
-    is?: DocenteWhereInput
-    isNot?: DocenteWhereInput
+  export type DocenteNullableRelationFilter = {
+    is?: DocenteWhereInput | null
+    isNot?: DocenteWhereInput | null
   }
 
   export type AlumnoClaseListRelationFilter = {
     every?: AlumnoClaseWhereInput
     some?: AlumnoClaseWhereInput
     none?: AlumnoClaseWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type AlumnoClaseOrderByRelationAggregateInput = {
@@ -11339,6 +11394,22 @@ export namespace Prisma {
     idSucursal?: SortOrder
     idDocente?: SortOrder
     cupoMax?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -11417,32 +11488,32 @@ export namespace Prisma {
     isNot?: ClaseWhereInput
   }
 
-  export type AlumnoClaseAlumnoIdClaseIdCompoundUniqueInput = {
-    alumnoId: number
-    claseId: number
-  }
-
   export type AlumnoClaseCountOrderByAggregateInput = {
+    id?: SortOrder
     alumnoId?: SortOrder
     claseId?: SortOrder
   }
 
   export type AlumnoClaseAvgOrderByAggregateInput = {
+    id?: SortOrder
     alumnoId?: SortOrder
     claseId?: SortOrder
   }
 
   export type AlumnoClaseMaxOrderByAggregateInput = {
+    id?: SortOrder
     alumnoId?: SortOrder
     claseId?: SortOrder
   }
 
   export type AlumnoClaseMinOrderByAggregateInput = {
+    id?: SortOrder
     alumnoId?: SortOrder
     claseId?: SortOrder
   }
 
   export type AlumnoClaseSumOrderByAggregateInput = {
+    id?: SortOrder
     alumnoId?: SortOrder
     claseId?: SortOrder
   }
@@ -11525,11 +11596,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type GastoCountOrderByAggregateInput = {
@@ -11790,10 +11856,12 @@ export namespace Prisma {
     update?: XOR<XOR<SucursalUpdateToOneWithWhereWithoutClasesInput, SucursalUpdateWithoutClasesInput>, SucursalUncheckedUpdateWithoutClasesInput>
   }
 
-  export type DocenteUpdateOneRequiredWithoutClasesNestedInput = {
+  export type DocenteUpdateOneWithoutClasesNestedInput = {
     create?: XOR<DocenteCreateWithoutClasesInput, DocenteUncheckedCreateWithoutClasesInput>
     connectOrCreate?: DocenteCreateOrConnectWithoutClasesInput
     upsert?: DocenteUpsertWithoutClasesInput
+    disconnect?: DocenteWhereInput | boolean
+    delete?: DocenteWhereInput | boolean
     connect?: DocenteWhereUniqueInput
     update?: XOR<XOR<DocenteUpdateToOneWithWhereWithoutClasesInput, DocenteUpdateWithoutClasesInput>, DocenteUncheckedUpdateWithoutClasesInput>
   }
@@ -11809,6 +11877,14 @@ export namespace Prisma {
     update?: AlumnoClaseUpdateWithWhereUniqueWithoutClaseInput | AlumnoClaseUpdateWithWhereUniqueWithoutClaseInput[]
     updateMany?: AlumnoClaseUpdateManyWithWhereWithoutClaseInput | AlumnoClaseUpdateManyWithWhereWithoutClaseInput[]
     deleteMany?: AlumnoClaseScalarWhereInput | AlumnoClaseScalarWhereInput[]
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type AlumnoClaseUncheckedUpdateManyWithoutClaseNestedInput = {
@@ -12041,6 +12117,44 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -12101,17 +12215,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | null
-    notIn?: number[] | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type ClaseCreateWithoutDocenteInput = {
     nombre: string
     cupoMax: number
@@ -12158,7 +12261,7 @@ export namespace Prisma {
     NOT?: ClaseScalarWhereInput | ClaseScalarWhereInput[]
     id?: IntFilter<"Clase"> | number
     idSucursal?: IntFilter<"Clase"> | number
-    idDocente?: IntFilter<"Clase"> | number
+    idDocente?: IntNullableFilter<"Clase"> | number | null
     nombre?: StringFilter<"Clase"> | string
     cupoMax?: IntFilter<"Clase"> | number
     dias?: StringFilter<"Clase"> | string
@@ -12170,13 +12273,13 @@ export namespace Prisma {
     cupoMax: number
     dias: string
     hora: string
-    docente: DocenteCreateNestedOneWithoutClasesInput
+    docente?: DocenteCreateNestedOneWithoutClasesInput
     alumnos?: AlumnoClaseCreateNestedManyWithoutClaseInput
   }
 
   export type ClaseUncheckedCreateWithoutSucursalInput = {
     id?: number
-    idDocente: number
+    idDocente?: number | null
     nombre: string
     cupoMax: number
     dias: string
@@ -12303,6 +12406,7 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseUncheckedCreateWithoutClaseInput = {
+    id?: number
     alumnoId: number
   }
 
@@ -12385,6 +12489,7 @@ export namespace Prisma {
     AND?: AlumnoClaseScalarWhereInput | AlumnoClaseScalarWhereInput[]
     OR?: AlumnoClaseScalarWhereInput[]
     NOT?: AlumnoClaseScalarWhereInput | AlumnoClaseScalarWhereInput[]
+    id?: IntFilter<"AlumnoClase"> | number
     alumnoId?: IntFilter<"AlumnoClase"> | number
     claseId?: IntFilter<"AlumnoClase"> | number
   }
@@ -12394,6 +12499,7 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseUncheckedCreateWithoutAlumnoInput = {
+    id?: number
     claseId: number
   }
 
@@ -12500,13 +12606,13 @@ export namespace Prisma {
     dias: string
     hora: string
     sucursal: SucursalCreateNestedOneWithoutClasesInput
-    docente: DocenteCreateNestedOneWithoutClasesInput
+    docente?: DocenteCreateNestedOneWithoutClasesInput
   }
 
   export type ClaseUncheckedCreateWithoutAlumnosInput = {
     id?: number
     idSucursal: number
-    idDocente: number
+    idDocente?: number | null
     nombre: string
     cupoMax: number
     dias: string
@@ -12569,13 +12675,13 @@ export namespace Prisma {
     dias?: StringFieldUpdateOperationsInput | string
     hora?: StringFieldUpdateOperationsInput | string
     sucursal?: SucursalUpdateOneRequiredWithoutClasesNestedInput
-    docente?: DocenteUpdateOneRequiredWithoutClasesNestedInput
+    docente?: DocenteUpdateOneWithoutClasesNestedInput
   }
 
   export type ClaseUncheckedUpdateWithoutAlumnosInput = {
     id?: IntFieldUpdateOperationsInput | number
     idSucursal?: IntFieldUpdateOperationsInput | number
-    idDocente?: IntFieldUpdateOperationsInput | number
+    idDocente?: NullableIntFieldUpdateOperationsInput | number | null
     nombre?: StringFieldUpdateOperationsInput | string
     cupoMax?: IntFieldUpdateOperationsInput | number
     dias?: StringFieldUpdateOperationsInput | string
@@ -12719,13 +12825,13 @@ export namespace Prisma {
     cupoMax?: IntFieldUpdateOperationsInput | number
     dias?: StringFieldUpdateOperationsInput | string
     hora?: StringFieldUpdateOperationsInput | string
-    docente?: DocenteUpdateOneRequiredWithoutClasesNestedInput
+    docente?: DocenteUpdateOneWithoutClasesNestedInput
     alumnos?: AlumnoClaseUpdateManyWithoutClaseNestedInput
   }
 
   export type ClaseUncheckedUpdateWithoutSucursalInput = {
     id?: IntFieldUpdateOperationsInput | number
-    idDocente?: IntFieldUpdateOperationsInput | number
+    idDocente?: NullableIntFieldUpdateOperationsInput | number | null
     nombre?: StringFieldUpdateOperationsInput | string
     cupoMax?: IntFieldUpdateOperationsInput | number
     dias?: StringFieldUpdateOperationsInput | string
@@ -12735,7 +12841,7 @@ export namespace Prisma {
 
   export type ClaseUncheckedUpdateManyWithoutSucursalInput = {
     id?: IntFieldUpdateOperationsInput | number
-    idDocente?: IntFieldUpdateOperationsInput | number
+    idDocente?: NullableIntFieldUpdateOperationsInput | number | null
     nombre?: StringFieldUpdateOperationsInput | string
     cupoMax?: IntFieldUpdateOperationsInput | number
     dias?: StringFieldUpdateOperationsInput | string
@@ -12773,10 +12879,12 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseUncheckedUpdateWithoutClaseInput = {
+    id?: IntFieldUpdateOperationsInput | number
     alumnoId?: IntFieldUpdateOperationsInput | number
   }
 
   export type AlumnoClaseUncheckedUpdateManyWithoutClaseInput = {
+    id?: IntFieldUpdateOperationsInput | number
     alumnoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -12785,10 +12893,12 @@ export namespace Prisma {
   }
 
   export type AlumnoClaseUncheckedUpdateWithoutAlumnoInput = {
+    id?: IntFieldUpdateOperationsInput | number
     claseId?: IntFieldUpdateOperationsInput | number
   }
 
   export type AlumnoClaseUncheckedUpdateManyWithoutAlumnoInput = {
+    id?: IntFieldUpdateOperationsInput | number
     claseId?: IntFieldUpdateOperationsInput | number
   }
 

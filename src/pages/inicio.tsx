@@ -3,12 +3,11 @@ import imgFondo from '@/img/immusik-inicio.png'
 import logoImmusik from '@/img/immusik.png'
 import Link from 'next/link'
 import { useSucursales } from '@/hooks/sucursal'
-import toTitleCase from '@/lib/toTitleCase'
+import toTitleCase from '@/lib/utils'
 import BarraNavegacionAdmin from '@/components/barraNavegacionAdmin'
 
 export default function Inicio() {
 	const [sucursales] = useSucursales()
-
 	return (
 		<div className="bg-black min-h-screen flex flex-col items-center px-2 py-4 md:flex-row md:justify-evenly md:px-4">
 			<Image

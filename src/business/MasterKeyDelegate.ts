@@ -7,7 +7,7 @@ export async function fetchAllMasterKeys(){
     }
 
     const masterKeys = await obtenerContrasenaMaestra();
-
+    console.log(masterKeys)
     if(masterKeys === null){
         response.message="No existen contrasenas"
     }else{
@@ -15,4 +15,9 @@ export async function fetchAllMasterKeys(){
     }
 
     return response
+}
+
+export async function getMasterKey(){
+    const masterKeys = await obtenerContrasenaMaestra();
+    return masterKeys
 }

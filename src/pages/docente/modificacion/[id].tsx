@@ -2,6 +2,8 @@ import FormMod from "@/components/docente/mod-docente";
 import { Docente } from "@/entities/index";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import withAuth from "@/lib/withAuth"
+
 
 const Modificacion = () => {
   const router = useRouter();
@@ -27,7 +29,9 @@ const Modificacion = () => {
   return <div>{docente && <FormMod {...docente} />}</div>;
 };
 
-export default Modificacion;
+const ModificacionAuth = withAuth(Modificacion) // Proteger la página con el HOC, mirar @/lib/withAuth.tsx
+
+export default ModificacionAuth;
 
 /**
  * Detalle importante, este archivo tiene corchetes [ ] en el nombre
