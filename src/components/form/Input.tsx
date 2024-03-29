@@ -1,5 +1,5 @@
+import { cn } from '@/lib/utils'
 import { useEffect, useRef } from 'react'
-import Image from 'next/image'
 import {
 	FieldError,
 	FieldErrorsImpl,
@@ -13,13 +13,15 @@ const Input = ({
 	id,
 	placeholder,
 	error,
-	register
+	register,
+	className
 }: {
 	type: string
 	id: string
 	placeholder: string
 	error: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 	register: UseFormRegisterReturn<string>
+	className?: string
 }) => {
 	const toastId = useRef(null as Id | null)
 
@@ -39,11 +41,14 @@ const Input = ({
 			type={type}
 			id={id}
 			placeholder={placeholder}
-			className={`text-gray-800 bg-transparent px-1 py-1 rounded-lg w-full ${
-				error ? 'border-red-600 outline-red-600' : 'border-transparent'
-			}`}
+			className={cn(
+				'p-1',
+				'text-gray-800 rounded-lg w-full border-2 border-transparent',
+				className,
+				{ 'border-red-600 outline-red-600': error }
+			)}
 			{...register}
-			/>
+		/>
 	)
 }
 
