@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { ToastContainer } from "react-toastify";
-import Label from "../form-label";
-import Input from "../form-input";
+import Label from "../form/Label";
+import Input from "../form/Input";
 
 // Formulario para registrar un docente
 const FormDocente = () => {
