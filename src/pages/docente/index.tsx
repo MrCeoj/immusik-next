@@ -87,7 +87,7 @@ const Index = () => {
 
   return (
     <div>
-      <div className="w-screen flex items-center bg-primary h-1/8 z-50 rounded-lg mt-1 ">
+      <div className="w-screen flex items-center bg-primary h-1/8 z-50 rounded-lg mt-1">
 				<Image
 					src={require('@/img/immusik.png')}
 					alt={'hola'}
@@ -150,7 +150,7 @@ const Index = () => {
                     <td className="pt-4">{docente.aMaterno}</td>
                     <td className="pt-4">{docente.telefono}</td>
                     <td className="flex justify-center pt-4">
-                      <div className={`w-6 h-6 rounded-full ${docente.estado === 'Activo' ? 'bg-green-500' : 'bg-yellow-300'}`}></div>
+                      <div className={`w-6 h-6 rounded-full ${docente.estado === 'Activo' ? 'bg-green-500' : docente.estado === 'VETADO' ? 'bg-red-500' : 'bg-yellow-300'}`}></div>
                     </td>
                     <td className="text-center pt-4">
                       <button

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { Docente } from "@/entities/index";
+import Label from "../form/Label";
 
 const FormMod = (docente: Docente) => {
   // useState para manejar errores
@@ -52,7 +53,7 @@ const FormMod = (docente: Docente) => {
   });
 
   return (
-    <div className="relative">
+    <div className="relative m-5 p-5 rounded-md bg-gray-300 w-1/2">
       {/*
        * Este div es para mostrar un mensaje de éxito al editar un docente
        * Se muestra cuando success es true, igual, hay que cambiarlo
@@ -65,36 +66,48 @@ const FormMod = (docente: Docente) => {
         </div>
       )}
       <form onSubmit={onSubmit} className="">
-        <div className="flex flex-col gap-8">
-          <input
-            type="text"
-            id="nombre"
-            placeholder="Nombre del docente"
-            {...register("nombre", {
-              required: {
-                value: true,
-                message: "El nombre del docente es requerido.",
-              },
-            })}
-          />
-          {errors.nombre && (
-            <Error error={errors?.nombre.message?.toString()} />
-          )}
-          <input
-            type="text"
-            id="aPaterno"
-            placeholder="Apellido Paterno"
-            {...register("aPaterno", {
-              required: {
-                value: true,
-                message: "El apellido paterno es requerido.",
-              },
-            })}
-          />
-          {errors.aPaterno && (
-            <Error error={errors?.aPaterno.message?.toString()} />
-          )}
-          <input
+        <div className="flex flex-col gap-8 justify-center">
+          <div className="flex flex-col">
+            <label className="font-bold">Nombre </label>
+            <input
+              type="text"
+              id="nombre"
+              placeholder="Nombre del docente"
+              {...register("nombre", {
+                required: {
+                  value: true,
+                  message: "El nombre del docente es requerido.",
+                },
+              })}
+              className="rounded-md p-1"
+            />
+            {errors.nombre && (
+              <Error error={errors?.nombre.message?.toString()} />
+            )}
+          </div>
+
+          <div className="flex flex-col">
+            <label className="font-bold">Apellido Paterno</label>
+            <input
+              type="text"
+              id="aPaterno"
+              placeholder="Apellido Paterno"
+              {...register("aPaterno", {
+                required: {
+                  value: true,
+                  message: "El apellido paterno es requerido.",
+                },
+              })}
+              className="rounded-md p-1"
+            />
+            {errors.aPaterno && (
+              <Error error={errors?.aPaterno.message?.toString()} />
+            )}
+          </div>
+
+          <div className="flex flex-col">
+            <label className="font-bold">Apellido Materno</label>
+            <input
             type="text"
             id="aMaterno"
             placeholder="Apellido Materno"
@@ -104,11 +117,17 @@ const FormMod = (docente: Docente) => {
                 message: "El apellido materno es requerido.",
               },
             })}
+            className="rounded-md p-1"
           />
           {errors.aMaterno && (
             <Error error={errors?.aMaterno.message?.toString()} />
           )}
-          <input
+          </div>
+          
+
+          <div className="flex flex-col">
+            <label className="font-bold">CURP</label>
+            <input
             type="text"
             id="curp"
             placeholder="CURP"
@@ -127,9 +146,14 @@ const FormMod = (docente: Docente) => {
                 message: "El CURP debe tener exactamente 18 caracteres.",
               },
             })}
+            className="rounded-md p-1"
           />
           {errors.CURP && <Error error={errors?.CURP.message?.toString()} />}
-          <input
+          </div>
+          
+          <div className="flex flex-col">
+          <label className="font-bold">Teléfono</label>
+            <input
             type="number"
             id="telefono"
             placeholder="Telefono"
@@ -162,10 +186,13 @@ const FormMod = (docente: Docente) => {
                 setTelefono(e.target.value);
               }
             }}
+            className="rounded-md p-1"
           />
           {errors.telefono && (
             <Error error={errors?.telefono.message?.toString()} />
           )}
+          </div>
+          
         </div>
 
         {/* Cuidado con este componente, cuando las validaciones de aqui por 
@@ -176,9 +203,14 @@ const FormMod = (docente: Docente) => {
 
         {serverError && <Error error={serverError} />}
 
-        <button className="bg-pink-400" type="submit">
-          Registrar
+        <div className="flex justify-center">
+        <button
+          className="rounded-md bg-primary px-4 py-2 mt-4 font-bold text-white shadow-md transition-all duration-300 hover:shadow-lg hover:bg-pink-300"
+          type="submit"
+        >
+          Editar
         </button>
+        </div>
       </form>
     </div>
   );

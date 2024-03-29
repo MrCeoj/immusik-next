@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import InputLogin from './form/InputLogin'
 
 // Componente que contiene el formulario de inicio de sesión
 export default function LoginUsuario() {
@@ -49,7 +50,7 @@ export default function LoginUsuario() {
 					/>
 					<div className="border-2 border-gray-500 rounded-lg flex">
 					<Image src={require("@/img/user.png")} alt={''} width={30} className="p-1 opacity-40" />
-					<Input
+					<InputLogin
 						type="text"
 						id="nombre"
 						placeholder="Usuario"
@@ -75,7 +76,7 @@ export default function LoginUsuario() {
 					/>
 					<div className="border-2 border-gray-500 rounded-lg flex">
 					<Image src={require("@/img/key.png")} alt={''} width={30} className="p-1 opacity-50" />
-					<Input
+					<InputLogin
 						type="password"
 						id="contrasena"
 						placeholder="Contraseña"

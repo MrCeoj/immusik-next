@@ -8,7 +8,7 @@ import {
 } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
 
-const Input = ({
+const InputLogin = ({
 	type,
 	id,
 	placeholder,
@@ -39,7 +39,7 @@ const Input = ({
 			type={type}
 			id={id}
 			placeholder={placeholder}
-			className={`text-gray-800 px-1 py-1 rounded-lg ${
+			className={`text-gray-800 bg-transparent px-1 py-1 rounded-lg w-full ${
 				error ? 'border-red-600 outline-red-600' : 'border-transparent'
 			}`}
 			{...register}
@@ -47,4 +47,4 @@ const Input = ({
 	)
 }
 
-export default Input
+export default InputLogin

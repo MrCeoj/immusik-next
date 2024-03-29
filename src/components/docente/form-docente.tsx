@@ -30,6 +30,7 @@ const FormDocente = () => {
           aPaterno: data.aPaterno,
           aMaterno: data.aMaterno,
           telefono: data.telefono,
+          curp: data.curp,
           estado: "INACTIVO",
         },
       }),
@@ -98,6 +99,25 @@ const FormDocente = () => {
               required: {
                 value: true,
                 message: "El apellido materno es requerido.",
+              },
+            })}
+          />
+        </div>
+        <div className="flex flex-col max-w-82 min-w-72 relative">
+          <Label
+            htmlFor="curp"
+            label="CURP"
+            error={Boolean(errors.curp?.type === "required")}
+          />
+          <Input
+            type="text"
+            id="curp"
+            placeholder="CURP"
+            error={errors.curp}
+            register={register("curp", {
+              required: {
+                value: true,
+                message: "La CURP es requerida.",
               },
             })}
           />
