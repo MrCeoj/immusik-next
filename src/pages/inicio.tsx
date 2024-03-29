@@ -8,7 +8,6 @@ import BarraNavegacionAdmin from '@/components/barraNavegacionAdmin'
 
 export default function Inicio() {
 	const [sucursales] = useSucursales()
-
 	return (
 		<div className="bg-black min-h-screen flex flex-col items-center px-2 py-4 md:flex-row md:justify-evenly md:px-4">
 			<Image

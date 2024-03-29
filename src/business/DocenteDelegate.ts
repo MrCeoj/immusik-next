@@ -1,9 +1,12 @@
-import { Docente } from "@/entities/index";
+import { Docente, Clase } from "@/entities/index";
+import { deleteDocenteFromClase } from "@/persistence/ClaseDao";
 import {
   createDocente,
   getAllDocentes,
   getDocente,
   modDocente,
+  setEstado,
+  getClases,
 } from "@/persistence/DocenteDao";
 
 /**
@@ -13,7 +16,7 @@ import {
  */
 export async function registrarDocente(data: any) {
   // Formatear los datos del docente
-  console.log("delegate recibido: ", data)
+  console.log("delegate recibido: ", data);
   const docenteFormat = {
     nombre: data.docente.nombre.toUpperCase(),
     aPaterno: data.docente.aPaterno.toUpperCase(),
@@ -23,7 +26,7 @@ export async function registrarDocente(data: any) {
     estado: data.docente.estado.toUpperCase(),
   } as Docente;
 
-  console.log("delegate formateado: ", docenteFormat)
+  console.log("delegate formateado: ", docenteFormat);
 
   if (docenteFormat.telefono.toString().length !== 10) {
     throw new Error("El número de teléfono debe tener 10 dígitos.");
@@ -83,8 +86,8 @@ export async function obtenerDocente(id: number) {
  * @param data - Los datos del docente a modificar.
  * @returns Una promesa que se resuelve en el objeto que informa sobre el docente modificado.
  */
-export async function modificarDocente(data: any){
-  console.log("delegate recibido: ", data)
+export async function modificarDocente(data: any) {
+  // Formatear los datos del docente entrante
   const docenteFormat = {
     id: data.id,
     nombre: data.nombre.toUpperCase(),
@@ -93,7 +96,8 @@ export async function modificarDocente(data: any){
     curp: data.curp.toUpperCase(),
     telefono: data.telefono,
   } as Docente;
-  console.log("delegate formateado: ", docenteFormat)
+
+  //Validaciones correspondientes
   if (docenteFormat.telefono.toString().length !== 10) {
     throw new Error("El número de teléfono debe tener 10 dígitos.");
   }
@@ -110,14 +114,53 @@ export async function modificarDocente(data: any){
     throw new Error("El apellido materno del docente no puede estar vacío.");
   }
 
-  if(docenteFormat.curp.length !== 18){
+  if (docenteFormat.curp.length !== 18) {
     throw new Error("El CURP del docente debe tener 18 caracteres.");
   }
 
-  try{
+  // Modificar al docente.
+  try {
     const docenteModificado = await modDocente(docenteFormat);
     return docenteModificado;
-  }catch(error){
+  } catch (error) {
     console.error("Error al modificar docente:", error);
+  }
+}
+
+/**
+ * Cambia el estado de un docente a lo que reciba como parámetro.
+ * @param id - El ID del docente a cambiar de estado.
+ * @returns Una promesa que se resuelve en el objeto que informa sobre el docente modificado.
+ */
+export async function establecerEstado(estado: string, id: number) {
+  try {
+    const estadosAceptados = ["ACTIVO", "INACTIVO", "VETADO"];
+    if (!estadosAceptados.includes(estado)) {
+      throw new Error("El estado del docente no es válido.");
+    }
+    const clases = await obtenerClases(id);
+    if (estado !== "ACTIVO" && clases?.length !== 0) {
+      clases?.forEach((clase: Clase) => {
+        deleteDocenteFromClase(clase.id);
+      });
+    }
+    const docenteModificado = await setEstado(estado, id);
+    return docenteModificado;
+  } catch (error) {
+    console.error("Error al modificar docente:", error);
+  }
+}
+
+/**
+ * Obtiene las clases de un docente.
+ * @param id - El ID del docente a buscar.
+ * @returns Una promesa que se resuelve en un arreglo con las clases del docente.
+ */
+export async function obtenerClases(id: number) {
+  try {
+    const clases = await getClases(id);
+    return clases;
+  } catch (error) {
+    console.error("Error al obtener clases:", error);
   }
 }

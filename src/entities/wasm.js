@@ -154,6 +154,7 @@ exports.Prisma.AlumnoScalarFieldEnum = {
 };
 
 exports.Prisma.AlumnoClaseScalarFieldEnum = {
+  id: 'id',
   alumnoId: 'alumnoId',
   claseId: 'claseId'
 };

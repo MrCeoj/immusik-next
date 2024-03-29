@@ -31,8 +31,8 @@ model Clase {
   id         Int           @id @default(autoincrement())
   sucursal   Sucursal      @relation(fields: [idSucursal], references: [id])
   idSucursal Int
-  docente    Docente       @relation(fields: [idDocente], references: [id])
-  idDocente  Int
+  docente    Docente?       @relation(fields: [idDocente], references: [id])
+  idDocente  Int?
   nombre     String
   cupoMax    Int
   dias       String
@@ -54,12 +54,11 @@ model Alumno {
 }
 
 model AlumnoClase {
+  id       Int    @id @default(autoincrement())
   alumno   Alumno @relation(fields: [alumnoId], references: [id])
   alumnoId Int
   clase    Clase  @relation(fields: [claseId], references: [id])
   claseId  Int
-
-  @@id([alumnoId, claseId])
 }
 
 model Pagos {
