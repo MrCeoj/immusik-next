@@ -4,7 +4,9 @@ import {
   deleteClasesFromSucursal,
   getClasesFromSucursal,
   deleteDocenteFromClase,
+  deleteSingelDocente,
 } from "@/persistence/ClaseDao";
+import { Clase } from "@prisma/client";
 
 /**
  * Obtiene una clase por su id
@@ -16,7 +18,7 @@ export async function obtenerClase(id: number) {
     return await getClase(id);
   } catch (error) {
     console.error("Error al buscar clase:", error);
-    throw error;
+    return error;
   }
 }
 
@@ -54,7 +56,7 @@ export async function deleteClasesDeDeterminadaSucursal(id: any) {
 export async function eliminarDocentedeClase(id: number) {
   try {
     // Obtener clase de la base de datos para hacer validaciones
-    const clase = await obtenerClase(id);
+    const clase = (await obtenerClase(id)) as Clase;
 
     // Validar que la clase exista y tenga docente asignado
     if (!clase) {
@@ -66,6 +68,25 @@ export async function eliminarDocentedeClase(id: number) {
 
     return await deleteDocenteFromClase(id);
   } catch (error) {
-    throw new Error("Error al eliminar docente de clase: " + error);
+    if (error instanceof Error) {
+      return error;
+    }
+    return new Error("Error al eliminar docente de clase: " + error);
+  }
+}
+
+export async function eliminarUnDocente(id: number) {
+  try {
+    const clase = (await obtenerClase(id)) as Clase;
+    if (!clase) {
+      throw new Error("No existe la clase con el id proporcionado");
+    }
+    if (clase.idDocente === null) {
+      throw new Error("La clase no tiene docente asignado");
+    }
+    return await deleteSingelDocente(id);
+  } catch (error) {
+    console.error("Error al eliminar docente:", error);
+    return error;
   }
 }

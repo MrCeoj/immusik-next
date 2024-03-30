@@ -1,4 +1,4 @@
-import { eliminarDocentedeClase } from "@/business/ClaseDelegate";
+import { eliminarUnDocente } from "@/business/ClaseDelegate";
 import { NextApiRequest, NextApiResponse } from "next";
 
 /**
@@ -15,13 +15,12 @@ export default async function handler(
   try {
     if (req.method === "DELETE") {
       const id = req.body;
-      console.log("api", id);
-      const idBuscar = Number(id);
-      if (!idBuscar)
+      console.log(typeof id, id)
+      if (!req.body)
         return res
           .status(400)
           .json({ error: "Falta proporcionar el ID de la clase" });
-      const result = await eliminarDocentedeClase(idBuscar);
+      const result = await eliminarUnDocente(id.id);
       return res.status(200).json(result);
     }
     return res.status(405).json({ error: "Método no permitido" });

@@ -20,13 +20,13 @@ CREATE TABLE "Sucursal" (
 CREATE TABLE "Clase" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "idSucursal" INTEGER NOT NULL,
-    "idDocente" INTEGER NOT NULL,
+    "idDocente" INTEGER,
     "nombre" TEXT NOT NULL,
     "cupoMax" INTEGER NOT NULL,
     "dias" TEXT NOT NULL,
     "hora" TEXT NOT NULL,
     CONSTRAINT "Clase_idSucursal_fkey" FOREIGN KEY ("idSucursal") REFERENCES "Sucursal" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "Clase_idDocente_fkey" FOREIGN KEY ("idDocente") REFERENCES "Docente" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "Clase_idDocente_fkey" FOREIGN KEY ("idDocente") REFERENCES "Docente" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- CreateTable

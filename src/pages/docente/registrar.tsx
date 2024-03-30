@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import FormDocente from "@/components/docente/form-docente";
 import Link from "next/link";
+import withAuth from "@/lib/withAuth"; // Componente que verifica si el usuario está autenticado
 
 // Función que establece el título de la página
 export function getServerSideProps() {
@@ -42,4 +43,6 @@ const Registrar = () => {
   );
 };
 
-export default Registrar;
+const RegistrarAuth = withAuth(Registrar); // Protege la ruta para que solo usuarios autenticados puedan acceder
+
+export default RegistrarAuth;

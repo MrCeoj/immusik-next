@@ -7,6 +7,7 @@ import {
   modDocente,
   setEstado,
   getClases,
+  getByCurp,
 } from "@/persistence/DocenteDao";
 
 /**
@@ -14,42 +15,61 @@ import {
  * @param data - Los datos del docente a registrar.
  * @returns Una promesa que se resuelve en el objeto que informa sobre el docente creado.
  */
-export async function registrarDocente(data: any) {
-  // Formatear los datos del docente
-  console.log("delegate recibido: ", data);
-  const docenteFormat = {
-    nombre: data.docente.nombre.toUpperCase(),
-    aPaterno: data.docente.aPaterno.toUpperCase(),
-    aMaterno: data.docente.aMaterno.toUpperCase(),
-    curp: data.docente.curp.toUpperCase(),
-    telefono: data.docente.telefono,
-    estado: data.docente.estado.toUpperCase(),
-  } as Docente;
+export async function registrarDocente(data: any): Promise<Docente | Error> {
+  try {
+    console.log("delegate recibido: ", data);
+    const docenteFormat = {
+      nombre: data.docente.nombre.toUpperCase(),
+      aPaterno: data.docente.aPaterno.toUpperCase(),
+      aMaterno: data.docente.aMaterno.toUpperCase(),
+      curp: data.docente.curp.toUpperCase(),
+      telefono: data.docente.telefono,
+      estado: data.docente.estado.toUpperCase(),
+    } as Docente;
 
-  console.log("delegate formateado: ", docenteFormat);
+    console.log("delegate formateado: ", docenteFormat);
 
-  if (docenteFormat.telefono.toString().length !== 10) {
-    throw new Error("El número de teléfono debe tener 10 dígitos.");
+    // Validaciones correspondientes
+    const docenteExistente = await getByCurp(docenteFormat.curp);
+    if (docenteExistente) {
+      if (docenteExistente.estado === "VETADO") {
+        throw new Error(
+          "Éste CURP ya existe y está vetado, imposible registrar."
+        );
+      } else {
+        throw new Error("Éste CURP ya fue registrado.");
+      }
+    }
+
+    if (docenteFormat.telefono.length !== 10) {
+      throw new Error("El número de teléfono debe tener 10 dígitos.");
+    }
+
+    if (docenteFormat.nombre.length === 0) {
+      throw new Error("El nombre del docente no puede estar vacío.");
+    }
+
+    if (docenteFormat.aPaterno.length === 0) {
+      throw new Error("El apellido paterno del docente no puede estar vacío.");
+    }
+
+    if (docenteFormat.aMaterno.length === 0) {
+      throw new Error("El apellido materno del docente no puede estar vacío.");
+    }
+
+    if (docenteFormat.curp.length !== 18) {
+      throw new Error("El CURP del docente debe tener 18 caracteres.");
+    }
+
+    const docenteCreado = await createDocente(docenteFormat);
+    return docenteCreado;
+  } catch (error) {
+    if (error instanceof Error) {
+      return error;
+    } else {
+      return new Error("Un error inesperado ocurrió al registrar el docente.");
+    }
   }
-
-  if (docenteFormat.nombre.length === 0) {
-    throw new Error("El nombre del docente no puede estar vacío.");
-  }
-
-  if (docenteFormat.aPaterno.length === 0) {
-    throw new Error("El apellido paterno del docente no puede estar vacío.");
-  }
-
-  if (docenteFormat.aMaterno.length === 0) {
-    throw new Error("El apellido materno del docente no puede estar vacío.");
-  }
-
-  if (docenteFormat.curp.length !== 18) {
-    throw new Error("El CURP del docente debe tener 18 caracteres.");
-  }
-
-  const docenteCreado = await createDocente(docenteFormat);
-  return docenteCreado;
 }
 
 /**
@@ -61,8 +81,9 @@ export async function obtenerDocentes() {
     const docentes = await getAllDocentes();
     return docentes;
   } catch (error) {
-    console.error("Error fetching all docentes:", error);
-    throw error; // Lanzar de nuevo el error para que la api lo muestre
+    return new Error(
+      "Error al obtener los docentes, intente de nuevo más tarde"
+    ); // Lanzar de nuevo el error para que la api lo muestre
   }
 }
 
@@ -76,8 +97,7 @@ export async function obtenerDocente(id: number) {
     const docente = await getDocente(id);
     return docente;
   } catch (error) {
-    console.error("Error al buscar docente:", error);
-    throw error;
+    return new Error("Error al obtener el docente, intente de nuevo más tarde");
   }
 }
 
@@ -87,43 +107,50 @@ export async function obtenerDocente(id: number) {
  * @returns Una promesa que se resuelve en el objeto que informa sobre el docente modificado.
  */
 export async function modificarDocente(data: any) {
-  // Formatear los datos del docente entrante
-  const docenteFormat = {
-    id: data.id,
-    nombre: data.nombre.toUpperCase(),
-    aPaterno: data.aPaterno.toUpperCase(),
-    aMaterno: data.aMaterno.toUpperCase(),
-    curp: data.curp.toUpperCase(),
-    telefono: data.telefono,
-  } as Docente;
-
-  //Validaciones correspondientes
-  if (docenteFormat.telefono.toString().length !== 10) {
-    throw new Error("El número de teléfono debe tener 10 dígitos.");
-  }
-
-  if (docenteFormat.nombre.length === 0) {
-    throw new Error("El nombre del docente no puede estar vacío.");
-  }
-
-  if (docenteFormat.aPaterno.length === 0) {
-    throw new Error("El apellido paterno del docente no puede estar vacío.");
-  }
-
-  if (docenteFormat.aMaterno.length === 0) {
-    throw new Error("El apellido materno del docente no puede estar vacío.");
-  }
-
-  if (docenteFormat.curp.length !== 18) {
-    throw new Error("El CURP del docente debe tener 18 caracteres.");
-  }
-
-  // Modificar al docente.
   try {
+    // Formatear los datos del docente entrante
+    const docenteFormat = {
+      id: data.id,
+      nombre: data.nombre.toUpperCase(),
+      aPaterno: data.aPaterno.toUpperCase(),
+      aMaterno: data.aMaterno.toUpperCase(),
+      curp: data.curp.toUpperCase(),
+      telefono: data.telefono,
+    } as Docente;
+
+    //Validaciones correspondientes
+
+    const docenteExistente = await getByCurp(docenteFormat.curp);
+
+    if (docenteExistente && docenteExistente.id !== docenteFormat.id) {
+      throw new Error("Éste CURP ya fue registrado.");
+    }
+
+    if (docenteFormat.telefono.toString().length !== 10) {
+      throw new Error("El número de teléfono debe tener 10 dígitos.");
+    }
+
+    if (docenteFormat.nombre.length === 0) {
+      throw new Error("El nombre del docente no puede estar vacío.");
+    }
+
+    if (docenteFormat.aPaterno.length === 0) {
+      throw new Error("El apellido paterno del docente no puede estar vacío.");
+    }
+
+    if (docenteFormat.aMaterno.length === 0) {
+      throw new Error("El apellido materno del docente no puede estar vacío.");
+    }
+
+    if (docenteFormat.curp.length !== 18) {
+      throw new Error("El CURP del docente debe tener 18 caracteres.");
+    }
+
+    // Modificar al docente.
     const docenteModificado = await modDocente(docenteFormat);
     return docenteModificado;
   } catch (error) {
-    console.error("Error al modificar docente:", error);
+    return error;
   }
 }
 
@@ -135,19 +162,22 @@ export async function modificarDocente(data: any) {
 export async function establecerEstado(estado: string, id: number) {
   try {
     const estadosAceptados = ["ACTIVO", "INACTIVO", "VETADO"];
+
+    // Prevenir estados no manejados por la aplicación
     if (!estadosAceptados.includes(estado)) {
       throw new Error("El estado del docente no es válido.");
     }
-    const clases = await obtenerClases(id);
-    if (estado !== "ACTIVO" && clases?.length !== 0) {
-      clases?.forEach((clase: Clase) => {
-        deleteDocenteFromClase(clase.id);
-      });
+
+    // Si el docente está inactivo o vetado, se elimina de todas las clases
+    const clases = await getClases(id);
+    if (estado !== "ACTIVO" && clases.length > 0) {
+      deleteDocenteFromClase(id);
     }
+
     const docenteModificado = await setEstado(estado, id);
     return docenteModificado;
   } catch (error) {
-    console.error("Error al modificar docente:", error);
+    return error;
   }
 }
 
@@ -159,8 +189,11 @@ export async function establecerEstado(estado: string, id: number) {
 export async function obtenerClases(id: number) {
   try {
     const clases = await getClases(id);
+    console.log(clases)
     return clases;
   } catch (error) {
-    console.error("Error al obtener clases:", error);
+    return new Error(
+      "Error al obtener las clases del docente, intente de nuevo más tarde."
+    );
   }
 }

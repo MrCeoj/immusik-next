@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import router from "next/router";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/Input";
+import "react-toastify/dist/ReactToastify.css";
 
 // Formulario para registrar un docente
 const FormDocente = () => {
@@ -35,9 +37,39 @@ const FormDocente = () => {
         },
       }),
     });
-    const resJSON = await response.json();
-    if (response.status === 500) setServerError(resJSON.error);
+    if (response.status === 500) {
+      const resJSON = await response.json();
+      console.log(resJSON.error);
+      console.log(typeof resJSON.error);
+      toast.error(resJSON.error, {
+        className: "text-white px-6 py-4 border-0 rounded-md bg-red-500",
+        bodyClassName: "font-semibold text-sm text-red-500",
+        autoClose: 5000,
+        draggable: false,
+      });
+    } else {
+      toast.success("Docente registrado", {
+        className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
+        bodyClassName: "font-semibold text-sm text-green-500",
+        autoClose: 3000,
+        draggable: false,
+        onClose: () => router.push("/docente"),
+      });
+    }
   });
+
+  useEffect(() => {
+    Object.values(errors).forEach((error) => {
+      if (error) {
+        toast.error(String(error.message), {
+          className: "text-white px-6 py-4 border-0 rounded-md bg-red-500",
+          bodyClassName: "font-semibold text-sm text-red-500",
+          autoClose: 5000,
+          draggable: false,
+        });
+      }
+    });
+  }, [errors]);
 
   return (
     <>
@@ -119,6 +151,18 @@ const FormDocente = () => {
                 value: true,
                 message: "La CURP es requerida.",
               },
+              minLength: {
+                value: 18,
+                message: "La CURP debe tener 18 caracteres.",
+              },
+              maxLength: {
+                value: 18,
+                message: "La CURP debe tener 18 caracteres.",
+              },
+              pattern: {
+                value: /^[A-Za-z0-9]+$/i,
+                message: "Formato de CURP no válido.",
+              },
             })}
           />
         </div>
@@ -130,7 +174,7 @@ const FormDocente = () => {
           />
           <input
             className="text-gray-800 px-2 py-1 pr-6 rounded-md border-2"
-            type="number"
+            type="text"
             id="telefono"
             placeholder="Telefono"
             value={telefono}

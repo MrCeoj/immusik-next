@@ -20,6 +20,9 @@ export default async function handler(
       const result = await modificarDocente(docente);
 
       // Se retorna un mensaje de éxito
+      if (result instanceof Error) {
+        return res.status(500).json({ error: result.message });
+      }
       return res.status(200).json(result);
     } catch (error) {
 
