@@ -7,19 +7,22 @@ import {
 	UseFormRegisterReturn
 } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
+import { cn } from '@/lib/utils'
 
 const InputLogin = ({
 	type,
 	id,
 	placeholder,
 	error,
-	register
+	register,
+	iconFile
 }: {
 	type: string
 	id: string
 	placeholder: string
 	error: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 	register: UseFormRegisterReturn<string>
+	iconFile: string
 }) => {
 	const toastId = useRef(null as Id | null)
 
@@ -34,16 +37,28 @@ const InputLogin = ({
 		return () => toast.dismiss(toastId.current as Id)
 	}, [error?.message])
 
+	const handleClick = () => document.getElementById(id)?.focus()
+
 	return (
-		<input
-			type={type}
-			id={id}
-			placeholder={placeholder}
-			className={`text-gray-800 bg-transparent px-1 py-1 rounded-lg w-full ${
-				error ? 'border-red-600 outline-red-600' : 'border-transparent'
-			}`}
-			{...register}
+		<div className="relative">
+			<Image
+				src={require('@/img/' + iconFile)}
+				alt={''}
+				width={30}
+				onClick={handleClick}
+				className="p-1 opacity-40 absolute top-1/2 left-1 -translate-y-1/2 cursor-pointer"
 			/>
+			<input
+				type={type}
+				id={id}
+				placeholder={placeholder}
+				className={cn(
+					'text-gray-800 bg-transparent pl-8 pr-1 py-1 rounded-lg w-full border-2',
+					error ? 'border-red-600 outline-red-600' : 'border-gray-500'
+				)}
+				{...register}
+			/>
+		</div>
 	)
 }
 
