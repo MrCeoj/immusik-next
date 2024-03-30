@@ -3,9 +3,9 @@ import { obtenerDocente, obtenerClases } from "@/business/DocenteDelegate";
 
 /**
  * Maneja la solicitud HTTP para obtener un docente por su ID.
- * @param req
- * @param res
- * @returns
+ * @param req - El request de la API, contiene el ID del docente a buscar.
+ * @param res - El response de la API, contiene el resultado de la búsqueda.
+ * @returns Un objeto con la información del docente y sus clases.
  */
 
 export default async function handler(

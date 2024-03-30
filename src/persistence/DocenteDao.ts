@@ -76,6 +76,22 @@ export async function getClases(id: number) {
   return await prisma.clase.findMany({
     where: {
       idDocente: id,
+    },
+    include: {
+      sucursal: true,
     }
   })
+}
+
+/**
+ * Obtiene un docente por su CURP.
+ * @param curp - La CURP del docente a buscar.
+ * @returns Una promesa que se resuelve en el objeto que representa el docente encontrado.
+ */
+export async function getByCurp(curp: string) {
+  return await prisma.docente.findUnique({
+    where: {
+      curp: curp,
+    },
+  });
 }
