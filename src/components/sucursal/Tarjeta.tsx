@@ -48,14 +48,13 @@ const Tarjeta = ({ sucursal }: { sucursal: Sucursal }) => {
 						key={id}
 						className="group bg-gradient-to-b from-pink-400 to-pink-900 rounded-2xl cursor-pointer"
 					>
-						<div className="relative overflow-hidden rounded-[inherit] m-[2px]">
+						<div className="relative w-[250px] max-w-[250px] h-[300px] overflow-hidden rounded-[inherit] m-[2px]">
 							<Image
 								alt={`Imagen que muestra ${desc} de la sucursal ${toTitleCase(
 									sucursal.nombre
 								)}`}
-								width={100}
-								height={100}
-								className="block object-cover w-full max-w-[250px] h-[300px] transition-transform group-hover:scale-105"
+								fill={true}
+								className="block object-cover transition-transform group-hover:scale-105"
 								src={img}
 							/>
 							<Image
