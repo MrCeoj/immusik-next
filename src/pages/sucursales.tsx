@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Sucursal from "../components/Sucursal";
+import BarraNavegacion from "@/components/barraNavegacion";
 // import MasterKeyVerificacion from "./components/MasterKeyVerificacion";
 
 // Componente de React básico que compone  y muestra la lista de sucursales
@@ -33,6 +34,7 @@ export default function Sucursales() {
   que redirije a agregarSucursal.tsx*/
   return (
     <>
+      <BarraNavegacion titulo="Editar sucursales" />
       <div className="h-screen w-screen bg-gray-100 flex items-center justify-center">
         <div className="bg-white p-10 rounded-lg shadow-lg flex flex-col items-center justify-center">
           <h1 className="text-3xl font-bold mb-5">Sucursales</h1>
