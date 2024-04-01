@@ -1,6 +1,9 @@
 export { default } from 'next-auth/middleware'
 
 export const config = {
-	// rutas protegidas por la sesión de usuario
-	matcher: ['/inicio', '/sucursal/(.*)']
+	/**
+	 * Las rutas protegidas por la sesión de usuario serán
+	 * todas las que no sean registro o login
+	 **/
+	matcher: ['/((?!registro|login).*)']
 }
