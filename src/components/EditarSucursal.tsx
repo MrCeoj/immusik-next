@@ -9,8 +9,8 @@ import ConfirmacionEliminar from "./ConfirmacionEliminar";
  *  */
 const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
   //useStates que cambian el valor de los campos que se registran por parte del usuario
-  const [nombre, setNombre] = useState("");
-  const [direccion, setDireccion] = useState("");
+  const [nombre, setNombre] = useState(sucursal.nombre);
+  const [direccion, setDireccion] = useState(sucursal.direccion);
   const [contrasena, setContrasena] = useState("");
 
   //useState para mostrar o no la pantalla de error
@@ -99,7 +99,7 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
               <div className="mt-2">
                 <label className="text-2xl mr-7">Nombre</label>
                 <input
-                  placeholder={sucursal.nombre}
+                  placeholder="Nombre"
                   className="text-2xl bg-gray-100 py-1 px-2 rounded-lg"
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value.toUpperCase())}
@@ -108,7 +108,7 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
               <div className="mt-5">
                 <label className="text-2xl mr-7">Dirección</label>
                 <input
-                  placeholder={sucursal.direccion}
+                  placeholder="Dirección"
                   className="text-2xl bg-gray-100 py-1 px-2 rounded-lg"
                   value={direccion}
                   onChange={(e) => setDireccion(e.target.value.toUpperCase())}
