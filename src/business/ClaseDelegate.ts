@@ -5,6 +5,7 @@ import {
   getClasesFromSucursal,
   deleteDocenteFromClase,
   deleteSingelDocente,
+  getAllClases,
 } from "@/persistence/ClaseDao";
 import { Clase } from "@prisma/client";
 
@@ -89,4 +90,24 @@ export async function eliminarUnDocente(id: number) {
     console.error("Error al eliminar docente:", error);
     return error;
   }
+}
+
+/**
+ * Función para encontrar todas las clases en la base de datos.
+ * @returns se regresan las clases obtenidas
+ */
+export async function fecthGetAllClases(){
+  //Se buscan todas las clases
+  const clasesTemp = await getAllClases();
+
+  //Las clases se dividen en aquellas que no tienen docente y aquellas donde si tienen docente
+  //De igual forma cada uno de estos 2 sub-arreglos se ordena por orden alfabético
+  const clasesSinProfesor = (clasesTemp.filter((clase)=>clase.idDocente===null)).sort((a,b)=> a.nombre.localeCompare(b.nombre))
+  const clasesConProfesor = (clasesTemp.filter((clase)=>clase.idDocente!==null)).sort((a,b)=> a.nombre.localeCompare(b.nombre))
+  
+  //Los 2 sub-arreglos se vuelven a unir en un sub-arreglo llamado clases
+  const clases = clasesSinProfesor.concat(clasesConProfesor) 
+
+  //Se regresan las clases
+  return clases;
 }

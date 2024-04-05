@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Sucursal from "../components/Sucursal";
+import Sucursal from "@/components/Sucursales/Sucursal";
 import BarraNavegacion from "@/components/barraNavegacion";
 // import MasterKeyVerificacion from "./components/MasterKeyVerificacion";
 
