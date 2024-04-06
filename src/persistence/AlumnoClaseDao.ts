@@ -37,3 +37,14 @@ export async function deleteAlumnoClaseFromClase(id: any) {
     })
 }
 
+/**
+ * Función para obtener los registros AlumnoClase relacionados a cierto alumno
+ * @param id id del alumno del cual se regresarán los registros AlumnoClase
+ * @returns los registros AlumnoClase relacionadas al alumno
+ */
+export async function getClasesDeCiertoAlumno(id:any){
+    const clases = await prisma.alumnoClase.findMany({
+        where: {alumnoId:id}
+    })
+    return clases
+}

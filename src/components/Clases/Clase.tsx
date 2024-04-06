@@ -3,6 +3,28 @@ import warningIcon from "@/img/warningIcon.png";
 import Image from "next/image";
 
 export default function Clase({ clase }: any) {
+  const handleEliminar = () => {
+    let id = clase.id;
+    alert("vas a eliminar");
+    fetch("api/clase/clases", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id,
+      }),
+    }).then((response) => {
+      if (response.ok) {
+        return response.json().then((data) => {
+          alert(data.message);
+        });
+      } else {
+        alert("Hubo un problema al eliminar la clase.");
+      }
+    });
+  };
+
   //useState para guardar los registros alumnoClases
   const [alumnoClases, setAlumnoClases] = useState([]);
 
@@ -53,7 +75,15 @@ export default function Clase({ clase }: any) {
       <div className="col-span-2">{clase.dias}</div>
       <div className="col-span-2">{clase.hora}</div>
       <div className="col-span-2">{cupo}</div>
-      <div>Ver más</div>
+      <div>
+        Ver más
+        <button
+          onClick={handleEliminar}
+          className="bg-red-500 py-1 px-3 rounded-md text-white hover:bg-red-700"
+        >
+          Eliminar
+        </button>
+      </div>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import {
   getClases,
   getByCurp,
 } from "@/persistence/DocenteDao";
+import { fetchGetClasesDeDeterminadoDocente } from "./ClaseDelegate";
 
 /**
  * Registra un docente en la base de datos.
@@ -189,11 +190,29 @@ export async function establecerEstado(estado: string, id: number) {
 export async function obtenerClases(id: number) {
   try {
     const clases = await getClases(id);
-    console.log(clases)
+    //console.log(clases)
     return clases;
   } catch (error) {
     return new Error(
       "Error al obtener las clases del docente, intente de nuevo más tarde."
     );
+  }
+}
+
+/**
+ * Función que actualiza el estado de docentes
+ */
+export async function actualizarEstadoDeDocentes(){
+  //Se obtienen todos los docentes
+  const docentes = await getAllDocentes()
+  for(const docente of docentes){
+    //Se obtienen todas las clases de determinado docente 
+    const clasesDelDocente = await fetchGetClasesDeDeterminadoDocente(docente.id)
+    //Si tiene clases asignadas, se determina como activo y si no, como inactivo
+    if(Array.isArray(clasesDelDocente) && clasesDelDocente.length>0){
+      setEstado("ACTIVO",docente.id)
+    }else{
+      setEstado("INACTIVO",docente.id)
+    }
   }
 }

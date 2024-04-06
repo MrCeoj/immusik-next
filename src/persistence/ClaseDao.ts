@@ -82,3 +82,15 @@ export async function deleteSingelDocente(id: number) {
     },
   });
 }
+
+/**
+ * Función que obtiene las clases que imparte cierto docente.
+ * @param id id de docente del cual se recuperarán las clases que imparte
+ * @returns las clases que imparte el docente
+ */
+export async function getClasesDeDeterminadoDocente(id: any){
+  const clases = await prisma.clase.findMany({
+    where:{idDocente:id}
+  })
+  return clases
+}

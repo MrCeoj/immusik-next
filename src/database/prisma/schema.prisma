@@ -30,7 +30,7 @@ model Clase {
   id         Int           @id @default(autoincrement())
   sucursal   Sucursal      @relation(fields: [idSucursal], references: [id])
   idSucursal Int
-  docente    Docente?       @relation(fields: [idDocente], references: [id])
+  docente    Docente?      @relation(fields: [idDocente], references: [id])
   idDocente  Int?
   nombre     String
   cupoMax    Int

@@ -11,8 +11,11 @@ import {
 	deleteClasesDeDeterminadaSucursal,
 	getClasesDeDeterminadaSucursal
 } from './ClaseDelegate'
-import borrarAlumnoClaseConDeterminadaClase from './AlumnoClaseDelegate'
+import { borrarAlumnoClaseConDeterminadaClase } from './AlumnoClaseDelegate'
 import { obtenerContrasenaMaestra } from '@/persistence/MasterKeyDao'
+import { actualizarEstadoDeAlumno } from '@/persistence/AlumnoDao'
+import { actualizarEstadoDeAlumnos } from './AlumnoDelegate'
+import { actualizarEstadoDeDocentes } from './DocenteDelegate'
 
 /**
  * Obtiene todas las sucursales.
@@ -90,7 +93,7 @@ export async function fetchEditarSucursal(data: any) {
 	const sucursalesTemp = await getAllSucursals()
 	let existeSucursal = false
 
-	console.log("editando sucursal...")
+	//console.log("editando sucursal...")
 
 	const contrasenaMaestra = await obtenerContrasenaMaestra()
 
@@ -157,8 +160,13 @@ export async function fetchEliminarSucursal(data: any) {
 				//Por cada clase se elimina el registro alumno-clase de dicha clase
 				await borrarAlumnoClaseConDeterminadaClase(clase.id)
 			}
+
 			await deleteClasesDeDeterminadaSucursal(data.id) //Se borran las clases despues de borrar los registros alumno-clase
 			await deleteSucursal(data.id) //Finalmente se borra la sucursal
+			
+			//Se actualizan estados de alumnos y docentes en caso de quedarse sin clases
+			await actualizarEstadoDeAlumnos() 
+			await actualizarEstadoDeDocentes()
 			response.message = 'Sucursal eliminada exitosamente.' //Mensaje de exito
 		}
 	}else{

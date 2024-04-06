@@ -6,8 +6,12 @@ import {
   deleteDocenteFromClase,
   deleteSingelDocente,
   getAllClases,
+  getClasesDeDeterminadoDocente,
 } from "@/persistence/ClaseDao";
 import { Clase } from "@prisma/client";
+import { borrarAlumnoClaseConDeterminadaClase } from "./AlumnoClaseDelegate";
+import { actualizarEstadoDeDocentes } from "./DocenteDelegate";
+import { actualizarEstadoDeAlumnos } from "./AlumnoDelegate";
 
 /**
  * Obtiene una clase por su id
@@ -36,8 +40,26 @@ export async function getClasesDeDeterminadaSucursal(id: any) {
  * Borra una clase
  * @param id: id de la clase a borrar
  */
-export async function borrarClase(id: any) {
-  await deleteClase(id);
+export async function fetchEliminarClase(id: any) {
+  const response = {
+    success: false,
+    message: ""
+  }
+
+  const clases =  await getAllClases()  
+  const existe = clases.some((clase)=> clase.id===id)
+
+  if(existe){
+    await borrarAlumnoClaseConDeterminadaClase(id)
+    await deleteClase(id)
+    await actualizarEstadoDeDocentes()
+    await actualizarEstadoDeAlumnos()
+    response.message = "Clase eliminada exitosamente."
+  }else{
+    response.message = "No existe la clase a eliminar."
+  }
+
+  return response
 }
 
 /**
@@ -110,4 +132,15 @@ export async function fecthGetAllClases(){
 
   //Se regresan las clases
   return clases;
+}
+
+/**
+ * Función que regresa las clases que imparte cierto docente.
+ * @param docenteId la id del docente del cual se regresarán sus clases.
+ * @returns las clases de dicho docente.
+ */
+export async function fetchGetClasesDeDeterminadoDocente(docenteId:any){
+  const clases = await getClasesDeDeterminadoDocente(docenteId)
+
+  return clases
 }
