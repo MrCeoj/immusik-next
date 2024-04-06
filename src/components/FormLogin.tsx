@@ -26,10 +26,8 @@ export default function LoginUsuario() {
 		}
 		// Si el inicio de sesión es exitoso, se muestra un toast con un mensaje de éxito
 		else {
-			toast.success('Inicio de sesión exitoso', {
-				// Redireccionar a la página de inicio después de cerrar el toast
-				onClose: () => router.push('/inicio')
-			})
+			// Redireccionar a la página de inicio
+			router.push('/inicio')
 		}
 	})
 
