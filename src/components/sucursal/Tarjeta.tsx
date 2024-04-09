@@ -4,7 +4,7 @@ import Docentes from '@/img/T2D.png'
 import Cursos from '@/img/T3C.png'
 import Sucursales from '@/img/T4S.png'
 import { Sucursal } from '@prisma/client'
-import toTitleCase from '@/lib/utils'
+import { toTitleCase } from '@/lib/utils'
 import Link from 'next/link'
 
 const datos = [

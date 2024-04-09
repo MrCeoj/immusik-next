@@ -1,9 +1,12 @@
 import {
+	deleteAlumnoClase,
 	deleteAlumnoClaseFromClase,
 	getAllAlumnoClase,
+	getAlumnoClase,
 	getAlumnosFromClase,
 	getClasesDeCiertoAlumno
 } from '@/persistence/AlumnoClaseDao'
+import { actualizarEstadoDeAlumno } from '@/persistence/AlumnoDao'
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -14,6 +17,32 @@ const prisma = new PrismaClient()
  *  */
 export async function borrarAlumnoClaseConDeterminadaClase(id: any) {
 	return await deleteAlumnoClaseFromClase(id)
+}
+
+/**
+ * Función para eliminar un alumno de la clase
+ * @param idClase Identificador de la clase
+ * @param idAlumno Identificador del alumno
+ * @returns Mensaje de éxito o error
+ */
+export async function eliminarAlumnoDeClase(idClase: number, idAlumno: number) {
+	// Obtener el registro AlumnoClase
+	const alumnoClase = await getAlumnoClase(idClase, idAlumno)
+
+	// Si no se encontró el registro regresa un error
+	if (!alumnoClase) {
+		throw { message: 'No se encontró el registro de la clase' }
+	}
+
+	// Validar si el alumno está inscrito en solo una clase
+	const clases = await getClasesDeCiertoAlumno(idAlumno)
+	// cambiar su estado a inactivo si solo está inscrito en una clase
+	if (clases.length === 1) {
+		await actualizarEstadoDeAlumno(false, idAlumno)
+	}
+
+	// Eliminar el registro AlumnoClase
+	return await deleteAlumnoClase(alumnoClase.id)
 }
 
 /**

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react'
-import Image from 'next/image'
 import {
 	FieldError,
 	FieldErrorsImpl,
@@ -7,19 +6,26 @@ import {
 	UseFormRegisterReturn
 } from 'react-hook-form'
 import { Id, toast } from 'react-toastify'
+import { cn } from '@/lib/utils'
 
 const Input = ({
 	type,
 	id,
+	defaultValue,
+	defaultChecked,
 	placeholder,
 	error,
-	register
+	register,
+	className
 }: {
 	type: string
 	id: string
-	placeholder: string
-	error: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
+	defaultValue?: string
+	defaultChecked?: boolean
+	placeholder?: string
+	error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 	register: UseFormRegisterReturn<string>
+	className?: string
 }) => {
 	const toastId = useRef(null as Id | null)
 
@@ -38,12 +44,14 @@ const Input = ({
 		<input
 			type={type}
 			id={id}
+			defaultValue={defaultValue}
+			defaultChecked={defaultChecked}
 			placeholder={placeholder}
-			className={`text-gray-800 px-1 py-1 rounded-lg ${
-				error ? 'border-red-600 outline-red-600' : 'border-transparent'
-			}`}
+			className={cn('border text-gray-800 px-1 py-1 rounded', className, {
+				'border-red-600 outline-red-600': error
+			})}
 			{...register}
-			/>
+		/>
 	)
 }
 

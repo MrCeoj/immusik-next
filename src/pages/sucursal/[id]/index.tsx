@@ -1,5 +1,5 @@
 import { useSucursal } from '@/hooks/sucursal'
-import toTitleCase from '@/lib/utils'
+import { toTitleCase } from '@/lib/utils'
 import { useRouter } from 'next/router'
 import BarraNavegacionAdmin from '@/components/barraNavegacionAdmin'
 import Tarjeta from '@/components/sucursal/Tarjeta'
