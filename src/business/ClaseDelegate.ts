@@ -7,10 +7,12 @@ import {
   deleteSingelDocente,
   getAllClases,
   getClasesDeDeterminadoDocente,
+  crearClaseSinDocente,
+  crearClaseConDocente,
 } from "@/persistence/ClaseDao";
 import { Clase } from "@prisma/client";
 import { borrarAlumnoClaseConDeterminadaClase } from "./AlumnoClaseDelegate";
-import { actualizarEstadoDeDocentes } from "./DocenteDelegate";
+import { actualizarEstadoDeDocentes, obtenerDocente } from "./DocenteDelegate";
 import { actualizarEstadoDeAlumnos } from "./AlumnoDelegate";
 
 /**
@@ -143,4 +145,50 @@ export async function fetchGetClasesDeDeterminadoDocente(docenteId:any){
   const clases = await getClasesDeDeterminadoDocente(docenteId)
 
   return clases
+}
+
+export async function fetchCrearClase(data:any){
+  let response = {
+    success: false,
+    message: ""
+  }
+  
+  if(data.docente===""){
+    await crearClaseSinDocente(data)
+    response.message = "Se creó la clase."
+  }else{
+
+    let valido = true
+    let idDocente: number = data.docente
+    const clasesDeDocente = await fetchGetClasesDeDeterminadoDocente(idDocente)
+    const diasARegistrar: string[] = data.dias.split(',')
+
+    if(clasesDeDocente.length>0){
+      for(const clase of clasesDeDocente){
+        const diasDeClase: string[] = clase.dias.split(',')
+        for(const diaDeClase of diasDeClase){
+          for(const diaAR of diasARegistrar){
+            if(diaAR===diaDeClase){
+              if(clase.hora===data.horario){
+                valido = false
+                response.message = "Horario no disponible."
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      if(valido){
+        response.message="Se creó la clase."
+        await crearClaseConDocente(data)
+      }
+    }else{
+      await crearClaseConDocente(data)
+      response.message = "Se creó la clase."
+    }
+  }
+
+  actualizarEstadoDeDocentes()
+  return response
 }

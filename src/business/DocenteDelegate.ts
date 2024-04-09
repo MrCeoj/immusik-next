@@ -8,6 +8,7 @@ import {
   setEstado,
   getClases,
   getByCurp,
+  getDocentesNoVetados,
 } from "@/persistence/DocenteDao";
 import { fetchGetClasesDeDeterminadoDocente } from "./ClaseDelegate";
 
@@ -209,10 +210,18 @@ export async function actualizarEstadoDeDocentes(){
     //Se obtienen todas las clases de determinado docente 
     const clasesDelDocente = await fetchGetClasesDeDeterminadoDocente(docente.id)
     //Si tiene clases asignadas, se determina como activo y si no, como inactivo
-    if(Array.isArray(clasesDelDocente) && clasesDelDocente.length>0){
-      setEstado("ACTIVO",docente.id)
-    }else{
-      setEstado("INACTIVO",docente.id)
+    if(docente.estado!=="VETADO"){
+      if(Array.isArray(clasesDelDocente) && clasesDelDocente.length>0){
+        setEstado("ACTIVO",docente.id)
+      }else{
+        setEstado("INACTIVO",docente.id)
+      }
     }
+    
   }
+}
+
+export async function fetchGetDocentesNoVetados(){
+  const docentes = getDocentesNoVetados()
+  return docentes
 }

@@ -95,3 +95,14 @@ export async function getByCurp(curp: string) {
     },
   });
 }
+
+export async function getDocentesNoVetados(){
+  const docentes = prisma.docente.findMany({
+    where: {
+      estado: {
+        in: ['ACTIVO', 'INACTIVO']
+      }
+    }
+  })
+  return docentes
+}

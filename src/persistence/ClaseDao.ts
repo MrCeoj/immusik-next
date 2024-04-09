@@ -1,4 +1,5 @@
 import prisma from "@/utils/Prisma";
+import { parse } from "path";
 
 /**
  * Regresa una clase por su id
@@ -89,8 +90,37 @@ export async function deleteSingelDocente(id: number) {
  * @returns las clases que imparte el docente
  */
 export async function getClasesDeDeterminadoDocente(id: any){
+  let idNum: number = parseInt(id)
   const clases = await prisma.clase.findMany({
-    where:{idDocente:id}
+    where:{idDocente:idNum}
   })
   return clases
+}
+
+export async function crearClaseSinDocente(data:any){
+  let cupoNum: number = parseInt(data.cupo)
+  let idSucursal: number = parseInt(data.sucursal)
+
+  await prisma.clase.create({data: {
+    nombre: data.nombre,
+    idSucursal: idSucursal,
+    cupoMax: cupoNum,
+    dias: data.dias,
+    hora: data.horario
+  }})
+}
+
+export async function crearClaseConDocente(data:any){
+  let cupoNum: number = parseInt(data.cupo)
+  let idDocente: number = parseInt(data.docente)
+  let idSucursal: number = parseInt(data.sucursal)
+
+  await prisma.clase.create({data: {
+    nombre: data.nombre,
+    idSucursal: idSucursal,
+    cupoMax: cupoNum,
+    dias: data.dias,
+    hora: data.horario,
+    idDocente: idDocente
+  }})
 }

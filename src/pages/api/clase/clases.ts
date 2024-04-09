@@ -1,4 +1,4 @@
-import { fecthGetAllClases ,fetchEliminarClase} from "@/business/ClaseDelegate";
+import { fecthGetAllClases ,fetchCrearClase,fetchEliminarClase} from "@/business/ClaseDelegate";
 
 /**
  * Handler para cualquier petición HTTP que haga el usuario.
@@ -13,7 +13,24 @@ export default async function Handler(req: any, res:any){
         const {id} = req.body
         const result = await fetchEliminarClase(id)
         res.status(200).json(result)
-    }else{
+    }else if(req.method==="POST"){
+        const {nombre,
+            diasDisplay,
+            horario,
+            sucursal,
+            cupo,
+            docente} = req.body
+        const data = {
+            nombre:nombre,
+            dias:diasDisplay,
+            horario:horario,
+            sucursal:sucursal,
+            cupo:cupo,
+            docente:docente
+        }
+        const result = await fetchCrearClase(data)
+        res.status(200).json(result)
+    } else{
         res.status(405).send({message: "Method not allowed."})
     }
 }
