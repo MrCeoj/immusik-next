@@ -8,7 +8,7 @@ const Label = ({
 }: {
 	htmlFor: string
 	label: string
-	error: boolean
+	error?: boolean
 	className?: string
 }) => {
 	return (

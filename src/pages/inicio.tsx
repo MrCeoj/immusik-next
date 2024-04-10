@@ -3,7 +3,7 @@ import imgFondo from '@/img/immusik-inicio.png'
 import logoImmusik from '@/img/immusik.png'
 import Link from 'next/link'
 import { useSucursales } from '@/hooks/sucursal'
-import toTitleCase from '@/lib/utils'
+import { toTitleCase } from '@/lib/utils'
 import BarraNavegacionAdmin from '@/components/barraNavegacionAdmin'
 
 export default function Inicio() {

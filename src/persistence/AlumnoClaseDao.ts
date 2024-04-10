@@ -17,6 +17,21 @@ export async function getAllAlumnoClase() {
 	return await prisma.alumnoClase.findMany()
 }
 
+/**
+ * Obtiene un registro AlumnoClase por el id de la clase y el alumno
+ * @param idAlumno id del alumno
+ * @param idClase id de la clase
+ * @returns registro AlumnoClase
+ */
+export async function getAlumnoClase(idClase: number, idAlumno: number) {
+	return await prisma.alumnoClase.findFirst({
+		where: {
+			alumnoId: idAlumno,
+			claseId: idClase
+		}
+	})
+}
+
 /*
  * Borra un registro AlumnoClase
  * @param id: id del registro AlumnoClase que se eliminará
