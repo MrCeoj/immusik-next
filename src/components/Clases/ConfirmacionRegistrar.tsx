@@ -6,6 +6,12 @@ function ConfirmacionRegistrar({
   cambio,
   setCambio,
   setRegistrarClase,
+}: {
+  setConfirmacionRegistrar: React.Dispatch<React.SetStateAction<boolean>>;
+  data: any;
+  cambio: boolean;
+  setCambio: React.Dispatch<React.SetStateAction<boolean>>;
+  setRegistrarClase: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const handleCancelar = () => {
     setConfirmacionRegistrar(false);

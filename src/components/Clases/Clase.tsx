@@ -94,7 +94,7 @@ export default function Clase({ clase }: { clase: Clase }) {
   */
   return (
     <>
-      <div className="grid grid-cols-10 my-4 text-lg bg-gray-100 bg-opacity-50 py-2 rounded-lg">
+      <div className="grid grid-cols-12 my-4 items-center font-inter font-bold bg-gray-contrast py-3 rounded-lg">
         <div className="flex justify-center items-center col-span-1">
           {
             //Si el idDocente es null significa que no tiene docente, por lo que se muestra la imagen de advertencia
@@ -109,11 +109,11 @@ export default function Clase({ clase }: { clase: Clase }) {
           }
         </div>
         <div className="col-span-2">{clase.nombre}</div>
-        <div className="col-span-2">{clase.dias}</div>
+        <div className="col-span-3">{clase.dias}</div>
         <div className="col-span-2">{clase.hora}</div>
         <div className="col-span-2">{cupo}</div>
         <div className="col-span-1">
-          <button onClick={handleVerMas}>Ver más</button>
+          <button className="underline" onClick={handleVerMas}>Ver detalles</button>
         </div>
         <Modal
           isOpen={modalOpen}

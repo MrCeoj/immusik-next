@@ -3,5 +3,19 @@
 @tailwind utilities;
 
 :root {
-	--clr-primary: #fb038f;
+  --clr-primary: #fb038f;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/Inter-VariableFont_slnt\,wght.ttf") format("trueType");
+}
+
+@font-face {
+	font-family: "Passion One";
+	font-weight: 400 900;
+	font-display: swap;
+	src: url("./fonts/PassionOne-Regular.ttf") format("trueType");
 }
