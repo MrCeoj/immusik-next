@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from "react";
-import ConfirmacionRegistrar from "./ConfirmacionRegistrar";
+import ConfirmacionRegistrar from "@/components/Clases/ConfirmacionRegistrar";
+import { Docente, Sucursal } from "@/entities/edge"
 
-function RegistrarClase({ setRegistrarClase, sucursales, setCambio, cambio }) {
-  const [docentes, setDocentes] = useState([]);
+
+function RegistrarClase({
+  setRegistrarClase,
+  setCambio,
+  cambio,
+}: {
+  setRegistrarClase: any;
+  setCambio: any;
+  cambio: any;
+}) {
+  const [docentes, setDocentes] = useState<Docente[]>([]);
   const [cupo, setCupo] = useState("");
   const [docente, setDocente] = useState("");
   const [nombre, setNombre] = useState("");
@@ -14,19 +24,32 @@ function RegistrarClase({ setRegistrarClase, sucursales, setCambio, cambio }) {
   const [jueves, setJueves] = useState(false);
   const [sabado, setSabado] = useState(false);
   const [confirmacionRegistrar, setConfirmacionRegistrar] = useState(false);
-  const [data, setData] = useState();
+  const [data, setData] = useState({
+    nombre: "",
+    diasDisplay: "",
+    horario: "",
+    sucursal: "",
+    cupo: "",
+    docente: "",
+  });
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
 
   useEffect(() => {
-    fetch("api/docente/docenteNoVetado").then((response) => {
-      if (response.ok) {
-        return response.json().then((data) => {
-          setDocentes(data);
-        });
-      } else {
-        alert("Hubo un error al encontrar los docentes.");
-      }
-    });
+    obtenerDocentes();
+    obtenerSucursales();
   }, []);
+
+  const obtenerDocentes = async () => {
+    const response = await fetch("api/docente/docenteNoVetado");
+    const data = await response.json();
+    setDocentes(data);
+  };
+
+  const obtenerSucursales = async () => {
+    const response = await fetch("api/Sucursal");
+    const data = await response.json();
+    setSucursales(data);
+  };
 
   const handleDia = (dia: string) => {
     if (dia === "l") {
@@ -100,7 +123,7 @@ function RegistrarClase({ setRegistrarClase, sucursales, setCambio, cambio }) {
       return;
     }
 
-    let datos = {
+    const datos = {
       nombre: nombre,
       diasDisplay: diasDisplay,
       horario: horario,
@@ -206,7 +229,7 @@ function RegistrarClase({ setRegistrarClase, sucursales, setCambio, cambio }) {
               disabled={docentes.length === 0}
             >
               <option value="">Seleccione un docente</option>
-              {docentes.map((docente) => (
+              {docentes && docentes.map((docente) => (
                 <option key={docente.id} value={docente.id}>
                   {docente.nombre} {docente.aPaterno}
                 </option>
