@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+	font-family: "PassionOne";
+	font-weight: 400 900;
+	src: url("./fonts/PassionOne-Regular.ttf") format('truetype');
+}
+
 :root {
 	--clr-primary: #fb038f;
 }

@@ -1,199 +1,225 @@
 import React, { useState, useEffect } from "react";
 import router from "next/router";
-
-import { Docente } from "@/entities/index";
 import Image from "next/image";
 import Link from "next/link";
+import RegistrarDocente from "@/components/docente/RegistrarDocente";
+import Docente from "@/components/docente/Docente";
 
 
 const Index = () => {
+  const [cambio, setCambio] = useState(false)
   const [docentes, setDocentes] = useState([]);
+  const [busqueda, setBusqueda] = useState('')
+  const [docentesFiltrados, setDocentesFiltrados] = useState([])
+  const [procesado, setProcesado] = useState(false)
+  const [registrarDocente, setRegistrarDocente] = useState(false)
+  const [sucursales, setSucursales] = useState([])
+  
   const [search, setSearch] = useState("");
-  const [viewed, setViewed] = useState([]);
-  const [sortConfig, setSortConfig] = useState({
-    key: "estado",
-    direction: "asc",
-  });
+  // const [viewed, setViewed] = useState([]);
+  // const [sortConfig, setSortConfig] = useState({
+  //   key: "estado",
+  //   direction: "asc",
+  // });
 
-  const obtenerDocentes = async () => {
-    const response = await fetch("/api/docente/fetchAll");
-    const data = await response.json();
-    setDocentes(data);
-    setViewed(data);
-  };
+  // const obtenerDocentes = async () => {
+  //   const response = await fetch("/api/docente/fetchAll");
+  //   const data = await response.json();
+  //   setDocentes(data);
+  //   setViewed(data);
+  // };
 
-  const sortBy = (key: any) => {
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-    setSortConfig({ key, direction });
-  };
+  // const sortBy = (key: any) => {
+  //   let direction = "asc";
+  //   if (sortConfig.key === key && sortConfig.direction === "asc") {
+  //     direction = "desc";
+  //   }
+  //   setSortConfig({ key, direction });
+  // };
+
+  // useEffect(() => {
+  //   obtenerDocentes();
+  // }, []);
+
+  // useEffect(() => {
+  //   const busquedaSeparada = search.trim();
+
+  //   const filtrados = docentes.filter((docente: Docente) => {
+  //     const fullName =
+  //       `${docente.nombre} ${docente.aPaterno} ${docente.aMaterno}`.toLowerCase();
+  //     return fullName.includes(busquedaSeparada.toLowerCase());
+  //   });
+
+  //   const sortedDocentes = [...filtrados].sort((a: Docente, b: Docente) => {
+  //     if (sortConfig.key === "estado") {
+  //       return a.estado.localeCompare(b.estado);
+  //     } else {
+  //       if ((a as any)[sortConfig.key] < (b as any)[sortConfig.key]) {
+  //         return sortConfig.direction === "asc" ? -1 : 1;
+  //       }
+  //       if ((a as any)[sortConfig.key] > (b as any)[sortConfig.key]) {
+  //         return sortConfig.direction === "asc" ? 1 : -1;
+  //       }
+  //       return 0;
+  //     }
+  //   });
+
+  //   setViewed(sortedDocentes);
+  // }, [docentes, search, sortConfig]);
+
+  // const handleRegister = () => {
+  //   router.push("/docente/registrar");
+  // };
+
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearch(event.target.value);
+  // };
 
   useEffect(() => {
-    obtenerDocentes();
-  }, []);
+		fetch('api/docente/fetchAll').then((response) => {
+			if (response.ok) {
+				return response.json().then((data) => {
+					setDocentes(data) //las clases se guardan en la variable "clases"
+				})
+			} else {
+				alert('Error al conseguir los Docentes.')
+			}
+		})
+		setBusqueda('')
+	}, [cambio])
 
   useEffect(() => {
-    const busquedaSeparada = search.trim();
+		if (busqueda === '') {
+			//Si la barra de busqueda está vacía las clases filtradas serán todas las clases
+			setDocentesFiltrados(docentes)
+		} else {
+			//Si no está vacía la barra de búsqueda las clases filtradas volverán a ser todas las clases
+			setDocentesFiltrados(docentes)
+			//Luego las clases filtradas serán solo aquellas clases cuyo nombre coincida con "busqueda"
+			setDocentesFiltrados(
+				docentes.filter((docente: any) =>
+					docente.nombre.toUpperCase().includes(busqueda.toUpperCase())
+				)
+			)
+		}
+	}, [busqueda])
 
-    const filtrados = docentes.filter((docente: Docente) => {
-      const fullName =
-        `${docente.nombre} ${docente.aPaterno} ${docente.aMaterno}`.toLowerCase();
-      return fullName.includes(busquedaSeparada.toLowerCase());
-    });
+  useEffect(() => {
+		fetch('api/Sucursal').then((response) => {
+			if (response.ok) {
+				return response.json().then((data) => {
+					setSucursales(data)
+				})
+			} else {
+				alert('Error al conseguir las sucursales')
+			}
+		})
+	}, [])
 
-    const sortedDocentes = [...filtrados].sort((a: Docente, b: Docente) => {
-      if (sortConfig.key === "estado") {
-        return a.estado.localeCompare(b.estado);
-      } else {
-        if ((a as any)[sortConfig.key] < (b as any)[sortConfig.key]) {
-          return sortConfig.direction === "asc" ? -1 : 1;
-        }
-        if ((a as any)[sortConfig.key] > (b as any)[sortConfig.key]) {
-          return sortConfig.direction === "asc" ? 1 : -1;
-        }
-        return 0;
-      }
-    });
+  const handleBusqueda = (value: any) => {
+		setBusqueda(value)
+		setProcesado(true)
+	}
 
-    setViewed(sortedDocentes);
-  }, [docentes, search, sortConfig]);
+  const handleCambio = () => {
+		setCambio(!cambio)
+	}
 
-  const handleRegister = () => {
-    router.push("/docente/registrar");
-  };
+  const handleRegistrar = () => {
+		if (sucursales.length === 0) {
+			alert('No se pueden registrar clases ya que no hay sucursales.')
+		} else {
+			setRegistrarDocente(true)
+		}
+	}
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(event.target.value);
-  };
-
-  const handleAlumno = () => {
-    router.push("/login");
-  };
+  const regresarMenu = () => {
+    router.push("/inicio")
+  }
 
   return (
-    <div>
-      <div className="w-screen flex items-center bg-primary h-1/8 z-50 rounded-lg mt-1">
-        <Image
-          src={require("@/img/immusik.png")}
-          alt={"hola"}
-          className="w-20 m-1"
-        />
-        <div className="flex gap-10 ml-4 text-xl">
-          <button
-            className="text-white font-bold"
-            style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}
-            onClick={handleAlumno}
-          >
-            Alumnos
-          </button>
-          <button
-            className="text-primary bg-white rounded-md pl-2 pr-2 pt-1 pb-1 font-bold shadow-md"
-            style={{ textShadow: "1px 1px 2px rgba(0, 0, 0, 0.5)" }}
-          >
-            Docentes
-          </button>
-          <button
-            className="text-white font-bold"
-            style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)" }}
-          >
-            Cursos
-          </button>
-        </div>
-        <Link
-          onClick={() => window.history.back()}
-          href={""}
-          className="ml-auto pr-1"
-        >
-          <Image src={require("@/img/back.png")} alt={"foto"} />
-        </Link>
-      </div>
-
-      <div className="flex mt-5 ml-10 mr-10">
-        <button
-          className="bg-gray-300 rounded-md pr-7 pl-7 text-lg shadow-md"
-          onClick={handleRegister}
-        >
-          Registrar
-        </button>
-
-        <div className="flex bg-gray-300 ml-auto rounded-md">
-          <Image
-            src={require("@/img/lupa.png")}
-            className="w-7"
-            alt={"fotolupa"}
-          />
-          <input
-            value={search}
-            placeholder="Buscar docente..."
-            onChange={handleChange}
-            className="bg-gray-300 rounded-md"
-          />
-        </div>
-      </div>
-
-      <div className="flex bg-pink-300 justify-center mr-10 ml-10 mt-5 rounded-md">
-        <div className=" w-full max-h-[620px] overflow-y-auto rounded-md">
-          {docentes.length === 0 ? (
-            <p>No se encontraron docentes</p>
-          ) : (
-            <table className="bg-pink-200 w-full rounded-md">
-              <thead>
-                <tr className="text-left text-xl cursor-pointer">
-                  <th onClick={() => sortBy("nombre")} className="pt-4 pl-4">
-                    Nombre
-                  </th>
-                  <th onClick={() => sortBy("aPaterno")} className="pt-4">
-                    Apellido P.
-                  </th>
-                  <th onClick={() => sortBy("aMaterno")} className="pt-4">
-                    Apellido M.
-                  </th>
-                  <th className="pt-4">Teléfono</th>
-                  <th
-                    onClick={() => sortBy("estado")}
-                    className="pt-4 text-center"
-                  >
-                    Estado
-                  </th>
-                  <th className="pt-4"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {viewed.map((docente: Docente) => (
-                  <tr key={docente.id} className="text-lg">
-                    <td className="pl-4 pt-4">{docente.nombre}</td>
-                    <td className="pt-4">{docente.aPaterno}</td>
-                    <td className="pt-4">{docente.aMaterno}</td>
-                    <td className="pt-4">{docente.telefono}</td>
-                    <td className="flex justify-center pt-4">
-                      <div
-                        className={`w-6 h-6 rounded-full ${
-                          docente.estado === "ACTIVO"
-                            ? "bg-green-500"
-                            : docente.estado === "VETADO"
-                            ? "bg-red-500"
-                            : "bg-yellow-300"
-                        }`}
-                      ></div>
-                    </td>
-                    <td className="text-center pt-4">
-                      <button
-                        className="underline"
-                        onClick={() => router.push(`/docente/${docente.id}`)}
-                      >
-                        Detalles
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-      </div>
-    </div>
+      <>
+        {registrarDocente && (
+				<RegistrarDocente
+					setRegistrarDocente={setRegistrarDocente}
+					sucursales={sucursales}
+					setCambio={setCambio}
+					cambio={cambio}
+				/>
+			)}
+			<div className="h-screen bg-neutral-900  w-screen flex justify-center items-center flex-col px-20 pb-20 text-white">
+				<div className="w-full flex items-center bg-transparent h-1/5">
+					<h1 className="font-PassionOne text-6xl text-white">i.m.musik</h1>
+					<div className="flex ml-auto text-xl gap-10">
+						<button className="text-white font-medium">
+							Alumnos
+						</button>
+						<button className="text-white font-medium bg-primary rounded-lg p-2 relative shadow-[0px_0px_20px_8px_rgba(251,_3,_143,_0.25)]">
+							Docentes
+						</button>
+						<button className="text-white font-medium">
+							Clases
+						</button>
+						<Image src={require("@/img/back.png")} alt={""} 
+						className="cursor-pointer transform transition-transform hover:scale-110"
+						onClick={regresarMenu}>
+						</Image>
+					</div>
+				</div>
+				
+				<div className="flex w-full items-end mb-1">
+					<h1 className="text-6xl font-bold mr-3">Docentes</h1>
+					<form className="flex bg-[rgba(217,217,217,0.5)] rounded-md items-center h-3/5">	
+						<Image 
+							src={require("@/img/lupa.png")} alt={""} className="bg-transparent max-w-5 max-h-6 pl-1">
+						</Image>
+						<input
+							className="bg-transparent rounded-md text-md text-white "
+							placeholder=""
+							value={busqueda}
+							onChange={
+								(e) =>
+									handleBusqueda(e.target.value) /*Se manda llamar el método
+             handleBusqueda cada que el usuario teclee algo */
+							}
+						></input>
+					</form>
+					<button
+						onClick={handleRegistrar}
+						className="bg-primary rounded-md shadow-md text-white text-center px-4 py-1 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)] text-lg font-bold ml-3"
+					>
+						Registrar
+					</button>
+				</div>
+				<div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-10 mt-3 gap-5 px-5">
+					<div className="text-2xl font-bold col-span-4 text-left ">Nombre</div>
+					<div className="text-2xl font-bold col-span-2 text-left ">Contacto</div>
+					<div className="text-2xl font-bold col-span-2 text-left ">Estado</div>
+					<div className="text-2xl font-bold col-span-2 text-left ">Detalles</div>
+				</div>
+				<div className="overflow-y-auto w-full h-5/6">
+					{
+						/*Si procesado es true, se mostrarán las clases filtradas, si no, se mostrarán
+          las clases sin filtrar*/
+						procesado
+							? docentesFiltrados.map((docente, index) => (
+									<Docente
+										key={index}
+										docente={docente}
+										actualizarDocentes={handleCambio}
+									/>
+							  ))
+							: docentes.map((docente, index) => (
+									<Docente
+										key={index}
+										docente={docente}
+										actualizarDocentes={handleCambio}
+									/>
+							  ))
+					}
+				</div>
+			</div>
+      </>
   );
 };
 
