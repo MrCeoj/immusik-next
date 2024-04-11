@@ -147,7 +147,7 @@ const Index = () => {
 					cambio={cambio}
 				/>
 			)}
-			<div className="h-screen bg-neutral-900  w-screen flex justify-center items-center flex-col px-20 pb-20 text-white">
+			<div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pb-20 text-white">
 				<div className="w-full flex items-center bg-transparent h-1/5">
 					<h1 className="font-PassionOne text-6xl text-white">i.m.musik</h1>
 					<div className="flex ml-auto text-xl gap-10">

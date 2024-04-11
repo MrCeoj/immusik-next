@@ -60,7 +60,7 @@ export default function ModalDocente({
 			return
 		}
 
-        const res = await fetch('/api/docente/mod', {
+        const res = await fetch('/api/docente/modificar', {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json'
@@ -81,7 +81,7 @@ export default function ModalDocente({
 		else {
 			// Actualiza la información de la clase
 			actualizarDocentes()
-			toast.success('Clase modificada correctamente')
+			toast.success('Docente actualizado correctamente')
 		}
 	})
 
@@ -95,20 +95,20 @@ export default function ModalDocente({
 				ariaHideApp={false}
 				onRequestClose={() => setModalOpen(false)}
 				overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
-				className="relative bg-white p-6 w-full max-w-5xl min-h-min rounded"
+				className="relative bg-customGray p-6 w-full max-w-5xl min-h-min rounded"
 			>
 				<ToastContainer />
-				<h1 className="font-bold text-4xl mb-3 text-center">
+				<h1 className="font-bold text-4xl mb-3 text-center text-white">
 					Detalles de la clase
 				</h1>
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-					<form onSubmit={onSubmit} className="flex flex-col gap-1">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+					<form onSubmit={onSubmit} className="flex flex-col gap-1 bg-secciones">
 						<div>
 							<Label
 								htmlFor="nombre"
 								label="Nombre"
 								error={Boolean(errors.nombre?.type === 'required')}
-								className="block"
+								className="block text-white text-lg"
 							/>
 							<Input
 								type="text"
@@ -124,8 +124,94 @@ export default function ModalDocente({
 								})}
 							/>
 						</div>
-						
-						
+
+						<div>
+							<Label
+								htmlFor="aPaterno"
+								label="Apellido Paterno"
+								error={Boolean(errors.aPaterno?.type === 'required')}
+								className="block text-white text-lg"
+							/>
+							<Input
+								type="text"
+								id="aPaterno"
+								error={errors.aPaterno}
+								className="w-full border border-gray-300 font-bold px-2"
+								register={register('aPaterno', {
+									required: {
+										value: true,
+										message: 'El apellido es requerido.'
+									},
+									value: toTitleCase(docente.aPaterno)
+								})}
+							/>
+						</div>
+
+						<div>
+							<Label
+								htmlFor="aMaterno"
+								label="Apellido Materno"
+								error={Boolean(errors.aMaterno?.type === 'required')}
+								className="block text-white text-lg"
+							/>
+							<Input
+								type="text"
+								id="aMaterno"
+								error={errors.aMaterno}
+								className="w-full border border-gray-300 font-bold px-2"
+								register={register('aMaterno', {
+									required: {
+										value: true,
+										message: 'El apellido es requerido.'
+									},
+									value: toTitleCase(docente.aMaterno)
+								})}
+							/>
+						</div>
+
+						<div>
+							<Label
+								htmlFor="telefono"
+								label="Contacto"
+								error={Boolean(errors.telefono?.type === 'required')}
+								className="block text-white text-lg"
+							/>
+							<Input
+								type="text"
+								id="telefono"
+								error={errors.telefono}
+								className="w-full border border-gray-300 font-bold px-2"
+								register={register('telefono', {
+									required: {
+										value: true,
+										message: 'El Contacto es requerido.'
+									},
+									value: toTitleCase(docente.telefono)
+								})}
+							/>
+						</div>
+
+						<div>
+							<Label
+								htmlFor="curp"
+								label="curp"
+								error={Boolean(errors.curp?.type === 'required')}
+								className="block text-white text-lg"
+							/>
+							<Input
+								type="text"
+								id="curp"
+								error={errors.curp}
+								className="w-full border border-gray-300 font-bold px-2"
+								register={register('curp', {
+									required: {
+										value: true,
+										message: 'El CURP es requerido.'
+									},
+									value: toTitleCase(docente.curp).toUpperCase()
+								})}
+							/>
+						</div>
 						<button className="bg-pink-500 hover:bg-pink-600 text-white rounded px-3 py-2 mt-3 justify-self-end self-center">
 							Guardar cambios
 						</button>
@@ -134,7 +220,7 @@ export default function ModalDocente({
 				</div>
 				<button
 					onClick={() => setModalOpen(false)}
-					className="absolute top-4 right-4 font-bold rounded hover:bg-black/10 w-8 h-8 flex items-center justify-center"
+					className="absolute text-white top-4 right-4 font-bold rounded hover:bg-black/10 w-8 h-8 flex items-center justify-center"
 				>
 					X
 				</button>

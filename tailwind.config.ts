@@ -20,8 +20,8 @@ const config: Config = {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
 				'gradient-conic':
 					'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+					'fondo' : "url('/fondo.svg')",
 				//imagen de fondo
-				
 			},
 			colors: {
 				primary: "#FB038F",
@@ -37,7 +37,9 @@ const config: Config = {
 				"banned-fill": "#DF6486",
 				"danger-red": "#FF4343",
 				"disabled": "#D9D9D9",
-			}
+				"customGray": 'rgba(42, 46, 45, 0.95)',
+				"secciones" : "#2A2E2D",
+			}, 
 		}
 	},
 	plugins: []
