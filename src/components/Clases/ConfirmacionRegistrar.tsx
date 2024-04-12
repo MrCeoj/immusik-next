@@ -50,7 +50,6 @@ function ConfirmacionRegistrar({
             }
             setRegistrarClase(false);
           } else {
-            alert(data.message);
             setConfirmacionRegistrar(false);
           }
         });

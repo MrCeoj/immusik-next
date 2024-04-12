@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ConfirmacionRegistrar from "@/components/Clases/ConfirmacionRegistrar";
-import { Docente, Sucursal } from "@/entities/edge"
-
+import { Docente, Sucursal } from "@/entities/edge";
 
 function RegistrarClase({
   setRegistrarClase,
@@ -229,11 +228,12 @@ function RegistrarClase({
               disabled={docentes.length === 0}
             >
               <option value="">Seleccione un docente</option>
-              {docentes && docentes.map((docente) => (
-                <option key={docente.id} value={docente.id}>
-                  {docente.nombre} {docente.aPaterno}
-                </option>
-              ))}
+              {docentes &&
+                docentes.map((docente) => (
+                  <option key={docente.id} value={docente.id}>
+                    {docente.nombre} {docente.aPaterno}
+                  </option>
+                ))}
             </select>
             <label className="my-1 font-bold">Sucursal (Temporal)</label>
             <select

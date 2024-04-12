@@ -6,6 +6,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/20/solid";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Clases() {
   /*Funciones useState para detectar cambios en variables */
@@ -24,11 +25,12 @@ export default function Clases() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage; // Define el índice del primer elemento que se va a mostrar
   const currentItems = clasesFiltradas.slice(indexOfFirstItem, indexOfLastItem); // Define los elementos que se van a mostrar en la página actual
 
+  const [sucursales, setSucurales] = useState([]);
+
   // UseEffect para obtener las clases, asumo que si se hacen cambios se actualiza igual
   useEffect(() => {
     obtenerClases();
   }, [cambio]);
-
 
   // UseEffect para filtrar las clases dependiendo de la busqueda
   useEffect(() => {
@@ -40,12 +42,10 @@ export default function Clases() {
     contarPaginas(filtrados);
   }, [busqueda, clases]);
 
-
   // UseEffect para contar las páginas dependiendo de la cantidad de clases
   useEffect(() => {
     contarPaginas(clasesFiltradas);
   }, [itemsPerPage]);
-
 
   // Función para obtener las clases
   const obtenerClases = async () => {
@@ -54,7 +54,6 @@ export default function Clases() {
     setClases(data);
     contarPaginas(clases); // Se manda llamar el método contarPaginas para contar cuantas páginas habrá dependiendo de la cantidad de clases
   };
-
 
   // Método para contar las páginas
   const contarPaginas = (data: any) => {
@@ -81,10 +80,16 @@ export default function Clases() {
     setItemsPerPage(pag);
   };
 
+  // Método para indicar que ocurrió un cambio
+  const handleCambio = () => {
+    setCambio(!cambio);
+  };
+
   /*CONTENIDO DE LA PÁGINA
   Un botón agregar que abre el componente para registrar otra clase, la barra de búsqueda */
   return (
     <>
+      <ToastContainer />
       {registrarClase && (
         <RegistrarClase
           setRegistrarClase={setRegistrarClase}
@@ -100,10 +105,7 @@ export default function Clases() {
               <input
                 className="h-4/5 bg-disabled bg-opacity-50 rounded-sm shadow-md pl-10 text-md text-white"
                 value={busqueda}
-                onChange={
-                  (e) =>
-                    handleBusqueda(e.target.value)
-                }
+                onChange={(e) => handleBusqueda(e.target.value)}
               />
               <MagnifyingGlassIcon
                 className="absolute top-1/2 left-3 transform -translate-y-1/2 text-white"
@@ -136,11 +138,21 @@ export default function Clases() {
         <div className="overflow-y-auto w-full h-5/6">
           {clasesFiltradas.length >= 0
             ? currentItems.map((clase, index) => (
-                <Clase key={index} clase={clase} />
+                <Clase
+                  key={index}
+                  clase={clase}
+                  actualizarClases={handleCambio}
+                />
               ))
             : clases
                 .slice(indexOfFirstItem, indexOfLastItem)
-                .map((clase, index) => <Clase key={index} clase={clase} />)}
+                .map((clase, index) => (
+                  <Clase
+                    key={index}
+                    clase={clase}
+                    actualizarClases={handleCambio}
+                  />
+                ))}
         </div>
         <div className="w-full flex justify-between">
           <ul className="flex items-center text-white" id="page-numbers">
