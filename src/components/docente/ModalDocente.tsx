@@ -1,5 +1,6 @@
-import { Docente } from '@prisma/client'
-import React from 'react'
+import { Alumno, Clase, Docente } from '@prisma/client'
+import { Sucursal } from "@/entities";
+import React, { useCallback, useEffect } from 'react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Label from '../form/Label'
@@ -8,14 +9,25 @@ import 'react-toastify/dist/ReactToastify.css'
 import Input from '../form/Input'
 import Modal from 'react-modal'
 import { ToastContainer, toast } from 'react-toastify'
+import router, { useRouter } from 'next/router';
+import { XMarkIcon } from '@heroicons/react/16/solid';
 
-export default function ModalDocente({
-    docente,
-    actualizarDocentes
-}:{
-    docente: Docente
-    actualizarDocentes: any
-}){
+export default function ModalDocente({ docente }:{docente: Docente}){
+	type ClaseSucursal = {
+		id: number;
+		nombre: string;
+		dias: string;
+	
+		sucursal: Sucursal;
+	  };
+	const [tempEstado, setTempEstado] = useState("");
+	const router = useRouter();
+	const [masterKey, setMasterKey] = useState("");
+	const [isMasterKeyModalOpen, setIsMasterKeyModalOpen] = useState(false);
+	const { id } = router.query;
+	const [clases, setClases] = useState([{}] as ClaseSucursal[]);
+	const [estado, setEstado] = useState<string>("");
+	const [color, setColor] = useState("");
     // useState para guardar la visibilidad del modal
 	const [modalOpen, setModalOpen] = useState(false)
 	// useState para guardar los docentes
@@ -43,10 +55,63 @@ export default function ModalDocente({
 		if (docentes === null) {
 			const res = await fetch(`/api/docente/${docente.id}`)
 			const data = await res.json()
-
 			// data.error ? setErrorAlumnos(data.error) : setAlumnos(data)
 		}
-	}
+
+	};
+
+	const obtenerDatos = useCallback(async () => {
+		if (!id) return;
+		const response = await fetch(`/api/docente/${id}`);
+		const data = await response.json();
+		console.log(data);
+		if (data && data.data && data.clases) {
+		  setdocentes(data.data);
+		  setClases(data.clases);
+		  switch (data.data.estado) {
+			case "VETADO":
+			  setEstado("VETADO");
+			  setColor("bg-red-500");
+			  break;
+			default:
+			  if (clases.length > 0) {
+				setEstado("ACTIVO");
+				setColor("bg-green-500");
+			  } else {
+				setEstado("INACTIVO");
+				setColor("bg-yellow-300");
+			  }
+		  }
+		  console.log("fetcheado");
+		}
+	  }, [clases.length, id]);
+
+	  useEffect(() => {
+		if (id) {
+		  obtenerDatos();
+		}
+	  }, [id, obtenerDatos, estado]);
+
+	  const deleteDocenteFromClase = async (id: number) => {
+		const response = await fetch(`/api/clase/eliminarDocente`, {
+		  method: "DELETE",
+		  headers: {
+			"Content-Type": "application/json",
+		  },
+		  body: JSON.stringify({ id: id }),
+		})
+		  .then((res) => res.json())
+		  .then((data) => {
+			if (data.error) {
+			  toast(data.error);
+			} else {
+			  console.log("se elimino 1");
+			  obtenerDatos();
+			}
+		  });
+	
+		return response;
+	  };
 
     const onSubmit = handleSubmit(async (data) => {
 		// Se verifica que la información haya sido modificada
@@ -212,11 +277,118 @@ export default function ModalDocente({
 								})}
 							/>
 						</div>
+
 						<button className="bg-pink-500 hover:bg-pink-600 text-white rounded px-3 py-2 mt-3 justify-self-end self-center">
 							Guardar cambios
 						</button>
 					</form>
+					<div className="text-white grid">
+						<div className="text-center">
+							<h1 className="font-bold text-2xl">Clases</h1>
+							<div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-12 mt-3 gap-2 px-5">
+								<div className="text-lg font-bold col-span-4 text-center">Nombre</div>
+								<div className="text-lg font-bold col-span-4 text-center">Sucursal</div>
+								<div className="text-lg font-bold col-span-4 text-center">Días</div>
+							</div>
+						</div>
+						<div className="text-center">
+							<h1 className="font-bold text-2xl">Cambiar estado del docente</h1>
+							<div className="flex justify-center my-5">
+								<select
+									value={estado}
+									onChange={(e) => {
+									if (estado === "VETADO") {
+										return;
+									}
+									if (e.target.value === "VETADO") {
+										setMasterKey("");
+										setIsMasterKeyModalOpen(true);
+										setTempEstado(e.target.value);
+									} else {
+										setEstado(e.target.value);
+										setTempEstado(e.target.value);
+									}
+									}}
+									className={`border-2 ${
+									estado === "VETADO"
+										? "border-gray-500 text-gray-500"
+										: "border-primary text-primary"
+									} min-w-[170px] max-w-[200px] text-center bg-transparent cursor-pointer`}
+									aria-label="Cambiar estado"
+									disabled={estado === "VETADO"}
+								>
+									{estado === "ACTIVO" && <option value="ACTIVO">ACTIVO</option>}
+									<option value="INACTIVO">INACTIVO</option>
+									<option value="VETADO">VETADO</option>
+								</select>
+							</div>
+							<Modal
+								isOpen={isMasterKeyModalOpen}
+								onRequestClose={() => {
+									setMasterKey("");
+									setIsMasterKeyModalOpen(false);
+								}}
+							>
+							<div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-transparent">
+								<div className="bg-customGray p-6 rounded-lg shadow-lg">
+								<h2 className="text-xl font-semibold mb-4 text-white">
+									Ingresar contraseña Maestra para vetar a un docente
+								</h2>
+								<h3 className="text-white">Esta acción será permanente</h3>
+								<input
+									type="password"
+									value={masterKey}
+									onChange={(e) => setMasterKey(e.target.value)}
+									placeholder="Ingresa Contraseña Maestra"
+									className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
+								/>
+								<button
+									onClick={async () => {
+									const res = await fetch("/api/docente/changeEstado", {
+										method: "POST",
+										headers: {
+										"Content-Type": "application/json",
+										},
+										body: JSON.stringify({ masterKey }),
+									});
 
+									if (docente) {
+										const { verified } = await res.json();
+
+										if (verified) {
+										await fetch(`/api/docente/changeEstado`, {
+											method: "PATCH",
+											headers: {
+											"Content-Type": "application/json",
+											},
+											body: docente.id.toString(),
+										});
+										setEstado(tempEstado);
+										setIsMasterKeyModalOpen(false);
+										obtenerDatos();
+										} else {
+										toast("Contraseña Maestra incorrecta");
+										}
+									}
+									}}
+									className="bg-pink-500 text-white rounded-md px-4 py-2 mr-2 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)]"
+								>
+									Confirmar
+								</button>
+								<button
+									onClick={() => {
+									setMasterKey("");
+									setIsMasterKeyModalOpen(false);
+									}}
+									className="bg-gray-300 text-gray-800 rounded-md px-4 py-2"
+								>
+									Cancelar
+								</button>
+								</div>
+							</div>
+							</Modal>
+						</div>
+					</div>
 				</div>
 				<button
 					onClick={() => setModalOpen(false)}
@@ -228,3 +400,7 @@ export default function ModalDocente({
         </>
     )
 }
+function setErrorClases(message: any) {
+	throw new Error('Function not implemented.')
+}
+

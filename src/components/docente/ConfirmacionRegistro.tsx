@@ -1,4 +1,6 @@
+import router from "next/router";
 import React from "react";
+import { toast } from "react-toastify";
 
 function ConfirmacionRegistro({
   setConfirmacionRegistrar,
@@ -6,6 +8,12 @@ function ConfirmacionRegistro({
   cambio,
   setCambio,
   setRegistrarDocente,
+}: {
+  setConfirmacionRegistrar: React.Dispatch<React.SetStateAction<boolean>>;
+  data: any;
+  cambio: boolean;
+  setCambio: React.Dispatch<React.SetStateAction<boolean>>;
+  setRegistrarDocente: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const handleCancelar = () => {
     setConfirmacionRegistrar(false);
@@ -13,14 +21,26 @@ function ConfirmacionRegistro({
 
   const handleAceptar = () => {
     let nombre = data.nombre;
+    let aPaterno = data.aPaterno;
+    let aMaterno = data.aMaterno;
+    let telefono = data.telefono;
+    let curp = data.curp;
+    let estado = "INACTIVO";
 
-    fetch("api/docente/fetchAll", {
+    fetch("api/docente/registerDocente", { //aqui me da error con status 500
       method: "POST", //Metodo: POST porque vamos a hacer un nuevo registro
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nombre,
+        docente: { 
+          nombre: data.nombre,
+          aPaterno: data.aPaterno,
+          aMaterno: data.aMaterno,
+          telefono: data.telefono,
+          curp: data.curp,
+          estado: "INACTIVO",
+        },
       }),
     }).then((response) => {
       if (response.ok) {
@@ -39,7 +59,7 @@ function ConfirmacionRegistro({
           }
         });
       } else {
-        alert("Error al registrar la nueva clase.");
+        alert("Error al registrar al Docente.");
       }
     });
   };
@@ -70,3 +90,4 @@ function ConfirmacionRegistro({
 }
 
 export default ConfirmacionRegistro;
+
