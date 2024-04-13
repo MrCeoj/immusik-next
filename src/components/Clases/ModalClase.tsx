@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { diasHabiles, horasHabiles } from "../../lib/horario";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import Label from "../form/Label";
 import "react-toastify/dist/ReactToastify.css";
 import Input from "../form/Input";
@@ -29,8 +29,7 @@ export default function ModalClase({
   // se obtiene la sucursal de la clase
   const [sucursal] = useSucursal(clase.idSucursal.toString());
   const [diasClase, setDiasClase] = useState<string[]>([]);
-  // useForm para manejar los inputs del formulario
-  const [eliminar, setEliminar] = useState(false);
+  
   const {
     register,
     handleSubmit,
@@ -42,6 +41,7 @@ export default function ModalClase({
     // se obtienen los días de clase en un array
     setDiasClase(toArrayDiasClase(clase.dias));
   }, [clase.dias]);
+
 
   // se obtiene el mensaje en el caso de que no haya docentes disponibles
   // o si no se han cargado los docentes
@@ -91,10 +91,6 @@ export default function ModalClase({
     }
   };
 
-  const handleEliminar = () => {
-    setEliminar(true);
-  };
-
   const handleEliminarAlumno = async (idAlumno: number) => {
     const res = await fetch("/api/clase/eliminarAlumno", {
       method: "DELETE",
@@ -116,7 +112,9 @@ export default function ModalClase({
       alumnos && setAlumnos(alumnos.filter((alumno) => alumno.id !== idAlumno));
       // Se actualiza la información de la clase
       actualizarClases();
-      toast.success("Alumno eliminado correctamente");
+      toast.success("Alumno eliminado correctamente", {
+        autoClose: 2000,
+      });
     }
   };
 
@@ -161,15 +159,10 @@ export default function ModalClase({
 
   return (
     <>
-      {eliminar && (
-        <ConfirmacionEliminarClase
-          clase={clase}
-          setEliminar={setEliminar}
-          actualizarClases={actualizarClases}
-          setModalOpen={setModalOpen}
-        />
-      )}
-      <button onClick={handleVerDetalles} className="col-span-1">
+      <button
+        onClick={handleVerDetalles}
+        className="col-span-1 underline hover:text-slate-900"
+      >
         Ver detalles
       </button>
       <Modal
@@ -177,11 +170,10 @@ export default function ModalClase({
         ariaHideApp={false}
         onRequestClose={() => setModalOpen(false)}
         overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
-        className="relative bg-white p-6 w-full max-w-5xl min-h-min rounded"
+        className="relative bg-secciones bg-opacity-95 p-6 w-full max-w-5xl min-h-min rounded-md text-white"
       >
-        <ToastContainer />
         <h1 className="font-bold text-4xl mb-3 text-center">
-          Detalles de la clase
+          Detalles de la clase - {toTitleCase(clase.nombre)}
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <form onSubmit={onSubmit} className="flex flex-col gap-1">
@@ -202,7 +194,7 @@ export default function ModalClase({
                 type="text"
                 id="nombre"
                 error={errors.nombre}
-                className="w-full border border-gray-300 font-bold px-2"
+                className="w-full border text-black border-gray-300 font-bold px-2"
                 register={register("nombre", {
                   required: {
                     value: true,
@@ -226,7 +218,7 @@ export default function ModalClase({
                       type="checkbox"
                       id={dia}
                       error={errors.dias}
-                      className="mr-1"
+                      className="mr-1 cursor-pointer "
                       defaultValue={dia}
                       defaultChecked={diasClase.includes(dia)}
                       register={register("dias", {
@@ -236,7 +228,11 @@ export default function ModalClase({
                         },
                       })}
                     />
-                    <Label label={toTitleCase(dia)} htmlFor={dia} />
+                    <Label
+                      label={toTitleCase(dia)}
+                      className="cursor-pointer"
+                      htmlFor={dia}
+                    />
                   </div>
                 ))}
               </div>
@@ -252,7 +248,7 @@ export default function ModalClase({
                 type="number"
                 id="hora"
                 error={errors.hora}
-                className="w-full border-gray-300 font-bold px-2 py-1"
+                className="w-full text-black border-gray-300 font-bold px-2 py-1"
                 register={register("hora", {
                   required: {
                     value: true,
@@ -287,7 +283,7 @@ export default function ModalClase({
                 type="number"
                 id="cupoMax"
                 error={errors.cupoMax}
-                className="w-full border border-gray-300 font-bold rounded px-2 py-1"
+                className="w-full border text-black border-gray-300 font-bold rounded px-2 py-1"
                 register={register("cupoMax", {
                   required: {
                     value: true,
@@ -310,7 +306,7 @@ export default function ModalClase({
                   </label>
                   <select
                     id="docente"
-                    className="w-full border border-gray-300 font-bold rounded px-2 py-1"
+                    className="w-full border text-black border-gray-300 font-bold rounded px-2 py-1"
                     {...register("idDocente", {
                       required: {
                         value: true,
@@ -348,25 +344,25 @@ export default function ModalClase({
                 {mensajeAlumnos()}
               </p>
             ) : (
-              <table className="w-full">
+              <table className="w-full text-center overflow-hidden">
                 <caption className="font-bold text-xl mb-3">
                   Alumnos inscritos
                 </caption>
                 <thead>
-                  <tr className="bg-black/10 rounded">
-                    <th>Nombre</th>
-                    <th>Ap. Paterno</th>
-                    <th>Ap. Materno</th>
+                  <tr className="bg-gray-contrast rounded-lg font-normal">
+                    <th className="py-1">Nombre</th>
+                    <th className="py-1">Ap. Paterno</th>
+                    <th className="py-1">Ap. Materno</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {alumnos?.map((alumno, index) => (
-                    <tr key={index} className="p-2">
-                      <td>{toTitleCase(alumno.nombre)}</td>
-                      <td>{toTitleCase(alumno.aPaterno)}</td>
-                      <td>{toTitleCase(alumno.aMaterno)}</td>
-                      <td>
+                    <tr key={index} className="border-b-2">
+                      <td className="py-2">{toTitleCase(alumno.nombre)}</td>
+                      <td className="py-2">{toTitleCase(alumno.aPaterno)}</td>
+                      <td className="py-2">{toTitleCase(alumno.aMaterno)}</td>
+                      <td className="py-2">
                         <button
                           onClick={() => handleEliminarAlumno(alumno.id)}
                           className="bg-rose-600 text-white font-bold w-6 h-6 rounded"
@@ -379,12 +375,7 @@ export default function ModalClase({
                 </tbody>
               </table>
             )}
-            <button
-              onClick={handleEliminar}
-              className="bg-red-500 py-2 px-3 mt-3 rounded-md text-white hover:bg-red-700 self-center"
-            >
-              Eliminar clase
-            </button>
+            <ConfirmacionEliminarClase clase={clase} actualizarClases={actualizarClases} setModalOpen={setModalOpen} />
           </div>
         </div>
         <button

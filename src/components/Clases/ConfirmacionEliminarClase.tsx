@@ -1,18 +1,18 @@
 import React from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Modal from "react-modal";
+import { useState } from "react";
 
 function ConfirmacionEliminarClase({
   clase,
-  setEliminar,
   actualizarClases,
   setModalOpen,
 }: {
   clase: any;
-  setEliminar: any;
   actualizarClases: any;
-  setModalOpen: any;
+  setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const [eliminar, setEliminar] = useState(false);
+
   const handleCancelar = () => {
     setEliminar(false);
   };
@@ -29,46 +29,54 @@ function ConfirmacionEliminarClase({
       }),
     }).then((response) => {
       if (response.ok) {
-        return response.json().then((data) => {
+        response.json().then(() => {
           // Se actualiza la información de la clase
-          actualizarClases();
           // Se cierra el modal
           setEliminar(false);
           setModalOpen(false);
+          actualizarClases();
         });
-      } else {
-        alert("Hubo un problema al eliminar la clase.");
       }
     });
   };
 
   return (
     <>
-      <div className="absolute z-50 h-screen w-screen top-0 left-0 bg-black bg-opacity-70 flex justify-center items-center">
-        <div className="text-black bg-white p-8 rounded-lg shadow-lg flex flex-col items-center justify-center">
-          <h1 className="text-2xl font-bold">
-            ¿Está seguro que quiere eliminar la clase {clase.nombre}?
-          </h1>
-          <p className="my-1">
-            Se eliminará la inscripción de los alumnos de esta clase.
-          </p>
-          <p className="text-red-500">¡Esta acción es permanente!</p>
-          <div className="mt-5">
-            <button
-              className="mr-1 bg-gray-500 py-1 px-5 rounded-md hover:bg-gray-700 text-white"
-              onClick={handleCancelar}
-            >
-              Cancelar
-            </button>
-            <button
-              className="bg-red-500 py-1 px-5 rounded-md ml-1 hover:bg-red-700 text-white"
-              onClick={handleEliminar}
-            >
-              Eliminar
-            </button>
-          </div>
+      <button
+        onClick={() => setEliminar(true)}
+        className="bg-red-500 py-2 px-3 mt-3 rounded-md text-white hover:bg-red-700 self-center"
+      >
+        Eliminar clase
+      </button>
+      <Modal
+        isOpen={eliminar}
+        ariaHideApp={false}
+        onRequestClose={() => setEliminar(false)}
+        overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
+        className="relative flex flex-col items-center bg-secciones bg-opacity-95 p-6 w-full max-w-5xl min-h-min rounded-md text-white"
+      >
+        <h1 className="text-2xl font-bold">
+          ¿Está seguro que quiere eliminar la clase {clase.nombre}?
+        </h1>
+        <p className="my-1">
+          Se eliminará la inscripción de los alumnos de esta clase.
+        </p>
+        <p className="text-red-500">¡Esta acción es permanente!</p>
+        <div className="mt-5">
+          <button
+            className="mr-1 bg-gray-500 py-1 px-5 rounded-md hover:bg-gray-700 text-white"
+            onClick={handleCancelar}
+          >
+            Cancelar
+          </button>
+          <button
+            className="bg-red-500 py-1 px-5 rounded-md ml-1 hover:bg-red-700 text-white"
+            onClick={handleEliminar}
+          >
+            Eliminar
+          </button>
         </div>
-      </div>
+      </Modal>
     </>
   );
 }

@@ -27,7 +27,7 @@ const config: Config = {
 				primary: "#FB038F",
 				"back-dark": "#1B1B1B",
 				"pink-focus": "#FB038F",
-				"pink-accent": "F837A4",
+				"pink-accent": "#F837A4",
 				"gray-contrast": "#5E5E5E",
 				"active-stroke": "#00603B",
 				"active-fill": "#64DFAF",

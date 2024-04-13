@@ -1,12 +1,12 @@
 import Clase from "@/components/Clases/Clase";
 import { useEffect, useState } from "react";
 import RegistrarClase from "@/components/Clases/RegistrarClase";
+import { ToastContainer } from "react-toastify";
 import {
   MagnifyingGlassIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "@heroicons/react/20/solid";
-import { ToastContainer, toast } from "react-toastify";
 
 export default function Clases() {
   /*Funciones useState para detectar cambios en variables */
@@ -14,7 +14,6 @@ export default function Clases() {
   const [clases, setClases] = useState([]); //Almacena las clases que existen
   const [busqueda, setBusqueda] = useState(""); //Almacena el texto que se buscará en el nombre de las clases
   const [clasesFiltradas, setClasesFiltradas] = useState([]); //Clases filtradas dependiendo de el texto que contenga la variable "busqueda"
-  const [registrarClase, setRegistrarClase] = useState(false);
 
   //usestates para la paginación
   const [currentPage, setCurrentPage] = useState(1); // Define en que página va a empezar, por defecto en página 1
@@ -24,8 +23,6 @@ export default function Clases() {
   const indexOfLastItem = currentPage * itemsPerPage; // Define el índice del último elemento que se va a mostrar
   const indexOfFirstItem = indexOfLastItem - itemsPerPage; // Define el índice del primer elemento que se va a mostrar
   const currentItems = clasesFiltradas.slice(indexOfFirstItem, indexOfLastItem); // Define los elementos que se van a mostrar en la página actual
-
-  const [sucursales, setSucurales] = useState([]);
 
   // UseEffect para obtener las clases, asumo que si se hacen cambios se actualiza igual
   useEffect(() => {
@@ -69,11 +66,6 @@ export default function Clases() {
     setBusqueda(value);
   };
 
-  // Método para abrir el componente de registrar clase
-  const handleRegistrar = () => {
-    setRegistrarClase(true);
-  };
-
   // Método para cambiar la cantidad de elementos por página
   const handleItemsPags = (e: any) => {
     const pag = e.target.value;
@@ -81,7 +73,7 @@ export default function Clases() {
   };
 
   // Método para indicar que ocurrió un cambio
-  const handleCambio = () => {
+  const handleCambio = (message:string) => {
     setCambio(!cambio);
   };
 
@@ -90,14 +82,7 @@ export default function Clases() {
   return (
     <>
       <ToastContainer />
-      {registrarClase && (
-        <RegistrarClase
-          setRegistrarClase={setRegistrarClase}
-          setCambio={setCambio}
-          cambio={cambio}
-        />
-      )}
-      <div className="h-screen bg-back-dark w-screen flex justify-center items-center font-inter flex-col p-20 text-white">
+      <div className="h-screen bg-back-dark bg-fondo w-screen flex justify-center items-center font-inter flex-col p-20 text-white">
         <div className="flex w-full items-end">
           <h1 className="text-5xl font-semibold mr-20">Clases</h1>
           <div className="flex h-3/4 items-center">
@@ -113,12 +98,7 @@ export default function Clases() {
                 height={20}
               />
             </form>
-            <button
-              onClick={handleRegistrar}
-              className="bg-pink-focus px-4 h-full rounded-md font-semibold shadow-md hover:bg-pink-focus text-md"
-            >
-              Registrar
-            </button>
+            <RegistrarClase setCambio={setCambio} cambio={cambio} />
           </div>
         </div>
         <div className="w-full bg-gray-contrast py-2 rounded-lg bg-opacity-40 grid grid-cols-12 mt-3">
@@ -154,7 +134,7 @@ export default function Clases() {
                   />
                 ))}
         </div>
-        <div className="w-full flex justify-between">
+        <div className="absolute bottom-8 w-full flex justify-between w-[90%]">
           <ul className="flex items-center text-white" id="page-numbers">
             <li>
               <ChevronLeftIcon

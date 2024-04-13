@@ -1,5 +1,5 @@
 import prisma from '@/utils/Prisma'
-import { Clase } from '@prisma/client'
+import { Clase } from '@/entities/edge'
 import { parse } from 'path'
 
 /**

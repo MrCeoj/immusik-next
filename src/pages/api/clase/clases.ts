@@ -32,5 +32,5 @@ export default async function Handler(req: any, res: any) {
     const result = await fetchCrearClase(data);
     return res.status(200).json(result);
   }
-  return res.status(405).send({ message: "Method not allowed." });
+  return res.status(405).send({ message: "Método no permitido" });
 }

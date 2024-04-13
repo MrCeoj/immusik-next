@@ -14,6 +14,7 @@ export default function Clase({
   //useState para guardar los registros alumnoClases
   const [alumnoClases, setAlumnoClases] = useState([]);
   const [docentes, setDocentes] = useState<Docente[] | null>(null);
+  const [dias, setDias] = useState<string[]>([]);
 
   useEffect(() => {
     // Se obtienen todos los docentes disponibles (que no estén vetados)
@@ -30,6 +31,8 @@ export default function Clase({
         alert("Error al encontrar los registros AlumnoClase");
       }
     });
+
+    setDias(clase.dias.split(",")); //Se separan los dias de la clase
   }, [clase]); //Se ejecuta cada vez que se modifica la clase
 
   //Declaración de variable cupo para mostrar el cupo de la clase
@@ -53,7 +56,7 @@ export default function Clase({
   */
   return (
     <>
-      <div className="grid grid-cols-10 my-4 text-lg bg-gray-100 bg-opacity-50 py-2 rounded-lg">
+      <div className="grid grid-cols-12 my-4 text-lg bg-gray-100 bg-opacity-50 py-2 rounded-lg items-center">
         <div className="flex justify-center items-center col-span-1">
           {
             //Si el idDocente es null significa que no tiene docente, por lo que se muestra la imagen de advertencia
@@ -68,7 +71,16 @@ export default function Clase({
           }
         </div>
         <div className="col-span-2">{clase.nombre}</div>
-        <div className="col-span-2">{clase.dias}</div>
+        <div className="col-span-3">
+          <span>
+            {dias.map((dia) => {
+              if (dia !== dias[dias.length - 1]) {
+                return dia + ", ";
+              }
+              return dia;
+            })}
+          </span>
+        </div>
         <div className="col-span-2">{clase.hora}</div>
         <div className="col-span-2">{cupo}</div>
         <ModalClase
