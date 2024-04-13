@@ -1,5 +1,5 @@
-import { User } from '@/entities/index'
 import prisma from "@/utils/Prisma";
+import { User } from '@/entities/index'
 
 /**
  * Obtiene un usuario por su nombre.
