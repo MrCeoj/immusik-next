@@ -1,6 +1,5 @@
-import { PrismaClient, User } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import prisma from '@/utils/Prisma'
+import { User } from '@/entities/edge'
 
 /*
  * Un registro AlumnoClase es una tabla intermedia en nuestra base de datos,

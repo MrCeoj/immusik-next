@@ -1,17 +1,16 @@
 import React from "react";
+import { toast } from "react-toastify";
 
 function ConfirmacionRegistrar({
   setConfirmacionRegistrar,
   data,
   cambio,
   setCambio,
-  setRegistrarClase,
 }: {
   setConfirmacionRegistrar: React.Dispatch<React.SetStateAction<boolean>>;
   data: any;
   cambio: boolean;
   setCambio: React.Dispatch<React.SetStateAction<boolean>>;
-  setRegistrarClase: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const handleCancelar = () => {
     setConfirmacionRegistrar(false);
@@ -48,14 +47,12 @@ function ConfirmacionRegistrar({
             } else {
               setCambio(true);
             }
-            setRegistrarClase(false);
           } else {
-            alert(data.message);
             setConfirmacionRegistrar(false);
           }
         });
       } else {
-        alert("Error al registrar la nueva clase.");
+        toast.error("Error al registrar la nueva clase.")
       }
     });
   };

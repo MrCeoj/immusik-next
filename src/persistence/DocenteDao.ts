@@ -1,5 +1,5 @@
-import { Docente } from "@/entities/index";
 import prisma from "@/utils/Prisma";
+import { Docente } from "@/entities/index";
 
 /**
  * Crea un nuevo docente

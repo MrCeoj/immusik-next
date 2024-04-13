@@ -1,6 +1,5 @@
 import prisma from '@/utils/Prisma'
-import { Clase } from '@prisma/client'
-import { parse } from 'path'
+import { Clase } from '@/entities/edge'
 
 /**
  * Regresa una clase por su id

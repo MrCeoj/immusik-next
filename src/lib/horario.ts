@@ -3,7 +3,6 @@ export const diasHabiles = [
 	'martes',
 	'miércoles',
 	'jueves',
-	'viernes',
 	'sábado'
 ]
 

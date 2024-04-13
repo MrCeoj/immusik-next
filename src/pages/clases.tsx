@@ -1,5 +1,7 @@
 import Clase from "@/components/Clases/Clase";
+import Paginador from "@/components/Paginador";
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 import RegistrarClase from "@/components/Clases/RegistrarClase";
 import {
   MagnifyingGlassIcon,
@@ -13,7 +15,6 @@ export default function Clases() {
   const [clases, setClases] = useState([]); //Almacena las clases que existen
   const [busqueda, setBusqueda] = useState(""); //Almacena el texto que se buscará en el nombre de las clases
   const [clasesFiltradas, setClasesFiltradas] = useState([]); //Clases filtradas dependiendo de el texto que contenga la variable "busqueda"
-  const [registrarClase, setRegistrarClase] = useState(false);
 
   //usestates para la paginación
   const [currentPage, setCurrentPage] = useState(1); // Define en que página va a empezar, por defecto en página 1
@@ -29,7 +30,6 @@ export default function Clases() {
     obtenerClases();
   }, [cambio]);
 
-
   // UseEffect para filtrar las clases dependiendo de la busqueda
   useEffect(() => {
     const filtrados = clases.filter((clase: any) => {
@@ -40,12 +40,10 @@ export default function Clases() {
     contarPaginas(filtrados);
   }, [busqueda, clases]);
 
-
   // UseEffect para contar las páginas dependiendo de la cantidad de clases
   useEffect(() => {
     contarPaginas(clasesFiltradas);
   }, [itemsPerPage]);
-
 
   // Función para obtener las clases
   const obtenerClases = async () => {
@@ -54,7 +52,6 @@ export default function Clases() {
     setClases(data);
     contarPaginas(clases); // Se manda llamar el método contarPaginas para contar cuantas páginas habrá dependiendo de la cantidad de clases
   };
-
 
   // Método para contar las páginas
   const contarPaginas = (data: any) => {
@@ -70,29 +67,23 @@ export default function Clases() {
     setBusqueda(value);
   };
 
-  // Método para abrir el componente de registrar clase
-  const handleRegistrar = () => {
-    setRegistrarClase(true);
-  };
-
   // Método para cambiar la cantidad de elementos por página
   const handleItemsPags = (e: any) => {
     const pag = e.target.value;
     setItemsPerPage(pag);
   };
 
+  // Método para indicar que ocurrió un cambio
+  const handleCambio = (message: string) => {
+    setCambio(!cambio);
+  };
+
   /*CONTENIDO DE LA PÁGINA
   Un botón agregar que abre el componente para registrar otra clase, la barra de búsqueda */
   return (
     <>
-      {registrarClase && (
-        <RegistrarClase
-          setRegistrarClase={setRegistrarClase}
-          setCambio={setCambio}
-          cambio={cambio}
-        />
-      )}
-      <div className="h-screen bg-back-dark w-screen flex justify-center items-center font-inter flex-col p-20 text-white">
+      <ToastContainer />
+      <div className="h-screen bg-back-dark bg-fondo w-screen flex justify-center items-center font-inter flex-col p-20 text-white">
         <div className="flex w-full items-end">
           <h1 className="text-5xl font-semibold mr-20">Clases</h1>
           <div className="flex h-3/4 items-center">
@@ -100,10 +91,7 @@ export default function Clases() {
               <input
                 className="h-4/5 bg-disabled bg-opacity-50 rounded-sm shadow-md pl-10 text-md text-white"
                 value={busqueda}
-                onChange={
-                  (e) =>
-                    handleBusqueda(e.target.value)
-                }
+                onChange={(e) => handleBusqueda(e.target.value)}
               />
               <MagnifyingGlassIcon
                 className="absolute top-1/2 left-3 transform -translate-y-1/2 text-white"
@@ -111,12 +99,7 @@ export default function Clases() {
                 height={20}
               />
             </form>
-            <button
-              onClick={handleRegistrar}
-              className="bg-pink-focus px-4 h-full rounded-md font-semibold shadow-md hover:bg-pink-focus text-md"
-            >
-              Registrar
-            </button>
+            <RegistrarClase setCambio={setCambio} cambio={cambio} />
           </div>
         </div>
         <div className="w-full bg-gray-contrast py-2 rounded-lg bg-opacity-40 grid grid-cols-12 mt-3">
@@ -136,76 +119,28 @@ export default function Clases() {
         <div className="overflow-y-auto w-full h-5/6">
           {clasesFiltradas.length >= 0
             ? currentItems.map((clase, index) => (
-                <Clase key={index} clase={clase} />
+                <Clase
+                  key={index}
+                  clase={clase}
+                  actualizarClases={handleCambio}
+                />
               ))
             : clases
                 .slice(indexOfFirstItem, indexOfLastItem)
-                .map((clase, index) => <Clase key={index} clase={clase} />)}
+                .map((clase, index) => (
+                  <Clase
+                    key={index}
+                    clase={clase}
+                    actualizarClases={handleCambio}
+                  />
+                ))}
         </div>
-        <div className="w-full flex justify-between">
-          <ul className="flex items-center text-white" id="page-numbers">
-            <li>
-              <ChevronLeftIcon
-                onClick={() => {
-                  if (currentPage > 1) {
-                    setCurrentPage(currentPage - 1);
-                  }
-                }}
-                className={
-                  currentPage === 1
-                    ? "text-disabled text-opacity-40"
-                    : "text-white hover:cursor-pointer"
-                }
-                width={25}
-                height={25}
-              />
-            </li>
-            {pageNumbers.map((number) => {
-              return (
-                <li
-                  key={number}
-                  onClick={() => setCurrentPage(number)}
-                  className={
-                    currentPage === number
-                      ? "bg-white text-back-dark px-2 py-1 rounded-sm hover:cursor-pointer"
-                      : "px-2 py-1 rounded-sm hover:cursor-pointer"
-                  }
-                >
-                  {number}
-                </li>
-              );
-            })}
-
-            <li>
-              <ChevronRightIcon
-                onClick={() => {
-                  if (currentPage < pageNumbers.length) {
-                    setCurrentPage(currentPage + 1);
-                  }
-                }}
-                className={
-                  currentPage >= pageNumbers.length
-                    ? "text-disabled text-opacity-40"
-                    : "text-white hover:cursor-pointer"
-                }
-                width={25}
-                height={25}
-              />
-            </li>
-          </ul>
-          <span>
-            Mostrar{" "}
-            <select
-              onChange={handleItemsPags}
-              className="bg-disabled bg-opacity-10 border-white border-solid"
-            >
-              <option className="bg-back-dark">5</option>
-              <option className="bg-back-dark">7</option>
-              <option className="bg-back-dark">10</option>
-            </select>{" "}
-            elementos por página
-          </span>
-        </div>
+        <Paginador
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          pageNumbers={pageNumbers}
+          handleItemsPags={handleItemsPags}
+        />
       </div>
     </>
   );
