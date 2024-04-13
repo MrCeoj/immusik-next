@@ -9,6 +9,7 @@ import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
   } from "@heroicons/react/20/solid";
+import Paginador from "@/components/Paginador";
 
 
 const Index = () => {
@@ -162,70 +163,12 @@ const Index = () => {
 							.slice(indexOfFirstItem, indexOfLastItem)
 							.map((docente, index) => <Docente key={index} docente={docente}/>)}
 				</div>
-				<div className="w-full flex justify-between">
-				<ul className="flex items-center text-white" id="page-numbers">
-					<li>
-					<ChevronLeftIcon
-						onClick={() => {
-						if (currentPage > 1) {
-							setCurrentPage(currentPage - 1);
-						}
-						}}
-						className={
-						currentPage === 1
-							? "text-disabled text-opacity-40"
-							: "text-white hover:cursor-pointer"
-						}
-						width={25}
-						height={25}
-					/>
-					</li>
-					{pageNumbers.map((number) => {
-					return (
-						<li
-						key={number}
-						onClick={() => setCurrentPage(number)}
-						className={
-							currentPage === number
-							? "bg-white text-back-dark px-2 py-1 rounded-sm hover:cursor-pointer"
-							: "px-2 py-1 rounded-sm hover:cursor-pointer"
-						}
-						>
-						{number}
-						</li>
-					);
-					})}
-
-					<li>
-					<ChevronRightIcon
-						onClick={() => {
-						if (currentPage < pageNumbers.length) {
-							setCurrentPage(currentPage + 1);
-						}
-						}}
-						className={
-						currentPage >= pageNumbers.length
-							? "text-disabled text-opacity-40"
-							: "text-white hover:cursor-pointer"
-						}
-						width={25}
-						height={25}
-					/>
-					</li>
-				</ul>
-				<span>
-					Mostrar{" "}
-					<select
-					onChange={handleItemsPags}
-					className="bg-disabled bg-opacity-10 border-white border-solid"
-					>
-					<option className="bg-back-dark">5</option>
-					<option className="bg-back-dark">7</option>
-					<option className="bg-back-dark">10</option>
-					</select>{" "}
-					elementos por página
-				</span>
-				</div>
+				<Paginador
+					currentPage={currentPage}
+					setCurrentPage={setCurrentPage}
+					pageNumbers={pageNumbers}
+					handleItemsPags={handleItemsPags}
+				/>
 			</div>
       </>
   );
