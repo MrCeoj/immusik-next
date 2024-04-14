@@ -11,25 +11,36 @@ function RegistrarClase({
   setCambio: React.Dispatch<React.SetStateAction<boolean>>;
   cambio: boolean;
 }) {
+  //useState para almacenar los
   const [docentes, setDocentes] = useState<Docente[]>([]);
+
+  //useState para capturar las sucursales que existen
+  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+
+  //useStates para capturar la información a registrar de la clase
   const [cupo, setCupo] = useState("");
   const [docente, setDocente] = useState("");
   const [nombre, setNombre] = useState("");
   const [horario, setHorario] = useState("");
   const [sucursal, setSucursal] = useState("");
+
+  //useStates para capturar los días que se impartirá la clase
   const [lunes, setLunes] = useState(false);
   const [martes, setMartes] = useState(false);
   const [miercoles, setMiercoles] = useState(false);
   const [jueves, setJueves] = useState(false);
   const [sabado, setSabado] = useState(false);
-  const [sucursales, setSucursales] = useState<Sucursal[]>([]);
+
+  //useState para manejar el abrir y cerrar el modal
   const [modalOpen, setModalOpen] = useState(false);
 
+  //Cada que se cargue este componente se obtendran los profesores y sucursales.
   useEffect(() => {
     obtenerDocentes();
     obtenerSucursales();
   }, []);
 
+  //Cada que que el modal se cierre se reiniciará la información de la clase a información vacía.
   useEffect(() => {
     if (modalOpen) {
       setNombre("");
@@ -45,18 +56,24 @@ function RegistrarClase({
     }
   }, [modalOpen]);
 
+  //Función para obtener docentes
   const obtenerDocentes = async () => {
     const response = await fetch("api/docente/docenteNoVetado");
     const data = await response.json();
     setDocentes(data);
   };
 
+  //Función para obtener sucursales
   const obtenerSucursales = async () => {
     const response = await fetch("api/Sucursal");
     const data = await response.json();
     setSucursales(data);
   };
 
+  /**
+   * Función que cambia el estado de los días a true o false dependiendo de si están marcados o no.
+   * @param dia indicador de que día se está marcando.
+   */
   const handleDia = (dia: string) => {
     if (dia === "l") {
       if (lunes) {
@@ -95,11 +112,15 @@ function RegistrarClase({
     }
   };
 
+  //Función para cerrar el modal
   const handleCancelar = () => {
     setModalOpen(false);
   };
 
+  //Funcion para registrar la sucursal en la base de datos
   const handleAceptar = () => {
+    /*Se maneja los días creando un arreglo "dias", al cual se le insertarán los días como String
+    dependiendo si están marcados como true*/
     const dias = [""];
     if (lunes) dias.push("LUNES");
     if (martes) dias.push("MARTES");
@@ -107,9 +128,11 @@ function RegistrarClase({
     if (jueves) dias.push("JUEVES");
     if (sabado) dias.push("SÁBADO");
 
+    //El arrelgo de días se convierte en string y se formatea correctamente.
     const temp: string = dias.toString();
     const diasDisplay: string = temp.substring(1);
 
+    //Se verifica si exsite algun campo incompleto o vacío
     if (
       nombre === "" ||
       diasDisplay === "" ||
@@ -118,23 +141,28 @@ function RegistrarClase({
       cupo === null ||
       cupo === ""
     ) {
+      //Mensaje de error
       toast.error("Llene todos los campos.");
       return;
     }
 
+    //Se convierte el cupo en un valor numérico para sus validaciones
     const cupoNum = Number(cupo);
 
+    //Se valida que el cupo sea un valor entre 1 y 10 y que sea un valor entero.
     if (cupoNum < 1 || cupoNum > 10 || cupoNum % 1 !== 0) {
       toast.error("El cupo debe ser un número entero entre 1 y 10.");
       return;
     }
 
+    //Si no hay ningun error se hace fetch con método POST
     fetch("api/clase/clases", {
       method: "POST", //Metodo: POST porque vamos a hacer un nuevo registro
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        //Se envía nombre, dias, horario, sucursal, cupo y docente
         nombre,
         diasDisplay,
         horario,
@@ -146,19 +174,22 @@ function RegistrarClase({
       if (response.ok) {
         return response.json().then((data) => {
           if (data.message === "Se creó la clase.") {
+            //Si es un registro exitoso se le informa al usuario y se cierra el componente
             toast.success("Se creó la clase.", {
               autoClose: 2000,
               onClose: () => {
                 setModalOpen(false);
               },
             });
+            //Se indica que hay un cambio en las clases.
             if (cambio) {
               setCambio(false);
             } else {
               setCambio(true);
             }
           } else {
-            toast.error("Error al registrar la nueva clase.", {
+            //Si hay un error se le indica al usuario.
+            toast.error(data.message, {
               autoClose: 2000,
               onClose: () => {
                 setModalOpen(false);
@@ -172,10 +203,12 @@ function RegistrarClase({
     });
   };
 
+  //Función para abrir el modal
   const handleRegistrar = () => {
     setModalOpen(true);
   };
 
+  /*CONTENIDO DE LA PÁGINA*/
   return (
     <>
       <button
@@ -279,7 +312,7 @@ function RegistrarClase({
                 </option>
               ))}
           </select>
-          <label className="my-1 font-bold">Sucursal (Temporal)</label>
+          <label className="my-1 font-bold">Sucursal</label>
           <select
             onChange={(e) => setSucursal(e.target.value)}
             className="p-1 rounded-md text-black"

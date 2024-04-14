@@ -159,30 +159,47 @@ export async function fetchGetClasesDeDeterminadoDocente(docenteId: any) {
   return clases;
 }
 
+/**
+ * Función para registrar una clase
+ * @param data datos de la clase a registrar
+ * @returns respuesta con el mensaje que se tratará en la página de registrar clase.
+ */
 export async function fetchCrearClase(data: any) {
   let response = {
     success: false,
     message: "",
   };
 
+  //Primero se determina si la clase se va a crear sin docente o con docente.
   if (data.docente === "") {
+    //Si no se crea con docente, la clase se puede crear directamente.
     await crearClaseSinDocente(data);
     response.message = "Se creó la clase.";
   } else {
+    //Si hay docente se necesita validar si el docente está disponible a esta hora
     let valido = true;
-    let idDocente: number = data.docente;
-    const clasesDeDocente = await fetchGetClasesDeDeterminadoDocente(idDocente);
-    const diasARegistrar: string[] = data.dias.split(",");
+    let idDocente: number = data.docente; //Se consigue la id del docente como valor numérico
+    const clasesDeDocente = await fetchGetClasesDeDeterminadoDocente(idDocente); //Se obtienen las clases de dicho docente
+    const diasARegistrar: string[] = data.dias.split(","); //Se dividen los días de la clase a registrar en un arreglo.
 
+    //Si el docnete imparte alguna clase se continua con la validación
     if (clasesDeDocente.length > 0) {
       for (const clase of clasesDeDocente) {
+        //Por cada clase del docente se extraen sus días y se dividen en un arreglo de Strings
         const diasDeClase: string[] = clase.dias.split(",");
+
+        //Se itera por cada día que se imparte la clase
         for (const diaDeClase of diasDeClase) {
+          //Se itera por cada día que se imparte la clase a registrar
           for (const diaAR of diasARegistrar) {
+            //Se comparan todos los días de la clase con todos los días de la clase a registrar
             if (diaAR === diaDeClase) {
+              //Si se imparte un mismo día, se verifica que no se imparta la misma hora.
               if (clase.hora === data.horario) {
+                /*Si se imparte durante la misma hora se declara la bandera "valido" como false
+                se asigna un mensaje de error y se cortan los ciclos.*/
                 valido = false;
-                response.message = "Horario no disponible.";
+                response.message = "El docente no cuenta con ese horario disponible.";
                 break;
               }
             }
@@ -190,16 +207,19 @@ export async function fetchCrearClase(data: any) {
         }
       }
 
+      //Si después de todas las validaciones el horario es válido, se crea la clase
       if (valido) {
         response.message = "Se creó la clase.";
         await crearClaseConDocente(data);
       }
     } else {
+      //Si el docente no imparte ninguna clase no es necesario la validación, se registra la clase directamente.
       await crearClaseConDocente(data);
       response.message = "Se creó la clase.";
     }
   }
 
+  //Se actualiza el estado de los docentes
   actualizarEstadoDeDocentes();
   return response;
 }

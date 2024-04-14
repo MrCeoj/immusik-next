@@ -13,7 +13,15 @@ import EditarSucursal from "./EditarSucursal";
  *
  * */
 
-const SucursalInfo = ({ sucursal, cambio, setCambio }) => {
+const SucursalInfo = ({
+  sucursal,
+  cambio,
+  setCambio,
+}: {
+  sucursal: any;
+  cambio: any;
+  setCambio: any;
+}) => {
   const router = useRouter();
   //Editar se usa para mostrar o no la pantalla donde se registran los cambios de la sucursal a editar.
   const [editar, setEditar] = useState(false);

@@ -46,7 +46,7 @@ export async function fetchCreateSucursal(data: any) {
 
 	const contrasenaMaestra = await obtenerContrasenaMaestra()
 
-	console.log("Contaseña proporcionada: "+data.contrasena+" | Contraseña maestra: "+contrasenaMaestra?.value)
+	//console.log("Contaseña proporcionada: "+data.contrasena+" | Contraseña maestra: "+contrasenaMaestra?.value)
 
 	if(contrasenaMaestra?.value===data.contrasena){
 		console.log("Contraseña maestra encontrada")
@@ -62,10 +62,10 @@ export async function fetchCreateSucursal(data: any) {
 		} else {
 			const sucursal = await createSucursal(data)
 			if (sucursal) {
-				response.message = 'Se registró correcamente la sucursal'
+				response.message = 'Se registró la sucursal exitosamente.'
 				response.success = true
 			} else {
-				response.message = 'Hubo un problema al registrar la sucursal'
+				response.message = 'Hubo un problema al registrar la sucursal.'
 			}
 		}
 	}else{

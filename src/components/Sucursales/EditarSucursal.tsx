@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import ConfirmacionEliminar from "./ConfirmacionEliminar";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 /*
  * @param sucursal: la sucursal que se va a editar
  * @param setEditar: cambia el valor de Editar, esto para desaparecer este mismo componente
@@ -7,7 +9,17 @@ import ConfirmacionEliminar from "./ConfirmacionEliminar";
  * los cambios que se hicieron
  * @param setCambio: cambia el valor de cambio.
  *  */
-const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
+const EditarSucursal = ({
+  sucursal,
+  setEditar,
+  cambio,
+  setCambio,
+}: {
+  sucursal: any;
+  setEditar: any;
+  cambio: any;
+  setCambio: any;
+}) => {
   //useStates que cambian el valor de los campos que se registran por parte del usuario
   const [nombre, setNombre] = useState(sucursal.nombre);
   const [direccion, setDireccion] = useState(sucursal.direccion);
@@ -41,7 +53,7 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
 
     //Validación de no dejar espacios en blanco
     if (nombre === "" || direccion === "" || contrasena === "") {
-      alert("No deje espacios en blanco!");
+      toast.error("No deje espacios en blanco.");
       return; //Se corta el flujo
     }
 
@@ -63,15 +75,15 @@ const EditarSucursal = ({ sucursal, setEditar, cambio, setCambio }) => {
       if (response.ok) {
         return response.json().then((data) => {
           if (data.message === "Se ha modificado la sucursal correctamente.") {
+            toast.success(data.message);
             setEditar(false);
-            alert(data.message);
             toggleCambio();
           } else {
-            alert(data.message);
+            toast.error(data.message);
           }
         }); //Si hay una respuesta valida se regresa en formato json.
       } else {
-        alert("Hubo un problema al modificar la sucursal.");
+        toast.error("Hubo un problema al modificar la sucursal.");
       }
     });
   };

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Sucursal from "@/components/Sucursales/Sucursal";
 import BarraNavegacion from "@/components/barraNavegacion";
+import { ToastContainer, toast } from "react-toastify";
+import AgregarSucursal from "@/components/sucursal/AgregarSucursal";
 // import MasterKeyVerificacion from "./components/MasterKeyVerificacion";
 
 // Componente de React básico que compone  y muestra la lista de sucursales
@@ -11,6 +13,7 @@ export default function Sucursales() {
   const [sucursals, setSucursals] = useState([]);
   const [error, setError] = useState(null);
   const [cambio, setCambio] = useState(false);
+  const [agregar, setAgregar] = useState(false);
 
   /*SE EJECUTA CADA QUE CARGA ESTA PÁGINA
   UseEffect ejecuta su contenido cada que cargue la página, hace fetch a /api/sucursal con método de GET
@@ -20,6 +23,7 @@ export default function Sucursales() {
       .then((response) => {
         if (!response.ok) {
           //No hay sucursales
+          toast.error("Error al conseguir las sucursales.");
         } else {
           //Si hay sucursales
           return response.json();
@@ -29,11 +33,27 @@ export default function Sucursales() {
       .catch((error) => setError(error.message));
   }, [cambio]);
 
+  const handleAgregar = () => {
+    setAgregar(true);
+  };
+
+  const handleCambio = () => {
+    if (cambio) {
+      setCambio(false);
+    } else {
+      setCambio(true);
+    }
+  };
+
   /*CUERPO DE LA PAGINA
   se muestra el titulo y un componente Sucursal por cada sucursal que exista, finalmente botón de agregar
   que redirije a agregarSucursal.tsx*/
   return (
     <>
+      <ToastContainer />
+      {agregar && (
+        <AgregarSucursal setAgregar={setAgregar} handleCambio={handleCambio} />
+      )}
       <BarraNavegacion titulo="Editar sucursales" />
       <div className="h-screen w-screen bg-gray-100 flex items-center justify-center">
         <div className="bg-white p-10 rounded-lg shadow-lg flex flex-col items-center justify-center">
@@ -52,23 +72,25 @@ export default function Sucursales() {
                   GESTIONAR
                 </div>
               </div>
-              {sucursals.map((sucursal, i) => (
-                //Por cada sucursal se envía la key, la sucursal, y cambio, este para detectar un cambio desde el componente.
-                <Sucursal
-                  key={i}
-                  sucursal={sucursal}
-                  cambio={cambio}
-                  setCambio={setCambio}
-                />
-              ))}
+              <div className="overflow-y-auto max-h-5/6">
+                {sucursals.map((sucursal, i) => (
+                  //Por cada sucursal se envía la key, la sucursal, y cambio, este para detectar un cambio desde el componente.
+                  <Sucursal
+                    key={i}
+                    sucursal={sucursal}
+                    cambio={cambio}
+                    setCambio={setCambio}
+                  />
+                ))}
+              </div>
             </div>
           )}
-          <Link
-            href="/agregarSucursal"
+          <button
+            onClick={handleAgregar}
             className="bg-pink-500 text-lg text-white py-1 px-5 rounded-md shadow-md hover:bg-pink-700"
           >
             Agregar
-          </Link>
+          </button>
         </div>
       </div>
     </>
