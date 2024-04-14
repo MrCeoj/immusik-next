@@ -11,29 +11,25 @@ import Modal from 'react-modal'
 import { ToastContainer, toast } from 'react-toastify'
 import router, { useRouter } from 'next/router';
 import { XMarkIcon } from '@heroicons/react/16/solid';
+import ConfirmacionEliminarDocente from './ConfirmacionEliminarDocente';
 
-export default function ModalDocente({ docente }:{docente: Docente}){
-	type ClaseSucursal = {
-		id: number;
-		nombre: string;
-		dias: string;
+export default function ModalDocente({ 
+	docente,
+	actualizarDocente
+	}:{
+		docente: Docente,
+		actualizarDocente: any
+	}){
 	
-		sucursal: Sucursal;
-	  };
-	const [tempEstado, setTempEstado] = useState("");
-	const router = useRouter();
-	const [masterKey, setMasterKey] = useState("");
-	const [isMasterKeyModalOpen, setIsMasterKeyModalOpen] = useState(false);
-	const { id } = router.query;
-	const [clases, setClases] = useState([{}] as ClaseSucursal[]);
-	const [estado, setEstado] = useState<string>("");
-	const [color, setColor] = useState("");
-    // useState para guardar la visibilidad del modal
-	const [modalOpen, setModalOpen] = useState(false)
-	// useState para guardar los docentes
-	const [docentes, setdocentes] = useState<Docente[] | null>(null)
-	// useState para guardar un mensaje de error ocurrido durante la obtención de los alumnos
-	const [errorDocente, setErrorDocente] = useState(null)
+	// useState para guardar la visibilidad del modal
+	const [modalOpen, setModalOpen] = useState(false);
+	const [diasClase, setDiasClase] = useState<string[]>([]);
+	// useState para guardar las clases que imparte el docente
+	const [clases, setClases] = useState<Clase[] | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [errorClases, setErrorClases] = useState(null);
+
+	
 	// useForm para manejar los inputs del formulario
 	const {
 		register,
@@ -42,76 +38,68 @@ export default function ModalDocente({ docente }:{docente: Docente}){
 		formState: { errors }
 	} = useForm()
 
-    const handleVerDetalles = async () => {
+	// Cargar las clases del docente cuando el componente se monta
+	useEffect(() => {
+		const loadClases = async () => {
+		  setIsLoading(true);
+		  const res = await fetch(`/api/docente/${docente.id}/clasesDocente`);
+		  const data = await res.json();
+		  data.error ? setErrorClases(data.error) : setClases(data);
+		  setIsLoading(false);
+		};
+		loadClases();
+	  }, [docente.id]);
+
+	  const mensajeClase = () => {
+		if (errorClases) {
+		  return errorClases;
+		}
+	
+		if (isLoading) {
+		  return "Cargando...";
+		} else if (clases === null || clases.length === 0) {
+		  return "No imparte ninguna clase";
+		}
+		return null;
+	  };
+
+	  const handleVerDetalles = async () => {
 		/**
 		 * Se resetean los valores del formulario para evitar que
 		 * se guarden los valores de la clase anterior
 		 */
-		reset()
+		reset();
 		// se abre el modal primero para dar una experiencia más fluida
-		setModalOpen(true)
+		setModalOpen(true);
+	  };
 
-		// Si no se han obtenido los alumnos se hace una petición a la API para obtenerlos
-		if (docentes === null) {
-			const res = await fetch(`/api/docente/${docente.id}`)
-			const data = await res.json()
-			// data.error ? setErrorAlumnos(data.error) : setAlumnos(data)
-		}
-
-	};
-
-	const obtenerDatos = useCallback(async () => {
-		if (!id) return;
-		const response = await fetch(`/api/docente/${id}`);
-		const data = await response.json();
-		console.log(data);
-		if (data && data.data && data.clases) {
-		  setdocentes(data.data);
-		  setClases(data.clases);
-		  switch (data.data.estado) {
-			case "VETADO":
-			  setEstado("VETADO");
-			  setColor("bg-red-500");
-			  break;
-			default:
-			  if (clases.length > 0) {
-				setEstado("ACTIVO");
-				setColor("bg-green-500");
-			  } else {
-				setEstado("INACTIVO");
-				setColor("bg-yellow-300");
-			  }
-		  }
-		  console.log("fetcheado");
-		}
-	  }, [clases.length, id]);
-
-	  useEffect(() => {
-		if (id) {
-		  obtenerDatos();
-		}
-	  }, [id, obtenerDatos, estado]);
-
-	  const deleteDocenteFromClase = async (id: number) => {
-		const response = await fetch(`/api/clase/eliminarDocente`, {
+	//funcion para eleiminar al docente de la clase 
+	const handleEliminarClase = async (idClase: number) => {
+		const res = await fetch("/api/clase/eliminarDocente", {
 		  method: "DELETE",
 		  headers: {
 			"Content-Type": "application/json",
 		  },
-		  body: JSON.stringify({ id: id }),
-		})
-		  .then((res) => res.json())
-		  .then((data) => {
-			if (data.error) {
-			  toast(data.error);
-			} else {
-			  console.log("se elimino 1");
-			  obtenerDatos();
-			}
-		  });
+		  body: JSON.stringify({
+			idClase,
+		  }),
+		});
 	
-		return response;
+		const data = await res.json();
+	
+		if (data?.error) {
+		  toast.error(data.error);
+		} else {
+		  // Se actualiza la lista de clases
+		  
+		  // Se actualiza la información de la clase
+		  actualizarDocente();
+		  toast.success("Clase eliminada correctamente", {
+			autoClose: 2000,
+		  });
+		}
 	  };
+	
 
     const onSubmit = handleSubmit(async (data) => {
 		// Se verifica que la información haya sido modificada
@@ -145,7 +133,7 @@ export default function ModalDocente({ docente }:{docente: Docente}){
 		// Si la clase se modificó correctamente, se muestra un toast con un mensaje de éxito
 		else {
 			// Actualiza la información de la clase
-			actualizarDocentes()
+			actualizarDocente()
 			toast.success('Docente actualizado correctamente')
 		}
 	})
@@ -259,7 +247,7 @@ export default function ModalDocente({ docente }:{docente: Docente}){
 						<div>
 							<Label
 								htmlFor="curp"
-								label="curp"
+								label="CURP"
 								error={Boolean(errors.curp?.type === 'required')}
 								className="block text-white text-lg"
 							/>
@@ -282,112 +270,45 @@ export default function ModalDocente({ docente }:{docente: Docente}){
 							Guardar cambios
 						</button>
 					</form>
-					<div className="text-white grid">
-						<div className="text-center">
-							<h1 className="font-bold text-2xl">Clases</h1>
-							<div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-12 mt-3 gap-2 px-5">
-								<div className="text-lg font-bold col-span-4 text-center">Nombre</div>
-								<div className="text-lg font-bold col-span-4 text-center">Sucursal</div>
-								<div className="text-lg font-bold col-span-4 text-center">Días</div>
-							</div>
-						</div>
-						<div className="text-center">
-							<h1 className="font-bold text-2xl">Cambiar estado del docente</h1>
-							<div className="flex justify-center my-5">
-								<select
-									value={estado}
-									onChange={(e) => {
-									if (estado === "VETADO") {
-										return;
-									}
-									if (e.target.value === "VETADO") {
-										setMasterKey("");
-										setIsMasterKeyModalOpen(true);
-										setTempEstado(e.target.value);
-									} else {
-										setEstado(e.target.value);
-										setTempEstado(e.target.value);
-									}
-									}}
-									className={`border-2 ${
-									estado === "VETADO"
-										? "border-gray-500 text-gray-500"
-										: "border-primary text-primary"
-									} min-w-[170px] max-w-[200px] text-center bg-transparent cursor-pointer`}
-									aria-label="Cambiar estado"
-									disabled={estado === "VETADO"}
-								>
-									{estado === "ACTIVO" && <option value="ACTIVO">ACTIVO</option>}
-									<option value="INACTIVO">INACTIVO</option>
-									<option value="VETADO">VETADO</option>
-								</select>
-							</div>
-							<Modal
-								isOpen={isMasterKeyModalOpen}
-								onRequestClose={() => {
-									setMasterKey("");
-									setIsMasterKeyModalOpen(false);
-								}}
-							>
-							<div className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-transparent">
-								<div className="bg-customGray p-6 rounded-lg shadow-lg">
-								<h2 className="text-xl font-semibold mb-4 text-white">
-									Ingresar contraseña Maestra para vetar a un docente
-								</h2>
-								<h3 className="text-white">Esta acción será permanente</h3>
-								<input
-									type="password"
-									value={masterKey}
-									onChange={(e) => setMasterKey(e.target.value)}
-									placeholder="Ingresa Contraseña Maestra"
-									className="border border-gray-300 rounded-md px-3 py-2 mb-4 w-full"
-								/>
-								<button
-									onClick={async () => {
-									const res = await fetch("/api/docente/changeEstado", {
-										method: "POST",
-										headers: {
-										"Content-Type": "application/json",
-										},
-										body: JSON.stringify({ masterKey }),
-									});
 
-									if (docente) {
-										const { verified } = await res.json();
-
-										if (verified) {
-										await fetch(`/api/docente/changeEstado`, {
-											method: "PATCH",
-											headers: {
-											"Content-Type": "application/json",
-											},
-											body: docente.id.toString(),
-										});
-										setEstado(tempEstado);
-										setIsMasterKeyModalOpen(false);
-										obtenerDatos();
-										} else {
-										toast("Contraseña Maestra incorrecta");
-										}
-									}
-									}}
-									className="bg-pink-500 text-white rounded-md px-4 py-2 mr-2 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)]"
-								>
-									Confirmar
-								</button>
-								<button
-									onClick={() => {
-									setMasterKey("");
-									setIsMasterKeyModalOpen(false);
-									}}
-									className="bg-gray-300 text-gray-800 rounded-md px-4 py-2"
-								>
-									Cancelar
-								</button>
-								</div>
-							</div>
-							</Modal>
-						</div>
+					<div className="flex flex-col justify-between">
+					{mensajeClase() ? (
+						<p className="flex-grow grid place-items-center">
+							{mensajeClase()}
+						</p>
+						) : ( 
+							<table className="w-full text-center overflow-hidden text-white">
+								 <caption className="font-bold text-xl mb-3">
+									Clases
+								</caption>
+								<thead>
+									<tr className="bg-gray-contrast rounded-lg font-normal">
+										<th className="py-1">Nombre</th>
+										<th className="py-1">Ap. Paterno</th>
+										<th className="py-1">Ap. Materno</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									{clases?.map((clase, index) => ( 
+										<tr key={index} className="border-b-2">
+										<td className="py-2">{toTitleCase(clase.nombre)}</td>
+										<td className="py-2">{toTitleCase(clase.hora)}</td>
+										<td className="py-2">{toTitleCase(clase.dias)}</td>
+										<td className="py-2">
+											<button
+												onClick={() => handleEliminarClase(clase.id)}
+												className="bg-rose-600 text-white font-bold w-6 h-6 rounded"
+											>
+												×
+											</button>
+										</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						)}
+						{/* <ConfirmacionEliminarDocente clase={clases} actualizarDocente={actualizarDocente} setModalOpen={setModalOpen} /> */}
 					</div>
 				</div>
 				<button
@@ -398,9 +319,5 @@ export default function ModalDocente({ docente }:{docente: Docente}){
 				</button>
 			</Modal>
         </>
-    )
+    );
 }
-function setErrorClases(message: any) {
-	throw new Error('Function not implemented.')
-}
-

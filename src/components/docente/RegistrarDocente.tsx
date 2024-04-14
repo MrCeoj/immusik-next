@@ -1,129 +1,60 @@
-// RegistrarClase
+
 import React, { useEffect, useState } from "react";
-import Label from "../form/Label";
-import Input from "../form/Input";
-import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
-import router from "next/router";
+import Modal from "react-modal";
 import "react-toastify/dist/ReactToastify.css";
 import ConfirmacionRegistro from "./ConfirmacionRegistro";
+import { setEstado } from "@/persistence/DocenteDao";
+import FormDocente from "./form-docente";
+import { toast } from "react-toastify"; // Importa la función toast
 
-function RegistrarDocente({
-  setRegistrarDocente, 
+
+function RegistrarDocente({ 
   setCambio, 
   cambio
-  } : {
-    setRegistrarDocente: any,  
-    setCambio: any, 
-    cambio: any
+  } : { 
+    setCambio: React.Dispatch<React.SetStateAction<boolean>>, 
+    cambio: boolean,
   }) {
 
+   const [modalOpen, setModalOpen] = useState(false);
 
-  const [docentes, setDocentes] = useState([]);
-  const [docente, setDocente] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [aPaterno, setaPaterno] = useState("");
-  const [aMaterno, setaMaterno] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [curp, setCurp] = useState("");
-  const [data, setData] = useState<any>();
-  const [confirmacionRegistrar, setConfirmacionRegistrar] = useState(false);
+   const handleCancelar = () => {
+     setModalOpen(false);
+   };
 
-  useEffect(() => {
-    fetch("api/docente/fetchAll").then((response) => {
-        if (response.ok) {
-          return response.json().then((data) => {
-            setDocentes(data);
-          });
-        } else {
-          alert("Hubo un error al encontrar los docentes.");
-        }
-      })
-  }, []);
-
-  const handleCancelar = () => {
-    setRegistrarDocente(false);
-  };
-
-  const handleAceptar = () => {
-    let datos = {
-        nombre: nombre,
-        aPaterno: aPaterno,
-        aMaterno: aMaterno,
-        telefono: telefono,
-        curp: curp,
-      };
-      setData(datos); //por que me da error aqui
-      setConfirmacionRegistrar(true);
-  };
+   const handleRegistrar = () => {
+     setModalOpen(true);
+   };
 
   return (
     <>
-      {confirmacionRegistrar && (
-        <ConfirmacionRegistro
-          setConfirmacionRegistrar={setConfirmacionRegistrar}
-          data={data}
-          cambio={cambio}
-          setCambio={setCambio}
-          setRegistrarDocente={setRegistrarDocente}
-        />
-      )}
-      <div className="absolute z-20 top-0 left-0 bg-black bg-opacity-50 h-screen w-screen flex justify-center items-center">
-        <div className="bg-black p-9 w-9/12 h-5/6 rounded-lg shadow-lg flex flex-col bg-opacity-">
-          <form className="flex flex-col gap-2">
-            <label className="my-1 font-bold text-white">Nombre</label>
-            <input
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value.toUpperCase())}
-              className="p-1 rounded-md text-black"
-              placeholder="Nombre"
-            />
-            <label className="my-1 font-bold text-white">Apellido Paterno</label>
-            <input
-              value={aPaterno}
-              onChange={(e) => setaPaterno(e.target.value.toUpperCase())}
-              className="p-1 rounded-md text-black"
-              placeholder="Apellido Paterno"
-            />
-            <label className="my-1 font-bold text-white">Apellido Materno</label>
-            <input
-              value={aMaterno}
-              onChange={(e) => setaMaterno(e.target.value.toUpperCase())}
-              className="p-1 rounded-md text-black"
-              placeholder="Apellido Materno"
-            />
-            <label className="my-1 font-bold text-white">Contacto</label>
-            <input
-              value={telefono}
-              onChange={(e) => setTelefono(e.target.value.toUpperCase())}
-              className="p-1 rounded-md text-black"
-              placeholder="Contacto"
-            />
-            <label className="my-1 font-bold text-white">CURP</label>
-            <input
-              value={curp}
-              onChange={(e) => setCurp(e.target.value.toUpperCase())}
-              className="p-1 rounded-md text-black"
-              placeholder="CURP"
-            />
-          </form>
-          {/* Botones de cancelar y aceptar */}
-          <div className="flex justify-center items-center mt-3">
-            <button
-              className="bg-gray-500 py-1 px-3 rounded-md text-lg shadow-md mr-2 hover:bg-gray-600"
-              onClick={handleCancelar}
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={handleAceptar}
-              className="bg-pink-500 py-1 px-3 rounded-md text-lg shadow-md ml-2 hover:bg-pink-600"
-            >
-              Aceptar
-            </button>
-          </div>
+      
+      <button
+        className="bg-primary rounded-md shadow-md text-white text-center px-4 py-1 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)] text-lg font-bold ml-3"
+        onClick={handleRegistrar}
+      >
+        <span>Registrar Docente</span>
+      </button>
+      <Modal
+        isOpen={modalOpen}
+        ariaHideApp={false}
+        onRequestClose={() => setModalOpen(false)}
+        overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
+        className="relative bg-secciones bg-opacity-95 p-6 w-full max-w-5xl min-h-min rounded-md text-white"
+      >
+        <div className="flex items-center justify-center">
+          <h1 className="font-bold text-4xl">Alta de Docente</h1>
         </div>
-      </div>
+        
+        <FormDocente cambio={cambio} setCambio={setCambio} setModalOpen={setModalOpen}></FormDocente>
+        
+        <button
+          onClick={() => setModalOpen(false)}
+          className="absolute top-4 right-4 font-bold rounded hover:bg-black/10 w-8 h-8 flex items-center justify-center"
+        >
+          X
+        </button>
+      </Modal>
     </>
   );
 }
