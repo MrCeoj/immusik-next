@@ -23,7 +23,7 @@ export default function ModalClase({
   // useState para guardar la visibilidad del modal
   const [modalOpen, setModalOpen] = useState(false);
   // useState para guardar los alumnos inscritos a la clase
-  const [alumnos, setAlumnos] = useState<Alumno[] | null>(null);
+  const [alumnos, setAlumnos] = useState<Alumno[]>([]);
   // useState para guardar un mensaje de error ocurrido durante la obtención de los alumnos
   const [errorAlumnos, setErrorAlumnos] = useState(null);
   // se obtiene la sucursal de la clase
@@ -51,7 +51,6 @@ export default function ModalClase({
     } else if (docentes.length === 0) {
       return "No hay docentes disponibles";
     }
-
     return null;
   };
 
@@ -62,10 +61,10 @@ export default function ModalClase({
       return errorAlumnos;
     }
 
-    if (alumnos === null) {
-      return "Cargando...";
-    } else if (alumnos.length === 0) {
+    if (alumnos.length === 0) {
       return "No hay alumnos inscritos";
+    } else{
+      return "Cargando..."
     }
 
     return null;
@@ -83,7 +82,7 @@ export default function ModalClase({
     setModalOpen(true);
 
     // Si no se han obtenido los alumnos se hace una petición a la API para obtenerlos
-    if (alumnos === null) {
+    if (alumnos.length === 0) { 
       const res = await fetch(`/api/clase/${clase.id}/obtenerAlumnos`);
       const data = await res.json();
 

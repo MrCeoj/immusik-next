@@ -7,7 +7,15 @@ import Input from "@/components/form/Input";
 import "react-toastify/dist/ReactToastify.css";
 
 // Formulario para registrar un docente
-const FormDocente = () => {
+function FormDocente({ 
+  setCambio, 
+  cambio,
+  setModalOpen, 
+  }: {
+    setCambio: React.Dispatch<React.SetStateAction<boolean>>, 
+    cambio: boolean,
+    setModalOpen : any,
+}) {
   // useState para manejar errores
   const [serverError, setServerError] = useState<string | null>(null);
   const [telefono, setTelefono] = useState("");
@@ -19,8 +27,8 @@ const FormDocente = () => {
     formState: { errors },
   } = useForm();
 
-  // Función que se ejecuta al enviar el formulario, consume la api para registrar un docente
-  const onSubmit = handleSubmit(async (data) => {
+   // Función que se ejecuta al enviar el formulario, consume la api para registrar un docente
+   const onSubmit = handleSubmit(async (data) => {
     const response = await fetch("/api/docente/registerDocente", {
       method: "POST",
       headers: {
@@ -37,52 +45,39 @@ const FormDocente = () => {
         },
       }),
     });
+    const resJSON = await response.json();
     if (response.status === 500) {
-      const resJSON = await response.json();
-      console.log(resJSON.error);
-      console.log(typeof resJSON.error);
-      toast.error(resJSON.error, {
-        className: "text-white px-6 py-4 border-0 rounded-md bg-red-500",
-        bodyClassName: "font-semibold text-sm text-red-500",
-        autoClose: 5000,
-        draggable: false,
-      });
+      setServerError(resJSON.error);
     } else {
-      toast.success("Docente registrado", {
-        className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
-        bodyClassName: "font-semibold text-sm text-green-500",
-        autoClose: 3000,
-        draggable: false,
-        onClose: () => router.push("/docente"),
-      });
+      if (cambio) {
+          setCambio(false);
+        } else {
+          setCambio(true);
+        }
+
+        toast.success("Docente registrado", {
+          className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
+          bodyClassName: "font-semibold text-sm text-green-500",
+          autoClose: 2000,
+          draggable: false,
+          onClose: () => setModalOpen(false),
+        });
     }
   });
 
-  useEffect(() => {
-    Object.values(errors).forEach((error) => {
-      if (error) {
-        toast.error(String(error.message), {
-          className: "text-white px-6 py-4 border-0 rounded-md bg-red-500",
-          bodyClassName: "font-semibold text-sm text-red-500",
-          autoClose: 5000,
-          draggable: false,
-        });
-      }
-    });
-  }, [errors]);
-
   return (
     <>
-      <ToastContainer />
+      <ToastContainer/>
       <form
         onSubmit={onSubmit}
-        className="flex flex-col gap-4 bg-gray-300 p-8 rounded-md"
+        className="flex flex-col gap-4 bg-transparent p-8 rounded-md"
       >
         <div className="flex flex-col max-w-82 min-w-72 relative">
           <Label
             htmlFor="nombre"
             label="Nombre del docente"
             error={Boolean(errors.nombre?.type === "required")}
+            className="text-lg "
           />
           <Input
             type="text"
@@ -102,6 +97,7 @@ const FormDocente = () => {
             htmlFor="aPaterno"
             label="Apellido Paterno"
             error={Boolean(errors.aPaterno?.type === "required")}
+            className="text-lg "
           />
           <Input
             type="text"
@@ -121,6 +117,7 @@ const FormDocente = () => {
             htmlFor="aMaterno"
             label="Apellido Materno"
             error={Boolean(errors.aMaterno?.type === "required")}
+            className="text-lg "
           />
           <Input
             type="text"
@@ -140,6 +137,7 @@ const FormDocente = () => {
             htmlFor="curp"
             label="CURP"
             error={Boolean(errors.curp?.type === "required")}
+            className="text-lg"
           />
           <Input
             type="text"
@@ -171,9 +169,10 @@ const FormDocente = () => {
             htmlFor="telefono"
             label="Teléfono"
             error={Boolean(errors.telefono?.type === "required")}
+            className="text-lg font-normal"
           />
           <input
-            className="text-gray-800 px-2 py-1 pr-6 rounded-md border-2"
+            className="text-black px-2 py-1 pr-6 rounded-md border-2 font-bold"
             type="text"
             id="telefono"
             placeholder="Telefono"
@@ -217,12 +216,14 @@ const FormDocente = () => {
 
         {serverError && <Error error={serverError} />}
 
-        <button
-          className="rounded-md bg-primary px-4 py-2 mt-4 font-bold text-white shadow-md transition-all duration-300 hover:shadow-lg hover:bg-pink-300"
-          type="submit"
-        >
-          Registrar
-        </button>
+        <div className="flex justify-center">
+          <button
+            className="rounded-md bg-primary w-2/5 px-4 py-2 mt-4 font-bold text-white shadow-md transition-all duration-300 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)]"
+            type="submit"
+          >
+            Dar de alta
+          </button>
+        </div>
       </form>
     </>
   );

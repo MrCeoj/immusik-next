@@ -47,7 +47,7 @@ const Input = ({
 			defaultValue={defaultValue}
 			defaultChecked={defaultChecked}
 			placeholder={placeholder}
-			className={cn('border text-gray-800 px-1 py-1 rounded', className, {
+			className={cn('border text-black font-bold px-2 py-1 rounded', className, {
 				'border-red-600 outline-red-600': error
 			})}
 			{...register}

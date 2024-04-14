@@ -10,6 +10,7 @@ import {
 	ChevronRightIcon,
   } from "@heroicons/react/20/solid";
 import Paginador from "@/components/Paginador";
+import { ToastContainer } from "react-toastify";
 
 
 const Index = () => {
@@ -86,6 +87,11 @@ const Index = () => {
 		setItemsPerPage(pag);
 	  };
 
+	// Método para indicar que ocurrió un cambio
+	const handleCambio = (message: string) => {
+		setCambio(!cambio);
+	  };
+
 
 	//funciones para moverte 
 	const goClases = () => {
@@ -97,57 +103,46 @@ const Index = () => {
 
  	return (
       <>
-        {registrarDocente && (
-				<RegistrarDocente
-					setRegistrarDocente={setRegistrarDocente}
-					setCambio={setCambio}
-					cambio={cambio}
-				/>
-			)}
-			<div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pb-20 text-white">
-				<div className="w-full flex items-center bg-transparent h-1/5">
-					<h1 className="font-PassionOne text-6xl text-white">i.m.musik</h1>
-					<div className="flex ml-auto text-xl gap-10">
-						<button className="text-white font-medium" >
-							Alumnos
-						</button>
-						<button className="text-white font-medium bg-primary rounded-lg p-2 relative shadow-[0px_0px_20px_8px_rgba(251,_3,_143,_0.25)]">
-							Docentes
-						</button>
-						<button className="text-white font-medium" onClick={goClases}>
-							Clases
-						</button>
-						<Image src={require("@/img/back.png")} alt={""} 
-						className="cursor-pointer transform transition-transform hover:scale-110"
-						onClick={regresarMenu}>
-						</Image>
-					</div>
-				</div>
-				
-				<div className="flex w-full items-end mb-1">
-					<h1 className="text-6xl font-bold mr-3">Docentes</h1>
-					<form className="flex bg-[rgba(217,217,217,0.5)] rounded-md items-center h-3/5">	
-						<Image 
-							src={require("@/img/lupa.png")} alt={""} className="bg-transparent max-w-5 max-h-6 pl-1">
-						</Image>
-						<input
-							className="bg-transparent rounded-md text-md text-white "
-							placeholder=""
-							value={busqueda}
-							onChange={
-								(e) =>
-									handleBusqueda(e.target.value) /*Se manda llamar el método
-             							handleBusqueda cada que el usuario teclee algo */
-							}
-						></input>
-					</form>
-					<button
-						onClick={handleRegistrar}
-						className="bg-primary rounded-md shadow-md text-white text-center px-4 py-1 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)] text-lg font-bold ml-3"
-					>
-						Registrar
+	   
+		<div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pb-20 text-white">
+			<div className="w-full flex items-center bg-transparent h-1/5">
+				<h1 className="font-PassionOne text-6xl text-white">i.m.musik</h1>
+				<div className="flex ml-auto text-xl gap-10">
+					<button className="text-white font-medium" >
+						Alumnos
 					</button>
+					<button className="text-white font-medium bg-primary rounded-lg p-2 relative shadow-[0px_0px_20px_8px_rgba(251,_3,_143,_0.25)]">
+						Docentes
+					</button>
+					<button className="text-white font-medium" onClick={goClases}>
+						Clases
+					</button>
+					<Image src={require("@/img/back.png")} alt={""} 
+					className="cursor-pointer transform transition-transform hover:scale-110"
+					onClick={regresarMenu}>
+					</Image>
 				</div>
+			</div>
+			
+			<div className="flex w-full items-end mb-1">
+				<h1 className="text-6xl font-bold mr-3">Docentes</h1>
+				<form className="flex bg-[rgba(217,217,217,0.5)] rounded-md items-center h-3/5">	
+					<Image 
+						src={require("@/img/lupa.png")} alt={""} className="bg-transparent max-w-5 max-h-6 pl-1">
+					</Image>
+					<input
+						className="bg-transparent rounded-md text-md text-white "
+						placeholder=""
+						value={busqueda}
+						onChange={
+							(e) =>
+								handleBusqueda(e.target.value) /*Se manda llamar el método
+									handleBusqueda cada que el usuario teclee algo */
+						}
+					></input>
+				</form>
+				<RegistrarDocente setCambio={setCambio} cambio={cambio} />
+		</div>
 				<div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-10 mt-3 gap-5 px-5">
 					<div className="text-2xl font-bold col-span-4 text-left ">Nombre</div>
 					<div className="text-2xl font-bold col-span-2 text-left ">Contacto</div>
@@ -157,11 +152,11 @@ const Index = () => {
 				<div className="overflow-y-auto w-full h-5/6">
 					{docentesFiltrados.length >= 0
 						? currentItems.map((docente, index) => (
-							<Docente key={index} docente={docente}/>
+							<Docente key={index} docente={docente} actualizarDocente={handleCambio}/>
 						))
 						: docentes
 							.slice(indexOfFirstItem, indexOfLastItem)
-							.map((docente, index) => <Docente key={index} docente={docente}/>)}
+							.map((docente, index) => <Docente key={index} docente={docente} actualizarDocente={handleCambio}/>)}
 				</div>
 				<Paginador
 					currentPage={currentPage}
