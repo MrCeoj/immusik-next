@@ -189,7 +189,7 @@ function RegistrarClase({
             }
           } else {
             //Si hay un error se le indica al usuario.
-            toast.error("Error al registrar la nueva clase.", {
+            toast.error(data.message, {
               autoClose: 2000,
               onClose: () => {
                 setModalOpen(false);

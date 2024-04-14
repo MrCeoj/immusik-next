@@ -199,7 +199,7 @@ export async function fetchCrearClase(data: any) {
                 /*Si se imparte durante la misma hora se declara la bandera "valido" como false
                 se asigna un mensaje de error y se cortan los ciclos.*/
                 valido = false;
-                response.message = "Horario no disponible.";
+                response.message = "El docente no cuenta con ese horario disponible.";
                 break;
               }
             }
