@@ -19,6 +19,7 @@ export default function Docente ({docente, actualizarDocente} : { docente: Docen
           .then((data) => setDocentes(data));
       }, [docente]); //Se ejecuta cada vez que se modifica el docente
 
+
     return (
         <>
             <div className="grid grid-cols-10 my-4 text-lg bg-gray-100 bg-opacity-50 py-2 rounded-lg font-bold pl-4 gap-5 justify-center">

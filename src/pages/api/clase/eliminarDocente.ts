@@ -20,6 +20,7 @@ export default async function handler(
         return res
           .status(400)
           .json({ error: "Falta proporcionar el ID de la clase" });
+      
       const result = await eliminarUnDocente(id.id);
       return res.status(200).json(result);
     }

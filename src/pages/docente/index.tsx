@@ -58,9 +58,7 @@ const Index = () => {
 		setDocentes(data);
 		contarPaginas(docentes); // Se manda llamar el método contarPaginas para contar cuantas páginas habrá dependiendo de la cantidad de clases
 	};
-	 
 	
-
 	  // Método para contar las páginas
   	const contarPaginas = (data: any) => {
     	const newPageNumbers = [];
