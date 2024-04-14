@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 /*
  * Componente para validar la eliminación de la sucursal
@@ -15,6 +18,12 @@ const ConfirmacionEliminar = ({
   cambio,
   setCambio,
   setEditar,
+}: {
+  sucursal: any;
+  setEliminar: any;
+  cambio: any;
+  setCambio: any;
+  setEditar: any;
 }) => {
   //useState para la contraseña Maestra
   const [contrasena, setContrasena] = useState("");
@@ -30,7 +39,7 @@ const ConfirmacionEliminar = ({
   //Si se presiona eliminar se ejecuta el siguiente comando
   const handleEliminar = () => {
     if (contrasena === "") {
-      alert("¡Ingrese la Contraseña Maestra!");
+      toast.error("¡Ingrese la contraseña maestra para continuar!");
       return;
     }
 
@@ -50,16 +59,20 @@ const ConfirmacionEliminar = ({
       if (response.ok) {
         return response.json().then((data) => {
           if (data.message === "Sucursal eliminada exitosamente.") {
-            alert(data.message);
+            toast.success("Sucursal eliminada exitosamente.");
             setEliminar(false);
             setEditar(false);
-            toggleCambio();
+            if (cambio) {
+              setCambio(false);
+            } else {
+              setCambio(true);
+            }
           } else {
-            alert(data.message);
+            toast.error(data.message);
           }
         }); //Si hay una respuesta valida se regresa en formato json.
       } else {
-        alert("Hubo un problema al eliminar la sucursal.");
+        toast.error("Hubo un problema al eliminar la sucursal.");
       }
     });
   };

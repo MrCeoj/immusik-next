@@ -1,31 +1,30 @@
-import { redirect } from "next/navigation";
-import router from "next/router";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const AgregarSucursal = () => {
-  //useStates que manejan si hay errores y un mensaje de error cambiante
-  const [error, setError] = useState(false);
-  const [mensajeDeError, setMensajeDeError] = useState("");
-
+const AgregarSucursal = ({
+  setAgregar,
+  handleCambio,
+}: {
+  setAgregar: any;
+  handleCambio: any;
+}) => {
   //useStates que manejan los datos de la sucursal
   const [nombre, setNombre] = useState("");
   const [direccion, setDireccion] = useState("");
   const [contrasena, setContrasena] = useState("");
 
   const handleCancelar = () => {
-    router.push("/sucursales");
+    setAgregar(false);
   };
 
   /*cuando se envíe el formulario se haran validaciones para que no haya 
   campos vacíos*/
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (nombre === "" || direccion === "") {
-      setMensajeDeError("No deje espacios en blanco");
-      setError(true);
+      toast.error("No deje espacios en blanco.");
       return; //Se corta el flujo
     }
-    setError(false);
 
     /*Si no hay errores se sigue con el flujo haciendo petición fecth POST
     para crear una nueva sucursal, enviando nombre y dirección*/
@@ -43,13 +42,16 @@ const AgregarSucursal = () => {
       //Se obtiene la respuesta
       if (response.ok) {
         return response.json().then((data) => {
-          //Si la respuesta es exitosa se convierte en json y se regresa
-          alert(data.message);
-          if (data.message === "Se registró correcamente la sucursal")
-            router.push("/sucursales"); //Se regresa a sucursales.
+          if (data.message === "Se registró la sucursal exitosamente.") {
+            handleCambio();
+            toast.success("Se registró la sucursal exitosamente.");
+            setAgregar(false);
+          } else {
+            toast.error(data.message);
+          }
         });
       } else {
-        alert("Hubo un problema al registrar la sucursal.");
+        toast.error("Hubo un problema al agregar la sucursal.");
       }
     });
   };
@@ -59,17 +61,9 @@ const AgregarSucursal = () => {
   archivo.*/
   return (
     <>
-      <div className="w-screen h-screen bg-gray-100 flex items-center justify-center">
+      <div className="absolute w-screen h-screen z-20 top-0 left-0 bg-black bg-opacity-50 flex justify-center items-center">
         <div className="bg-white p-10 flex flex-col rounded-lg shadow-lg items-center justify-center">
-          {error && (
-            <div
-              className=" bg-red-800 text-white text-center p-3 uppercase font-bold
-                rounded-md"
-            >
-              <p>{mensajeDeError}</p>
-            </div>
-          )}
-          <h1 className="font-bold text-3xl mb-3">Agregar sucursal</h1>
+          <h1 className="font-bold text-3xl mb-3">Agregar</h1>
           <form>
             <div className="text-lg">
               <label className="py-1">Nombre</label>
@@ -102,14 +96,12 @@ const AgregarSucursal = () => {
           </form>
           <div>
             <button
-              type="submit"
               className="bg-gray-500 mr-1 py-1 px-5 text-lg text-slate-50 rounded-md hover:bg-gray-700"
               onClick={handleCancelar}
             >
               Cancelar
             </button>
             <button
-              type="submit"
               className="bg-pink-500 ml-1 py-1 px-5 text-lg text-slate-50 rounded-md hover:bg-pink-700"
               onClick={handleSubmit}
             >

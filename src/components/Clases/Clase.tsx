@@ -3,6 +3,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { Clase, Docente } from "@prisma/client";
 import ModalClase from "./ModalClase";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function Clase({
   clase,
@@ -28,7 +30,7 @@ export default function Clase({
       if (response.ok) {
         return response.json().then((data) => setAlumnoClases(data)); //Los registros se guardan en alumnoClases
       } else {
-        alert("Error al encontrar los registros AlumnoClase");
+        toast.error("Error al cargar los registros Alumno-Clase.");
       }
     });
 

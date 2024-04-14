@@ -97,10 +97,16 @@ export async function getClasesDeDeterminadoDocente(id: any) {
 	return clases
 }
 
+/**
+ * Función que registra una clase sin docente
+ * @param data datos de la clase a registrar
+ */
 export async function crearClaseSinDocente(data: any) {
+	//Se convierten a valores numéricos los datos necesarios
 	let cupoNum: number = parseInt(data.cupo)
 	let idSucursal: number = parseInt(data.sucursal)
 
+	//Se crea la clase
 	await prisma.clase.create({
 		data: {
 			nombre: data.nombre,
@@ -112,11 +118,17 @@ export async function crearClaseSinDocente(data: any) {
 	})
 }
 
+/**
+ * Función para crear clase con docente.
+ * @param data datos de la clase a registrar
+ */
 export async function crearClaseConDocente(data: any) {
+	//Se convierten a valores numéricos los datos necesarios
 	let cupoNum: number = parseInt(data.cupo)
 	let idDocente: number = parseInt(data.docente)
 	let idSucursal: number = parseInt(data.sucursal)
 
+	//Se crea la clase
 	await prisma.clase.create({
 		data: {
 			nombre: data.nombre,
