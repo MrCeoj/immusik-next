@@ -63,24 +63,6 @@ const Index = () => {
       return 0;
     });
 
-<<<<<<< Updated upstream
-	//Función para obtener a los docentes
-	const obtenerDocentes = async () => {
-		const response = await fetch("/api/docente/fetchAll");
-		const data = await response.json();
-		setDocentes(data);
-		contarPaginas(docentes); // Se manda llamar el método contarPaginas para contar cuantas páginas habrá dependiendo de la cantidad de clases
-	};
-	
-	  // Método para contar las páginas
-  	const contarPaginas = (data: any) => {
-    	const newPageNumbers = [];
-		for (let i = 1; i <= Math.ceil(data.length / itemsPerPage); i++) {
-		newPageNumbers.push(i);
-		}
-    	setPageNumbers(newPageNumbers);
-  	};
-=======
     const ordenados = porNombre.sort((a: any, b: any) => {
       return orden.indexOf(a.estado) - orden.indexOf(b.estado);
     });
@@ -94,7 +76,6 @@ const Index = () => {
     setDocentes(data);
     contarPaginas(docentes); // Se manda llamar el método contarPaginas para contar cuantas páginas habrá dependiendo de la cantidad de clases
   };
->>>>>>> Stashed changes
 
   // Método para contar las páginas
   const contarPaginas = (data: any) => {

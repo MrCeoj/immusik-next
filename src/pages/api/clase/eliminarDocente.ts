@@ -19,14 +19,9 @@ export default async function handler(
         return res
           .status(400)
           .json({ error: "Falta proporcionar el ID de la clase" });
-<<<<<<< Updated upstream
-      
-      const result = await eliminarUnDocente(id.id);
-=======
       const result = await eliminarUnDocente(id.idClase, id.idDocente);
       if(result instanceof Error)
         return res.status(400).json({ error: result.message });
->>>>>>> Stashed changes
       return res.status(200).json(result);
     }
     return res.status(405).json({ error: "Método no permitido" });
