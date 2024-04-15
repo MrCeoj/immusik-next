@@ -101,60 +101,62 @@ const EditarSucursal = ({
           setEditar={setEditar}
         />
       )}
-      <div className="h-screen w-screen bg-gray-100 absolute top-0 left-0 flex justify-center items-center z-100">
-        <div className="bg-white p-7 pt-10 flex flex-col items-center w-1/2 h-1/2 justify-center rounded-lg shadow-lg">
-          <h1 className="text-3xl font-bold mb-7">
+      <div className="h-screen w-screen absolute backdrop-blur-md top-0 left-0 flex justify-center items-center z-100">
+        <div className="bg-secciones bg-opacity-95 p-7 pt-10 flex flex-col items-center w-[1000px] h-300 justify-center rounded-lg shadow-lg">
+          <h1 className="text-3xl font-bold mb-7 text-white mx-64">
             SUCURSAL {sucursal.nombre}
           </h1>
           <div>
             <form>
-              <div className="mt-2">
-                <label className="text-2xl mr-7">Nombre</label>
+              <div className="mt-2 flex flex-col w-[800px] relative">
+                <label className="text-2xl mr-7 text-white">Nombre</label>
                 <input
                   placeholder="Nombre"
-                  className="text-2xl bg-gray-100 py-1 px-2 rounded-lg"
+                  className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value.toUpperCase())}
                 ></input>
               </div>
-              <div className="mt-5">
-                <label className="text-2xl mr-7">Dirección</label>
+              <div className="mt-5 flex flex-col w-[800px] relative">
+                <label className="text-2xl mr-7 text-white">Dirección</label>
                 <input
                   placeholder="Dirección"
-                  className="text-2xl bg-gray-100 py-1 px-2 rounded-lg"
+                  className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                   value={direccion}
                   onChange={(e) => setDireccion(e.target.value.toUpperCase())}
                 />
               </div>
-              <div className="mt-5">
-                <label className="text-2xl mr-7">Contraseña Maestra</label>
+              <div className="mt-5 flex flex-col w-[800px] relative">
+                <label className="text-2xl mr-7 text-white">
+                  Contraseña Maestra
+                </label>
                 <input
                   type="password"
                   placeholder="Contraseña Maestra"
-                  className="text-2xl bg-gray-100 py-1 px-2 rounded-lg"
+                  className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                   value={contrasena}
                   onChange={(e) => setContrasena(e.target.value)}
                 />
               </div>
             </form>
           </div>
-          <div className="flex w-full mt-7 justify-between px-10 mb-5">
+          <div className="flex w-full mt-12 justify-between px-10 mb-5">
             <button
               onClick={handleCancelar}
-              className="bg-gray-500 text-white py-1 px-10 rounded-lg text-lg hover:bg-gray-700"
+              className="bg-gray-500 text-white py-1 px-10 rounded-lg text-lg shadow-md transition-all duration-300 hover:shadow-[0px_0px_20px_10px_rgba(107,_114,_128,_0.25)]"
             >
               Cancelar
             </button>
             <div>
               <button
                 onClick={handleEditar}
-                className="bg-pink-500 text-white py-1 px-10 rounded-lg text-lg mr-4 hover:bg-pink-700"
+                className="bg-pink-focus text-white py-1 px-10 rounded-lg text-lg mr-4 shadow-md transition-all duration-300 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)]"
               >
                 Editar
               </button>
               <button
                 onClick={handleEliminar}
-                className="bg-red-500 text-white py-1 px-10 rounded-lg text-lg hover:bg-red-700"
+                className="bg-red-600 text-white py-1 px-10 rounded-lg text-lg shadow-md transition-all duration-300 hover:shadow-[0px_0px_20px_10px_rgba(220,_38,_38,_0.25)]"
               >
                 Eliminar
               </button>

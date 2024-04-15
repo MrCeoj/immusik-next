@@ -6,6 +6,7 @@ import { toTitleCase } from "@/lib/utils";
 import Sucursal from "@/img/sucursal.png";
 import Gastos from "@/img/gastos.png";
 import Editar from "@/img/editar.png";
+import BarraNavegacion from "@/components/barraNavegacion";
 
 export function getServerSideProps() {
   return {
@@ -19,19 +20,7 @@ export default function Informacion() {
   const [sucursal] = useSucursal(id);
   return (
     <>
-      <div className="w-screen flex items-center fixed top-0 z-50 rounded-lg px-20 pb-20 mt-5">
-        <h1 className="font-PassionOne text-6xl text-white">i.m.musik</h1>
-        <h1 className="font-bold text-white text-2xl ml-8">
-          Información y gastos
-        </h1>
-        <Link
-          onClick={() => window.history.back()}
-          href={""}
-          className="ml-auto pr-1"
-        >
-          <Image src={require("@/img/back.png")} alt={"foto"} />
-        </Link>
-      </div>
+      <BarraNavegacion titulo="Información y gastos" />
       <div className="bg-[url('../img/fondo.svg')] bg-cover object-cover bg-no-repeat h-screen flex">
         <div className="rounded-2xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 grid-rows-[min-content_1fr] gap-6 m-auto">
           <div className="col-span-2 row-span-2 relative overflow-hidden rounded-[inherit] m-[2px] shadow-2xl border-2 border-white">

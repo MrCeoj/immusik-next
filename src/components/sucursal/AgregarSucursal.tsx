@@ -61,48 +61,50 @@ const AgregarSucursal = ({
   archivo.*/
   return (
     <>
-      <div className="absolute w-screen h-screen z-20 top-0 left-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div className="bg-white p-10 flex flex-col rounded-lg shadow-lg items-center justify-center">
-          <h1 className="font-bold text-3xl mb-3">Agregar</h1>
+      <div className="absolute backdrop-blur-md w-screen h-screen z-20 top-0 left-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="bg-secciones bg-opacity-95 p-10 flex flex-col rounded-lg shadow-lg items-center justify-center w-[1000px] h-[450px]">
+          <h1 className="font-bold text-3xl mb-3 text-white">Agregar</h1>
           <form>
-            <div className="text-lg">
-              <label className="py-1">Nombre</label>
+            <div className="mt-2 flex flex-col w-[800px] relative">
+              <label className="text-2xl mr-7 text-white">Nombre</label>
               <input
-                className="mb-3 bg-gray-100 p-2 ml-2 rounded-md"
+                className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                 placeholder="Nombre de la sucursal"
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value.toUpperCase())}
               />
             </div>
-            <div className="text-lg">
-              <label className="py-1">Direccion</label>
+            <div className="mt-2 flex flex-col w-[800px] relative">
+              <label className="text-2xl mr-7 text-white">Direccion</label>
               <input
-                className="mb-3 bg-gray-100 p-2 ml-2 rounded-md"
+                className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                 placeholder="Dirección de la sucursal"
                 value={direccion}
                 onChange={(e) => setDireccion(e.target.value.toUpperCase())}
               />
             </div>
-            <div className="text-lg">
-              <label className="py-1">Contraseña Maestra</label>
+            <div className="mt-2 flex flex-col w-[800px] relative">
+              <label className="text-2xl mr-7 text-white">
+                Contraseña Maestra
+              </label>
               <input
                 type="password"
-                className="mb-3 bg-gray-100 p-2 ml-2 rounded-md"
+                className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                 placeholder="Contraseña Maestra"
                 value={contrasena}
                 onChange={(e) => setContrasena(e.target.value)}
               />
             </div>
           </form>
-          <div>
+          <div className="flex w-full mt-12 justify-between pl-16 pr-12">
             <button
-              className="bg-gray-500 mr-1 py-1 px-5 text-lg text-slate-50 rounded-md hover:bg-gray-700"
+              className="bg-gray-500 text-white py-1 px-10 rounded-lg text-lg shadow-md transition-all duration-300 hover:shadow-[0px_0px_20px_10px_rgba(107,_114,_128,_0.25)]"
               onClick={handleCancelar}
             >
               Cancelar
             </button>
             <button
-              className="bg-pink-500 ml-1 py-1 px-5 text-lg text-slate-50 rounded-md hover:bg-pink-700"
+              className="bg-pink-focus text-white py-1 px-10 rounded-lg text-lg mr-4 shadow-md transition-all duration-300 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)]"
               onClick={handleSubmit}
             >
               Agregar

@@ -55,20 +55,20 @@ export default function Sucursales() {
         <AgregarSucursal setAgregar={setAgregar} handleCambio={handleCambio} />
       )}
       <BarraNavegacion titulo="Editar sucursales" />
-      <div className="h-screen w-screen bg-gray-100 flex items-center justify-center">
-        <div className="bg-white p-10 rounded-lg shadow-lg flex flex-col items-center justify-center">
-          <h1 className="text-3xl font-bold mb-5">Sucursales</h1>
+      <div className="bg-[url('../img/fondo.svg')] bg-cover h-screen w-screen bg-gray-100 flex items-center justify-center">
+        <div className="p-10 bg-zinc-800 bg-opacity-80 rounded-lg shadow-lg flex flex-col items-center justify-center">
+          <h1 className="text-3xl font-bold mb-5 text-white">Sucursales</h1>
           {sucursals?.length > 0 && ( //Si no existen sucursales no se muestra este div
             <div>
               {/*DIV DE CABECERA DONDE SE MUESTRAN LOS TITULOS DE LA INFORMACIÓN*/}
-              <div className="grid grid-cols-3 bg-pink-500 text-white font-bold py-2 rounded-md shadow-sm mb-3 text-lg">
-                <div className="flex justify-center items-center mx-3">
+              <div className="grid grid-cols-3 bg-zinc-600 text-white font-bold py-2 rounded-md shadow-sm mb-3 text-lg">
+                <div className="flex justify-center items-center mx-3 text-2xl font-bold">
                   NOMBRE
                 </div>
-                <div className="flex justify-center items-center mx-3">
+                <div className="flex justify-center items-center mx-3 text-2xl font-bold">
                   DIRECCIÓN
                 </div>
-                <div className="flex justify-center items-center mx-3">
+                <div className="flex justify-center items-center mx-3 text-2xl font-bold">
                   GESTIONAR
                 </div>
               </div>
@@ -87,7 +87,7 @@ export default function Sucursales() {
           )}
           <button
             onClick={handleAgregar}
-            className="bg-pink-500 text-lg text-white py-1 px-5 rounded-md shadow-md hover:bg-pink-700"
+            className="bg-pink-focus text-lg text-white py-1 px-5 rounded-md shadow-md hover:shadow-pink-accent font-bold mt-3 hover:-translate-y-1 transition-all duration-25 ease-out"
           >
             Agregar
           </button>

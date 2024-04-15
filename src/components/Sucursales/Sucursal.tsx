@@ -44,16 +44,16 @@ const SucursalInfo = ({
           setCambio={setCambio}
         />
       )}
-      <div className="grid grid-cols-3 bg-pink-100 py-2 rounded-md shadow-sm mb-3 text-lg">
-        <div className="flex justify-center items-center mx-3">
+      <div className="grid grid-cols-3 bg-neutral-400 py-2 rounded-md shadow-sm mb-3 text-lg">
+        <div className="flex justify-center items-center mx-3 text-white font-bold">
           {sucursal.nombre}
         </div>
-        <div className="flex justify-center items-center mx-3">
+        <div className="flex justify-center items-center mx-3 text-white font-bold">
           {sucursal.direccion}
         </div>
         <div className="flex justify-center items-center">
           <button
-            className="mx-1 bg-pink-500 text-white py-1 px-2 rounded-md hover:bg-pink-700"
+            className="mx-1 bg-pink-focus text-white py-1 px-2 rounded-md hover:shadow-pink-accent font-bold transition-all duration-25 ease-out font-bold"
             onClick={handleEditar} //Si se presiona el botón se ejecuta la función handleEditar
           >
             Gestionar
