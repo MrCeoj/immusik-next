@@ -39,8 +39,8 @@ export default function Inicio() {
     <>
       <BarraNavegacionAdmin />
       <div className="bg-[url('../img/fondo.svg')] bg-cover object-cover bg-no-repeat h-screen">
-        <div className="pt-32 pb-10">
-          <h1 className="text-center font-bold text-5xl text-white">
+        <div className="pt-24 pb-10">
+          <h1 className="font-PassionOne text-center font-bold text-7xl text-white">
             i.m.musik
           </h1>
           <h2 className="text-center text-xl mt-2 text-white">
