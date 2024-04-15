@@ -22,3 +22,19 @@ export function toArrayDiasClase(dias: string) {
 export function toStringDiasClase(dias: string[]) {
 	return dias.join(',').toUpperCase()
 }
+
+export function convertirAMinutosYSegundos(milisegundos: number) {
+	// Convertir milisegundos a segundos
+	var segundosTotales = Math.floor(milisegundos / 1000)
+
+	// Calcular los minutos y segundos
+	var minutos = Math.floor(segundosTotales / 60)
+	var segundos = segundosTotales % 60
+
+	// Formatear los minutos y segundos
+	var formatoMinutos = minutos < 10 ? '0' + minutos : minutos
+	var formatoSegundos = segundos < 10 ? '0' + segundos : segundos
+
+	// Devolver la cadena en formato minutos:segundos
+	return formatoMinutos + ':' + formatoSegundos
+}

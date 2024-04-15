@@ -7,6 +7,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { convertirAMinutosYSegundos } from '@/lib/utils'
 
 // Componente que contiene el formulario de inicio de sesión
 export default function LoginUsuario() {
@@ -17,12 +19,63 @@ export default function LoginUsuario() {
 		formState: { errors }
 	} = useForm()
 	const router = useRouter()
+	const TIEMPO_LIMITE = 1000 * 30 // 30 segundos
+	const INTENTOS_MAXIMOS = 5
+	const [intentosRestantes, setIntentosRestantes] = useState(INTENTOS_MAXIMOS)
+	const [tiempoRestante, setTiempoRestante] = useState<null | number>(null)
+	const [intentoBloqueado, setIntentoBloqueado] = useState(false)
+
+	useEffect(() => {
+		// Si los intentos restantes llegan a 0, se bloquea el formulario,
+		// se muestra un toast con el mensaje de error y se limpian los campos
+		if (intentosRestantes === 0) {
+			setIntentoBloqueado(true)
+			// Iniciar el tiempo restante
+			setTiempoRestante(TIEMPO_LIMITE)
+		}
+	}, [intentosRestantes])
+
+	useEffect(() => {
+		let intervalo: NodeJS.Timeout
+
+		// Si el número de intentos restantes es 0, se inicia el tiempo restante
+		if (tiempoRestante !== null) {
+			// Actualizar el tiempo restante cada segundo
+			intervalo = setInterval(() => {
+				setTiempoRestante(tiempoRestante - 1000)
+			}, 1000)
+		}
+
+		// Si el tiempo restante llega a 0, se reinician los intentos restantes y el tiempo restante
+		if (tiempoRestante === 0) {
+			setIntentosRestantes(INTENTOS_MAXIMOS)
+			setTiempoRestante(null)
+			setIntentoBloqueado(false)
+		}
+
+		// Limpiar el intervalo cuando el componente se desmonta para evitar fugas de memoria
+		return () => {
+			clearInterval(intervalo)
+		}
+	}, [tiempoRestante])
 
 	const onSubmit = handleSubmit(async (data) => {
+		// Si el intento está bloqueado, no se envía la petición
+		if (intentoBloqueado) return
+
 		const res = await signIn('credentials', { ...data, redirect: false })
 		// Si hay un error, se muestra un toast con el mensaje de error
 		if (res?.error) {
-			toast.error(res.error)
+			const nuevosIntentosRestantes = intentosRestantes - 1
+			// Si quedan menos de 3 intentos, se muestra el número de intentos restantes
+			const mensaje =
+				res.error +
+				(nuevosIntentosRestantes < 3
+					? `. Intentos restantes: ${nuevosIntentosRestantes}`
+					: '')
+			// Si quedan intentos, se muestra el toast con el mensaje de error
+			nuevosIntentosRestantes > 0 && toast.error(mensaje, { toastId: mensaje })
+			setIntentosRestantes(nuevosIntentosRestantes)
 		}
 		// Si el inicio de sesión es exitoso, se redirecciona a la página de inicio
 		else {
@@ -57,7 +110,8 @@ export default function LoginUsuario() {
 							minLength: {
 								value: 6,
 								message: 'Nombre de usuario debe tener mínimo 6 caracteres.'
-							}
+							},
+							disabled: intentoBloqueado
 						})}
 					/>
 				</div>
@@ -86,14 +140,23 @@ export default function LoginUsuario() {
 								value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
 								message:
 									'La contraseña debe tener al menos una mayúscula, una minúscula y un número.'
-							}
+							},
+							disabled: intentoBloqueado
 						})}
 					/>
 				</div>
-				<button className="rounded-md bg-primary px-4 py-2 mt-4 font-bold text-white shadow-md transition-all duration-300 hover:shadow-lg hover:bg-pink-300">
+				<button
+					disabled={intentoBloqueado}
+					className="rounded-md bg-pink-accent px-4 py-2 mt-4 font-bold text-white shadow-md transition-all duration-300 hover:shadow-lg hover:bg-pink-300 disabled:opacity-50 disabled:pointer-events-none disabled:select-none"
+				>
 					Acceder
 				</button>
 			</form>
+			{tiempoRestante && (
+				<p className="text-center mb-2">
+					Intenta de nuevo en {convertirAMinutosYSegundos(tiempoRestante)}
+				</p>
+			)}
 		</>
 	)
 }

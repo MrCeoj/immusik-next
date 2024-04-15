@@ -53,7 +53,7 @@ const InputLogin = ({
 				id={id}
 				placeholder={placeholder}
 				className={cn(
-					'text-gray-800 bg-transparent pl-8 pr-1 py-1 rounded-lg w-full border-2',
+					'text-gray-800 bg-transparent pl-8 pr-1 py-1 rounded-lg w-full border-2 disabled:pointer-events-none disabled:select-none',
 					error ? 'border-red-600 outline-red-600' : 'border-gray-500'
 				)}
 				{...register}
