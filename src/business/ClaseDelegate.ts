@@ -13,7 +13,7 @@ import {
 } from "@/persistence/ClaseDao";
 import { Clase } from "@/entities/edge";
 import { borrarAlumnoClaseConDeterminadaClase } from "./AlumnoClaseDelegate";
-import { actualizarEstadoDeDocentes, obtenerDocente } from "./DocenteDelegate";
+import { actualizarEstadoDeDocentes, verificarEstado } from "./DocenteDelegate";
 import { actualizarEstadoDeAlumnos } from "./AlumnoDelegate";
 import { toArrayDiasClase, toStringDiasClase } from "@/lib/utils";
 import { getDocente, setEstado } from "@/persistence/DocenteDao";
@@ -27,7 +27,6 @@ export async function obtenerClase(id: number) {
   try {
     return await getClase(id);
   } catch (error) {
-    console.error("Error al buscar clase:", error);
     return error;
   }
 }
@@ -72,7 +71,6 @@ export async function fetchEliminarClase(id: any) {
  * @param id: id de la sucursal cuyas clases serán eliminadas.
  */
 export async function deleteClasesDeDeterminadaSucursal(id: any) {
-  //console.log("borrando clases con id "+id)
   await deleteClasesFromSucursal(id);
 }
 
@@ -108,15 +106,20 @@ export async function eliminarDocentedeClase(id: number) {
  * @param id - id de la clase a la que se le eliminará el docente
  * @returns - la clase con el docente eliminado
  */
-export async function eliminarUnDocente(id: number) {
+export async function eliminarUnDocente(id: number, idDocente: number) {
   try {
-    const clase = (await obtenerClase(id)) as Clase;
-    if (!clase) {
-      throw new Error("No existe la clase con el id proporcionado");
+    const clase = await obtenerClase(id);
+    if (clase instanceof Error) {
+      throw new Error("La clase no existe");
     }
-    if (clase.idDocente === null) {
+    const asClase = clase as Clase;
+    if (asClase.idDocente === null) {
       throw new Error("La clase no tiene docente asignado");
     }
+    if (asClase.idDocente !== idDocente) {
+      throw new Error("El docente no está asignado a la clase");
+    }
+    verificarEstado(idDocente);
     return await deleteSingelDocente(id);
   } catch (error) {
     console.error("Error al eliminar docente:", error);
@@ -235,6 +238,11 @@ export async function modificarClase(clase: any) {
   clase.hora = `${clase.hora}:00 - ${Number(clase.hora) + 1}:00`;
   clase.cupoMax = Number(clase.cupoMax);
 
+  const claseActual = await getClase(clase.id);
+  let idDocenteActual;
+  if (claseActual) {
+    idDocenteActual = claseActual?.idDocente;
+  }
   // Validar si la clase ya existe
   const clasesSucursal = await getClasesDeDeterminadaSucursal(clase.idSucursal);
 
@@ -267,10 +275,10 @@ export async function modificarClase(clase: any) {
 
   // una vez terminada la validación se le da formato a los dias de la clase
   clase.dias = toStringDiasClase(clase.dias);
-
-  // Actualizar la clase
+  // Actualizar la clase y el docente por si es necesario cambiar su estado
   const claseModificada = await modClase(clase);
   const docente = await getDocente(clase.idDocente);
+  if (idDocenteActual) await verificarEstado(idDocenteActual);
 
   // Actualizar el estado de docente a activo si su estado es inactivo
   if (docente?.estado === "INACTIVO") {

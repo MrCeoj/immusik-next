@@ -1,4 +1,3 @@
-import { modificarClase } from '@/business/ClaseDelegate'
 import { modificarDocente } from '@/business/DocenteDelegate'
 import { NextApiRequest, NextApiResponse } from 'next'
 
@@ -19,8 +18,12 @@ export default async function handler(
 		}
 
 		const docente = req.body
+		console.log(docente)
 
 		const result = await modificarDocente(docente)
+		if (result instanceof Error) {
+			return res.status(500).json({ error: result.message })
+		}
 		return res.status(200).json(result)
 	} catch (error: any) {
 		return res.json({ error: error.message })

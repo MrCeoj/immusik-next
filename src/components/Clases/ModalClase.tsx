@@ -4,7 +4,7 @@ import { Alumno, Clase, Docente } from "@prisma/client";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { diasHabiles, horasHabiles } from "../../lib/horario";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Label from "../form/Label";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,14 +12,15 @@ import Input from "../form/Input";
 import ConfirmacionEliminarClase from "./ConfirmacionEliminarClase";
 
 export default function ModalClase({
-  clase,
+  claseArgs,
   actualizarClases,
   docentes,
 }: {
-  clase: Clase;
+  claseArgs: Clase;
   actualizarClases: any;
   docentes: Docente[] | null;
 }) {
+  const [clase, setClase] = useState<Clase>(claseArgs);
   // useState para guardar la visibilidad del modal
   const [modalOpen, setModalOpen] = useState(false);
   // useState para guardar los alumnos inscritos a la clase
@@ -29,7 +30,7 @@ export default function ModalClase({
   // se obtiene la sucursal de la clase
   const [sucursal] = useSucursal(clase.idSucursal.toString());
   const [diasClase, setDiasClase] = useState<string[]>([]);
-  
+
   const {
     register,
     handleSubmit,
@@ -41,7 +42,6 @@ export default function ModalClase({
     // se obtienen los días de clase en un array
     setDiasClase(toArrayDiasClase(clase.dias));
   }, [clase.dias]);
-
 
   // se obtiene el mensaje en el caso de que no haya docentes disponibles
   // o si no se han cargado los docentes
@@ -63,8 +63,8 @@ export default function ModalClase({
 
     if (alumnos.length === 0) {
       return "No hay alumnos inscritos";
-    } else{
-      return "Cargando..."
+    } else {
+      return "Cargando...";
     }
 
     return null;
@@ -78,11 +78,12 @@ export default function ModalClase({
      * se guarden los valores de la clase anterior
      */
     reset();
+    setClase(claseArgs);
     // se abre el modal primero para dar una experiencia más fluida
     setModalOpen(true);
 
     // Si no se han obtenido los alumnos se hace una petición a la API para obtenerlos
-    if (alumnos.length === 0) { 
+    if (alumnos.length === 0) {
       const res = await fetch(`/api/clase/${clase.id}/obtenerAlumnos`);
       const data = await res.json();
 
@@ -119,6 +120,10 @@ export default function ModalClase({
 
   const onSubmit = handleSubmit(async (data) => {
     // Se verifica que la información haya sido modificada
+    if(data.idDocente === "") {
+      toast.error("Por favor asigna un docente a la clase");
+      return;
+    }
     if (
       clase.nombre === data.nombre.toUpperCase() &&
       clase.dias === toStringDiasClase(data.dias) &&
@@ -126,6 +131,7 @@ export default function ModalClase({
       clase.cupoMax === data.cupoMax &&
       clase.idDocente === data.idDocente
     ) {
+      toast.info("No se ha modificado la información de la clase");
       return;
     }
 
@@ -333,7 +339,7 @@ export default function ModalClase({
                 </>
               )}
             </div>
-            <button className="bg-pink-500 hover:bg-pink-600 text-white rounded px-3 py-2 mt-3 justify-self-end self-center">
+            <button className="bg-pink-500 hover:bg-pink-600 text-white rounded px-3 py-2 mt-3 justify-self-end self-center disabled:bg-disabled transition-all duration-75">
               Guardar cambios
             </button>
           </form>
@@ -374,7 +380,11 @@ export default function ModalClase({
                 </tbody>
               </table>
             )}
-            <ConfirmacionEliminarClase clase={clase} actualizarClases={actualizarClases} setModalOpen={setModalOpen} />
+            <ConfirmacionEliminarClase
+              clase={clase}
+              actualizarClases={actualizarClases}
+              setModalOpen={setModalOpen}
+            />
           </div>
         </div>
         <button

@@ -1,24 +1,19 @@
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import router from "next/router";
+import { toast } from "react-toastify";
 import Label from "@/components/form/Label";
 import Input from "@/components/form/Input";
 import "react-toastify/dist/ReactToastify.css";
 
 // Formulario para registrar un docente
-function FormDocente({ 
-  setCambio, 
+function FormDocente({
+  setCambio,
   cambio,
-  setModalOpen, 
-  }: {
-    setCambio: React.Dispatch<React.SetStateAction<boolean>>, 
-    cambio: boolean,
-    setModalOpen : any,
+  setModalOpen,
+}: {
+  setCambio: React.Dispatch<React.SetStateAction<boolean>>;
+  cambio: boolean;
+  setModalOpen: any;
 }) {
-  // useState para manejar errores
-  const [serverError, setServerError] = useState<string | null>(null);
-  const [telefono, setTelefono] = useState("");
 
   // useForm para manejar los inputs del formulario
   const {
@@ -27,8 +22,8 @@ function FormDocente({
     formState: { errors },
   } = useForm();
 
-   // Función que se ejecuta al enviar el formulario, consume la api para registrar un docente
-   const onSubmit = handleSubmit(async (data) => {
+  // Función que se ejecuta al enviar el formulario, consume la api para registrar un docente
+  const onSubmit = handleSubmit(async (data) => {
     const response = await fetch("/api/docente/registerDocente", {
       method: "POST",
       headers: {
@@ -47,27 +42,26 @@ function FormDocente({
     });
     const resJSON = await response.json();
     if (response.status === 500) {
-      setServerError(resJSON.error);
+      toast.error(resJSON.error)
     } else {
       if (cambio) {
-          setCambio(false);
-        } else {
-          setCambio(true);
-        }
+        setCambio(false);
+      } else {
+        setCambio(true);
+      }
 
-        toast.success("Docente registrado", {
-          className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
-          bodyClassName: "font-semibold text-sm text-green-500",
-          autoClose: 2000,
-          draggable: false,
-          onClose: () => setModalOpen(false),
-        });
+      toast.success("Docente registrado", {
+        className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
+        bodyClassName: "font-semibold text-sm text-green-500",
+        autoClose: 2000,
+        draggable: false,
+        onClose: () => setModalOpen(false),
+      });
     }
   });
 
   return (
     <>
-      <ToastContainer/>
       <form
         onSubmit={onSubmit}
         className="flex flex-col gap-4 bg-transparent p-8 rounded-md"
@@ -171,13 +165,12 @@ function FormDocente({
             error={Boolean(errors.telefono?.type === "required")}
             className="text-lg font-normal"
           />
-          <input
-            className="text-black px-2 py-1 pr-6 rounded-md border-2 font-bold"
+          <Input
             type="text"
             id="telefono"
             placeholder="Telefono"
-            value={telefono}
-            {...register("telefono", {
+            error={errors.telefono}
+            register={register("telefono", {
               required: {
                 value: true,
                 message: "El teléfono es requerido.",
@@ -187,34 +180,8 @@ function FormDocente({
                 message: "El teléfono debe tener 10 dígitos.",
               },
             })}
-            onKeyDown={(e) => {
-              if (
-                !/[0-9]/.test(e.key) &&
-                e.key !== "Backspace" &&
-                e.key !== "Delete" &&
-                e.key !== "ArrowLeft" &&
-                e.key !== "ArrowRight" &&
-                e.key !== "Tab"
-              ) {
-                e.preventDefault();
-              }
-            }}
-            maxLength={10}
-            onChange={(e) => {
-              if (e.target.value.length <= 10) {
-                setTelefono(e.target.value);
-              }
-            }}
           />
         </div>
-
-        {/* Cuidado con este componente, cuando las validaciones de aqui por 
-            x motivo no funcionan este muestra las validaciones del servidor 
-            La idea es cambiar este componente por otro como un popup
-            NO USAR el mismo componente que está hasta abajo, es solo un ejemplo
-        */}
-
-        {serverError && <Error error={serverError} />}
 
         <div className="flex justify-center">
           <button
@@ -227,15 +194,7 @@ function FormDocente({
       </form>
     </>
   );
-};
+}
 
-/*
- * Componente para mostrar errores en el formulario.
- * Favor de modificarlo porque solo es un text
- * De preferencia muevanlo a la carpeta de components y quitenlo de aqui
- */
-const Error = (props: { error?: string }) => {
-  return <p className="text-red-500 text-sm z-50">{props.error}</p>;
-};
 
 export default FormDocente;

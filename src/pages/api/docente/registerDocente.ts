@@ -27,6 +27,6 @@ export default async function handler(
       message: `Docente registrado: ${docenteCreado.nombre} ${docenteCreado.aPaterno} ${docenteCreado.aMaterno}`,
     });
   } catch (error) {
-    return res.status(500).json({ error: "An unexpected error occurred." });
+    return res.status(500).json({ error: "Ocurrió un error inesperado." });
   }
 }

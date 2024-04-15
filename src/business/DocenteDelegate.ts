@@ -19,7 +19,6 @@ import { fetchGetClasesDeDeterminadoDocente } from "./ClaseDelegate";
  */
 export async function registrarDocente(data: any): Promise<Docente | Error> {
   try {
-    console.log("delegate recibido: ", data);
     const docenteFormat = {
       nombre: data.docente.nombre.toUpperCase(),
       aPaterno: data.docente.aPaterno.toUpperCase(),
@@ -29,7 +28,6 @@ export async function registrarDocente(data: any): Promise<Docente | Error> {
       estado: data.docente.estado.toUpperCase(),
     } as Docente;
 
-    console.log("delegate formateado: ", docenteFormat);
 
     // Validaciones correspondientes
     const docenteExistente = await getByCurp(docenteFormat.curp);
@@ -45,6 +43,10 @@ export async function registrarDocente(data: any): Promise<Docente | Error> {
 
     if (docenteFormat.telefono.length !== 10) {
       throw new Error("El número de teléfono debe tener 10 dígitos.");
+    }
+    
+    if (!/^\d+$/.test(docenteFormat.telefono)) {
+      throw new Error("El número de teléfono solo puede contener dígitos.");
     }
 
     if (docenteFormat.nombre.length === 0) {
@@ -119,7 +121,6 @@ export async function modificarDocente(data: any) {
       curp: data.curp.toUpperCase(),
       telefono: data.telefono,
     } as Docente;
-
     //Validaciones correspondientes
 
     const docenteExistente = await getByCurp(docenteFormat.curp);
@@ -128,8 +129,12 @@ export async function modificarDocente(data: any) {
       throw new Error("Éste CURP ya fue registrado.");
     }
 
-    if (docenteFormat.telefono.toString().length !== 10) {
+    if (docenteFormat.telefono.length !== 10) {
       throw new Error("El número de teléfono debe tener 10 dígitos.");
+    }
+
+    if(!/^\d+$/.test(docenteFormat.telefono)){
+      throw new Error("El número de teléfono solo puede contener dígitos.");
     }
 
     if (docenteFormat.nombre.length === 0) {
@@ -169,7 +174,6 @@ export async function establecerEstado(estado: string, id: number) {
     if (!estadosAceptados.includes(estado)) {
       throw new Error("El estado del docente no es válido.");
     }
-
     // Si el docente está inactivo o vetado, se elimina de todas las clases
     const clases = await getClases(id);
     if (estado !== "ACTIVO" && clases.length > 0) {
@@ -191,7 +195,6 @@ export async function establecerEstado(estado: string, id: number) {
 export async function obtenerClases(id: number) {
   try {
     const clases = await getClases(id);
-    //console.log(clases)
     return clases;
   } catch (error) {
     return new Error(
@@ -221,6 +224,28 @@ export async function actualizarEstadoDeDocentes(){
   }
 }
 
+/**
+ * Función que verifica si un docente se ha quedado sin clases, establece estado a inactivo si es el caso.
+ * @param idDocente - El ID del docente a verificar.
+ * @returns Una promesa que se resuelve en un objeto que informa sobre el docente modificado.
+ */
+export async function verificarEstado(idDocente: number){
+  try {
+    const clases = await getClases(idDocente);
+    if(clases.length <= 1){
+      const docenteModificado = await setEstado("INACTIVO", idDocente);
+      return docenteModificado;
+    }
+    return null;
+  } catch (error) {
+    return error;
+  }
+}
+
+/**
+ * Obtiene los docentes que no están vetados.
+ * @returns - Una promesa que se resuelve en un arreglo con los docentes no vetados.
+ */
 export async function fetchGetDocentesNoVetados(){
   const docentes = getDocentesNoVetados()
   return docentes

@@ -28,9 +28,8 @@ function RegistrarDocente({
 
   return (
     <>
-      
       <button
-        className="bg-primary rounded-md shadow-md text-white text-center px-4 py-1 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)] text-lg font-bold ml-3"
+        className="bg-pink-focus px-4 h-full text-md rounded-md font-semibold hover:shadow-md hover:shadow-pink-accent hover:-translate-y-1 transition-all duration-25 ease-out"
         onClick={handleRegistrar}
       >
         <span>Registrar Docente</span>
@@ -45,9 +44,13 @@ function RegistrarDocente({
         <div className="flex items-center justify-center">
           <h1 className="font-bold text-4xl">Alta de Docente</h1>
         </div>
-        
-        <FormDocente cambio={cambio} setCambio={setCambio} setModalOpen={setModalOpen}></FormDocente>
-        
+
+        <FormDocente
+          cambio={cambio}
+          setCambio={setCambio}
+          setModalOpen={setModalOpen}
+        ></FormDocente>
+
         <button
           onClick={() => setModalOpen(false)}
           className="absolute top-4 right-4 font-bold rounded hover:bg-black/10 w-8 h-8 flex items-center justify-center"

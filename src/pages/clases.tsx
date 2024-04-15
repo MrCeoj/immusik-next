@@ -1,13 +1,10 @@
-import Clase from "@/components/Clases/Clase";
-import Paginador from "@/components/Paginador";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import Clase from "@/components/Clases/Clase";
+import Navbar from "@/components/Navbar";
+import Paginador from "@/components/Paginador";
 import RegistrarClase from "@/components/Clases/RegistrarClase";
-import {
-  MagnifyingGlassIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/20/solid";
 
 export default function Clases() {
   /*Funciones useState para detectar cambios en variables */
@@ -83,8 +80,9 @@ export default function Clases() {
   return (
     <>
       <ToastContainer />
-      <div className="h-screen bg-back-dark bg-fondo w-screen flex justify-center items-center font-inter flex-col p-20 text-white">
-        <div className="flex w-full items-end">
+      <Navbar />
+      <div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pt-10 text-white">
+        <div className="flex w-full items-end mb-1">
           <h1 className="text-5xl font-semibold mr-20">Clases</h1>
           <div className="flex h-3/4 items-center">
             <form className="h-full relative flex items-center mr-5">
@@ -102,7 +100,7 @@ export default function Clases() {
             <RegistrarClase setCambio={setCambio} cambio={cambio} />
           </div>
         </div>
-        <div className="w-full bg-gray-contrast py-2 rounded-lg bg-opacity-40 grid grid-cols-12 mt-3">
+        <div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-12 mt-3 gap-3">
           {/**
            * Esto puede ser complicado de entender, pero entendí que la fila está "formateada"
            * usando grid, le acomodé un total de 12 columnas (arriba en grid-cols-12)
@@ -116,7 +114,7 @@ export default function Clases() {
           <div className="text-xl font-bold col-span-2">Cupo</div>
           <div className="text-xl font-bold col-span-1">Detalles</div>
         </div>
-        <div className="overflow-y-auto w-full h-5/6">
+        <div className="overflow-y-auto w-full h-[55%]">
           {clasesFiltradas.length >= 0
             ? currentItems.map((clase, index) => (
                 <Clase

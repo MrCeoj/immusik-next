@@ -58,7 +58,7 @@ export default function Clase({
   */
   return (
     <>
-      <div className="grid grid-cols-12 my-4 text-lg bg-gray-100 bg-opacity-50 py-2 rounded-lg items-center">
+      <div className="grid grid-cols-12 font-bold my-4 text-lg bg-gray-100 bg-opacity-50 py-2 rounded-lg items-center">
         <div className="flex justify-center items-center col-span-1">
           {
             //Si el idDocente es null significa que no tiene docente, por lo que se muestra la imagen de advertencia
@@ -86,7 +86,7 @@ export default function Clase({
         <div className="col-span-2">{clase.hora}</div>
         <div className="col-span-2">{cupo}</div>
         <ModalClase
-          clase={clase}
+          claseArgs={clase}
           actualizarClases={actualizarClases}
           docentes={docentes}
         />

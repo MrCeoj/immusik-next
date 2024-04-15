@@ -2,10 +2,17 @@ import { getMasterKey } from "@/business/MasterKeyDelegate";
 import { establecerEstado } from "@/business/DocenteDelegate";
 import { NextApiRequest, NextApiResponse } from "next";
 
+/**
+ * Maneja las peticiones que se relacionan al cambio de estado de un docente.
+ * @param req - Request de la petición.
+ * @param res - Response de la petición.
+ * @returns - Un json con la verificación de la contraseña, el cambio de estado o un error.
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  // Si el método es POST, se verifica la contraseña.
   if (req.method === "POST") {
     const password = req.body.masterKey;
     console.log(password);
@@ -21,6 +28,7 @@ export default async function handler(
       return res.status(200).json({ verified: false });
     }
   }
+  // Si el método es PATCH, se cambia el estado del docente a vetado.
   if (req.method === "PATCH") {
     try {
       const id = Number(req.body);
@@ -33,6 +41,7 @@ export default async function handler(
       return res.status(500).json({ error: error.message });
     }
   }
+  // Si el método es PUT, se cambia el estado del docente a activo o inactivo.
   if (req.method === "PUT") {
     try {
       const data = req.body;
