@@ -28,7 +28,6 @@ export async function registrarDocente(data: any): Promise<Docente | Error> {
       estado: data.docente.estado.toUpperCase(),
     } as Docente;
 
-
     // Validaciones correspondientes
     const docenteExistente = await getByCurp(docenteFormat.curp);
     if (docenteExistente) {
@@ -44,7 +43,7 @@ export async function registrarDocente(data: any): Promise<Docente | Error> {
     if (docenteFormat.telefono.length !== 10) {
       throw new Error("El número de teléfono debe tener 10 dígitos.");
     }
-    
+
     if (!/^\d+$/.test(docenteFormat.telefono)) {
       throw new Error("El número de teléfono solo puede contener dígitos.");
     }
@@ -133,7 +132,7 @@ export async function modificarDocente(data: any) {
       throw new Error("El número de teléfono debe tener 10 dígitos.");
     }
 
-    if(!/^\d+$/.test(docenteFormat.telefono)){
+    if (!/^\d+$/.test(docenteFormat.telefono)) {
       throw new Error("El número de teléfono solo puede contener dígitos.");
     }
 
@@ -206,21 +205,22 @@ export async function obtenerClases(id: number) {
 /**
  * Función que actualiza el estado de docentes
  */
-export async function actualizarEstadoDeDocentes(){
+export async function actualizarEstadoDeDocentes() {
   //Se obtienen todos los docentes
-  const docentes = await getAllDocentes()
-  for(const docente of docentes){
-    //Se obtienen todas las clases de determinado docente 
-    const clasesDelDocente = await fetchGetClasesDeDeterminadoDocente(docente.id)
+  const docentes = await getAllDocentes();
+  for (const docente of docentes) {
+    //Se obtienen todas las clases de determinado docente
+    const clasesDelDocente = await fetchGetClasesDeDeterminadoDocente(
+      docente.id
+    );
     //Si tiene clases asignadas, se determina como activo y si no, como inactivo
-    if(docente.estado!=="VETADO"){
-      if(Array.isArray(clasesDelDocente) && clasesDelDocente.length>0){
-        setEstado("ACTIVO",docente.id)
-      }else{
-        setEstado("INACTIVO",docente.id)
+    if (docente.estado !== "VETADO") {
+      if (Array.isArray(clasesDelDocente) && clasesDelDocente.length > 0) {
+        setEstado("ACTIVO", docente.id);
+      } else {
+        setEstado("INACTIVO", docente.id);
       }
     }
-    
   }
 }
 
@@ -229,10 +229,10 @@ export async function actualizarEstadoDeDocentes(){
  * @param idDocente - El ID del docente a verificar.
  * @returns Una promesa que se resuelve en un objeto que informa sobre el docente modificado.
  */
-export async function verificarEstado(idDocente: number){
+export async function verificarEstado(idDocente: number) {
   try {
     const clases = await getClases(idDocente);
-    if(clases.length <= 1){
+    if (clases.length <= 1) {
       const docenteModificado = await setEstado("INACTIVO", idDocente);
       return docenteModificado;
     }
@@ -243,10 +243,29 @@ export async function verificarEstado(idDocente: number){
 }
 
 /**
+ * Funcion que verifica si un docente se ha quedado sin clases, sin el offset de la clase que se va a eliminar.
+ * @param idDocente - El ID del docente a verificar.
+ * @returns Una promesa que se resuelve en un objeto que informa sobre el docente modificado.
+ */
+export async function verificarSinOffset(idDocente: number) {
+  try {
+    console.log(idDocente)
+    const clases = await getClases(idDocente);
+    if (clases.length === 0) {
+      console.log(idDocente, "inactivo")
+      const docenteModificado = await setEstado("INACTIVO", idDocente);
+      return docenteModificado;
+    }
+  } catch (error) {
+    return error;
+  }
+}
+
+/**
  * Obtiene los docentes que no están vetados.
  * @returns - Una promesa que se resuelve en un arreglo con los docentes no vetados.
  */
-export async function fetchGetDocentesNoVetados(){
-  const docentes = getDocentesNoVetados()
-  return docentes
+export async function fetchGetDocentesNoVetados() {
+  const docentes = getDocentesNoVetados();
+  return docentes;
 }

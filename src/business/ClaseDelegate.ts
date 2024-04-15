@@ -13,7 +13,11 @@ import {
 } from "@/persistence/ClaseDao";
 import { Clase } from "@/entities/edge";
 import { borrarAlumnoClaseConDeterminadaClase } from "./AlumnoClaseDelegate";
-import { actualizarEstadoDeDocentes, verificarEstado } from "./DocenteDelegate";
+import {
+  actualizarEstadoDeDocentes,
+  verificarEstado,
+  verificarSinOffset,
+} from "./DocenteDelegate";
 import { actualizarEstadoDeAlumnos } from "./AlumnoDelegate";
 import { toArrayDiasClase, toStringDiasClase } from "@/lib/utils";
 import { getDocente, setEstado } from "@/persistence/DocenteDao";
@@ -202,7 +206,8 @@ export async function fetchCrearClase(data: any) {
                 /*Si se imparte durante la misma hora se declara la bandera "valido" como false
                 se asigna un mensaje de error y se cortan los ciclos.*/
                 valido = false;
-                response.message = "El docente no cuenta con ese horario disponible.";
+                response.message =
+                  "El docente no cuenta con ese horario disponible.";
                 break;
               }
             }
@@ -240,9 +245,10 @@ export async function modificarClase(clase: any) {
 
   const claseActual = await getClase(clase.id);
   let idDocenteActual;
-  if (claseActual) {
+  if (claseActual !== undefined && claseActual !== null) {
     idDocenteActual = claseActual?.idDocente;
   }
+  console.log("idDocenteActual", idDocenteActual);
   // Validar si la clase ya existe
   const clasesSucursal = await getClasesDeDeterminadaSucursal(clase.idSucursal);
 
@@ -278,7 +284,8 @@ export async function modificarClase(clase: any) {
   // Actualizar la clase y el docente por si es necesario cambiar su estado
   const claseModificada = await modClase(clase);
   const docente = await getDocente(clase.idDocente);
-  if (idDocenteActual) await verificarEstado(idDocenteActual);
+  if (idDocenteActual !== undefined && idDocenteActual !== null)
+    await verificarSinOffset(idDocenteActual);
 
   // Actualizar el estado de docente a activo si su estado es inactivo
   if (docente?.estado === "INACTIVO") {

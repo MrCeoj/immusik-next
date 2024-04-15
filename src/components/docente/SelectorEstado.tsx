@@ -155,7 +155,6 @@ const SelectorEstado: React.FC<Props> = ({
             <option
               className="bg-secciones border-solid text-active-fill"
               value="ACTIVO"
-              selected
             >
               ACTIVO
             </option>

@@ -185,7 +185,7 @@ export default function ModalDocente({
         className="relative bg-customGray p-6 w-full max-w-5xl min-h-min rounded"
       >
         <h1 className="font-bold text-4xl mb-3 text-center text-white">
-          Detalles de la clase
+          Detalles de {toTitleCase(docente.nombre)} {toTitleCase(docente.aPaterno)}
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
           <form
