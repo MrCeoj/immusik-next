@@ -54,6 +54,10 @@ export default function ModalClase({
     return null;
   };
 
+  const handleMensajeDeEliminacion = () => {
+    toast.success("Clase eliminada exitosamente.", { autoClose: 5000 });
+  };
+
   // se obtiene el mensaje en el caso de que no haya alumnos inscritos
   // o si no se han cargado los alumnos
   const mensajeAlumnos = () => {
@@ -120,7 +124,7 @@ export default function ModalClase({
 
   const onSubmit = handleSubmit(async (data) => {
     // Se verifica que la información haya sido modificada
-    if(data.idDocente === "") {
+    if (data.idDocente === "") {
       toast.error("Por favor asigna un docente a la clase");
       return;
     }
@@ -384,6 +388,7 @@ export default function ModalClase({
               clase={clase}
               actualizarClases={actualizarClases}
               setModalOpen={setModalOpen}
+              handleMensajeDeEliminacion={handleMensajeDeEliminacion}
             />
           </div>
         </div>

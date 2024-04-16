@@ -31,15 +31,18 @@ export async function deleteClase(id: any) {
 	return await prisma.clase.delete({ where: { id } })
 }
 
+
+
 /**
  * Regresa todas las clases de cierta sucursal
  * @param id: id de la sucursal de la cual se buscaran sus clases
  * @return las clases de la sucursal
  */
 export async function getClasesFromSucursal(id: any) {
+	let idNum: number = parseInt(id)
 	return await prisma.clase.findMany({
-		where: {
-			idSucursal: id
+		where: { 
+			idSucursal: idNum
 		}
 	})
 }

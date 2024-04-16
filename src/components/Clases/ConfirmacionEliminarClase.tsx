@@ -1,15 +1,18 @@
 import React from "react";
 import Modal from "react-modal";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 function ConfirmacionEliminarClase({
   clase,
   actualizarClases,
   setModalOpen,
+  handleMensajeDeEliminacion,
 }: {
   clase: any;
   actualizarClases: any;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleMensajeDeEliminacion: any;
 }) {
   const [eliminar, setEliminar] = useState(false);
 
@@ -32,9 +35,11 @@ function ConfirmacionEliminarClase({
         response.json().then(() => {
           // Se actualiza la información de la clase
           // Se cierra el modal
+
           setEliminar(false);
           setModalOpen(false);
           actualizarClases();
+          handleMensajeDeEliminacion();
         });
       }
     });
