@@ -46,7 +46,8 @@ model Alumno {
   aMaterno String
   tutor    String
   contacto String
-  edad     Int
+  fechaNac String
+  curp     String        @unique
   activo   Boolean
   clases   AlumnoClase[]
   pagos    Pagos[]
@@ -75,7 +76,6 @@ model Gasto {
   sucursal   Sucursal @relation(fields: [idSucursal], references: [id])
   idSucursal Int
   titulo     String
-  decripcion String?
   monto      Float
   concepto   String
   fecha      String
