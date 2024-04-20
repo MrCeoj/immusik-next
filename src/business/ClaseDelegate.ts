@@ -12,7 +12,7 @@ import {
   modClase,
 } from "@/persistence/ClaseDao";
 import { Clase } from "@/entities/edge";
-import { borrarAlumnoClaseConDeterminadaClase } from "./AlumnoClaseDelegate";
+import { borrarAlumnoClaseConDeterminadaClase, fetchGetAllAlumnoClases } from "./AlumnoClaseDelegate";
 import {
   actualizarEstadoDeDocentes,
   verificarEstado,
@@ -308,4 +308,28 @@ export async function modificarClase(clase: any) {
   }
 
   return claseModificada;
+}
+
+/**
+ * Función que regresa clases con cupo disponible
+ * @returns clases con cupo disponible
+ */
+export async function fetchGetClasesConCupo() {
+  const clases = await getAllClases() //Se obtienen todas las clases
+  const alumnoClases = await fetchGetAllAlumnoClases() //Se obtienen todos los registros alumno-clase
+
+  //Se crea un arreglo para guardar las clases con cupo disponible
+  const clasesConCupo: { id: number; idSucursal: number; idDocente: number | null; nombre: string; cupoMax: number; dias: string; hora: string; }[]  = []
+
+  /*Por cada clase se encuentran sus registros alumnoClase, si tiene la misma cantidad de registros que su
+  cupoMax significa que está llena, si no, no está llena*/
+  clases.map((clase)=>{
+    const alumnoClasesDeClase = alumnoClases.filter((ac)=>ac.claseId===clase.id)
+    if(alumnoClasesDeClase.length<clase.cupoMax){
+      clasesConCupo.push(clase) //Se agrega la clase al arreglo de clases disponibles
+    }
+  })
+
+  //Se regresan las clases disponibles
+  return clasesConCupo
 }

@@ -1,4 +1,4 @@
-import { getAllAlumnos,actualizarEstadoDeAlumno } from "@/persistence/AlumnoDao"
+import { getAllAlumnos,actualizarEstadoDeAlumno, crearAlumno } from "@/persistence/AlumnoDao"
 import { fetchGetClasesDeCiertoAlumno } from "./AlumnoClaseDelegate"
 
 /**
@@ -35,4 +35,24 @@ export async function actualizarEstadoDeAlumnos(){
  */
 export async function fetchActualizarEstadoDeAlumno(estado:boolean,id:any){
     await actualizarEstadoDeAlumno(estado,id)
+}
+
+/**
+ * Función para crear un alumno.
+ * @param data información del alumno a registrar
+ * @returns respuesta que le dará al usuario para tratar errores.
+ */
+export async function fetchCrearAlumno(data:any){
+    let response = {
+        message:""
+    }
+    const alumnos = await getAllAlumnos()
+    if(alumnos.some((alumno)=>alumno.curp===data.curp)){
+        response.message="Ya existe un alumno con esa CURP."
+    }else{
+        await crearAlumno(data)
+        response.message="Alumno registrado correctamente."
+    }
+
+    return response
 }

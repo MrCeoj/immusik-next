@@ -4582,12 +4582,10 @@ export namespace Prisma {
 
   export type AlumnoAvgAggregateOutputType = {
     id: number | null
-    edad: number | null
   }
 
   export type AlumnoSumAggregateOutputType = {
     id: number | null
-    edad: number | null
   }
 
   export type AlumnoMinAggregateOutputType = {
@@ -4597,7 +4595,8 @@ export namespace Prisma {
     aMaterno: string | null
     tutor: string | null
     contacto: string | null
-    edad: number | null
+    fechaNac: string | null
+    curp: string | null
     activo: boolean | null
   }
 
@@ -4608,7 +4607,8 @@ export namespace Prisma {
     aMaterno: string | null
     tutor: string | null
     contacto: string | null
-    edad: number | null
+    fechaNac: string | null
+    curp: string | null
     activo: boolean | null
   }
 
@@ -4619,7 +4619,8 @@ export namespace Prisma {
     aMaterno: number
     tutor: number
     contacto: number
-    edad: number
+    fechaNac: number
+    curp: number
     activo: number
     _all: number
   }
@@ -4627,12 +4628,10 @@ export namespace Prisma {
 
   export type AlumnoAvgAggregateInputType = {
     id?: true
-    edad?: true
   }
 
   export type AlumnoSumAggregateInputType = {
     id?: true
-    edad?: true
   }
 
   export type AlumnoMinAggregateInputType = {
@@ -4642,7 +4641,8 @@ export namespace Prisma {
     aMaterno?: true
     tutor?: true
     contacto?: true
-    edad?: true
+    fechaNac?: true
+    curp?: true
     activo?: true
   }
 
@@ -4653,7 +4653,8 @@ export namespace Prisma {
     aMaterno?: true
     tutor?: true
     contacto?: true
-    edad?: true
+    fechaNac?: true
+    curp?: true
     activo?: true
   }
 
@@ -4664,7 +4665,8 @@ export namespace Prisma {
     aMaterno?: true
     tutor?: true
     contacto?: true
-    edad?: true
+    fechaNac?: true
+    curp?: true
     activo?: true
     _all?: true
   }
@@ -4762,7 +4764,8 @@ export namespace Prisma {
     aMaterno: string
     tutor: string
     contacto: string
-    edad: number
+    fechaNac: string
+    curp: string
     activo: boolean
     _count: AlumnoCountAggregateOutputType | null
     _avg: AlumnoAvgAggregateOutputType | null
@@ -4792,7 +4795,8 @@ export namespace Prisma {
     aMaterno?: boolean
     tutor?: boolean
     contacto?: boolean
-    edad?: boolean
+    fechaNac?: boolean
+    curp?: boolean
     activo?: boolean
     clases?: boolean | Alumno$clasesArgs<ExtArgs>
     pagos?: boolean | Alumno$pagosArgs<ExtArgs>
@@ -4806,7 +4810,8 @@ export namespace Prisma {
     aMaterno?: boolean
     tutor?: boolean
     contacto?: boolean
-    edad?: boolean
+    fechaNac?: boolean
+    curp?: boolean
     activo?: boolean
   }
 
@@ -4830,7 +4835,8 @@ export namespace Prisma {
       aMaterno: string
       tutor: string
       contacto: string
-      edad: number
+      fechaNac: string
+      curp: string
       activo: boolean
     }, ExtArgs["result"]["alumno"]>
     composites: {}
@@ -5219,7 +5225,8 @@ export namespace Prisma {
     readonly aMaterno: FieldRef<"Alumno", 'String'>
     readonly tutor: FieldRef<"Alumno", 'String'>
     readonly contacto: FieldRef<"Alumno", 'String'>
-    readonly edad: FieldRef<"Alumno", 'Int'>
+    readonly fechaNac: FieldRef<"Alumno", 'String'>
+    readonly curp: FieldRef<"Alumno", 'String'>
     readonly activo: FieldRef<"Alumno", 'Boolean'>
   }
     
@@ -7464,7 +7471,6 @@ export namespace Prisma {
     id: number | null
     idSucursal: number | null
     titulo: string | null
-    decripcion: string | null
     monto: number | null
     concepto: string | null
     fecha: string | null
@@ -7474,7 +7480,6 @@ export namespace Prisma {
     id: number | null
     idSucursal: number | null
     titulo: string | null
-    decripcion: string | null
     monto: number | null
     concepto: string | null
     fecha: string | null
@@ -7484,7 +7489,6 @@ export namespace Prisma {
     id: number
     idSucursal: number
     titulo: number
-    decripcion: number
     monto: number
     concepto: number
     fecha: number
@@ -7508,7 +7512,6 @@ export namespace Prisma {
     id?: true
     idSucursal?: true
     titulo?: true
-    decripcion?: true
     monto?: true
     concepto?: true
     fecha?: true
@@ -7518,7 +7521,6 @@ export namespace Prisma {
     id?: true
     idSucursal?: true
     titulo?: true
-    decripcion?: true
     monto?: true
     concepto?: true
     fecha?: true
@@ -7528,7 +7530,6 @@ export namespace Prisma {
     id?: true
     idSucursal?: true
     titulo?: true
-    decripcion?: true
     monto?: true
     concepto?: true
     fecha?: true
@@ -7625,7 +7626,6 @@ export namespace Prisma {
     id: number
     idSucursal: number
     titulo: string
-    decripcion: string | null
     monto: number
     concepto: string
     fecha: string
@@ -7654,7 +7654,6 @@ export namespace Prisma {
     id?: boolean
     idSucursal?: boolean
     titulo?: boolean
-    decripcion?: boolean
     monto?: boolean
     concepto?: boolean
     fecha?: boolean
@@ -7665,7 +7664,6 @@ export namespace Prisma {
     id?: boolean
     idSucursal?: boolean
     titulo?: boolean
-    decripcion?: boolean
     monto?: boolean
     concepto?: boolean
     fecha?: boolean
@@ -7685,7 +7683,6 @@ export namespace Prisma {
       id: number
       idSucursal: number
       titulo: string
-      decripcion: string | null
       monto: number
       concepto: string
       fecha: string
@@ -8071,7 +8068,6 @@ export namespace Prisma {
     readonly id: FieldRef<"Gasto", 'Int'>
     readonly idSucursal: FieldRef<"Gasto", 'Int'>
     readonly titulo: FieldRef<"Gasto", 'String'>
-    readonly decripcion: FieldRef<"Gasto", 'String'>
     readonly monto: FieldRef<"Gasto", 'Float'>
     readonly concepto: FieldRef<"Gasto", 'String'>
     readonly fecha: FieldRef<"Gasto", 'String'>
@@ -10106,7 +10102,8 @@ export namespace Prisma {
     aMaterno: 'aMaterno',
     tutor: 'tutor',
     contacto: 'contacto',
-    edad: 'edad',
+    fechaNac: 'fechaNac',
+    curp: 'curp',
     activo: 'activo'
   };
 
@@ -10138,7 +10135,6 @@ export namespace Prisma {
     id: 'id',
     idSucursal: 'idSucursal',
     titulo: 'titulo',
-    decripcion: 'decripcion',
     monto: 'monto',
     concepto: 'concepto',
     fecha: 'fecha'
@@ -10416,7 +10412,8 @@ export namespace Prisma {
     aMaterno?: StringFilter<"Alumno"> | string
     tutor?: StringFilter<"Alumno"> | string
     contacto?: StringFilter<"Alumno"> | string
-    edad?: IntFilter<"Alumno"> | number
+    fechaNac?: StringFilter<"Alumno"> | string
+    curp?: StringFilter<"Alumno"> | string
     activo?: BoolFilter<"Alumno"> | boolean
     clases?: AlumnoClaseListRelationFilter
     pagos?: PagosListRelationFilter
@@ -10429,7 +10426,8 @@ export namespace Prisma {
     aMaterno?: SortOrder
     tutor?: SortOrder
     contacto?: SortOrder
-    edad?: SortOrder
+    fechaNac?: SortOrder
+    curp?: SortOrder
     activo?: SortOrder
     clases?: AlumnoClaseOrderByRelationAggregateInput
     pagos?: PagosOrderByRelationAggregateInput
@@ -10437,6 +10435,7 @@ export namespace Prisma {
 
   export type AlumnoWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    curp?: string
     AND?: AlumnoWhereInput | AlumnoWhereInput[]
     OR?: AlumnoWhereInput[]
     NOT?: AlumnoWhereInput | AlumnoWhereInput[]
@@ -10445,11 +10444,11 @@ export namespace Prisma {
     aMaterno?: StringFilter<"Alumno"> | string
     tutor?: StringFilter<"Alumno"> | string
     contacto?: StringFilter<"Alumno"> | string
-    edad?: IntFilter<"Alumno"> | number
+    fechaNac?: StringFilter<"Alumno"> | string
     activo?: BoolFilter<"Alumno"> | boolean
     clases?: AlumnoClaseListRelationFilter
     pagos?: PagosListRelationFilter
-  }, "id">
+  }, "id" | "curp">
 
   export type AlumnoOrderByWithAggregationInput = {
     id?: SortOrder
@@ -10458,7 +10457,8 @@ export namespace Prisma {
     aMaterno?: SortOrder
     tutor?: SortOrder
     contacto?: SortOrder
-    edad?: SortOrder
+    fechaNac?: SortOrder
+    curp?: SortOrder
     activo?: SortOrder
     _count?: AlumnoCountOrderByAggregateInput
     _avg?: AlumnoAvgOrderByAggregateInput
@@ -10477,7 +10477,8 @@ export namespace Prisma {
     aMaterno?: StringWithAggregatesFilter<"Alumno"> | string
     tutor?: StringWithAggregatesFilter<"Alumno"> | string
     contacto?: StringWithAggregatesFilter<"Alumno"> | string
-    edad?: IntWithAggregatesFilter<"Alumno"> | number
+    fechaNac?: StringWithAggregatesFilter<"Alumno"> | string
+    curp?: StringWithAggregatesFilter<"Alumno"> | string
     activo?: BoolWithAggregatesFilter<"Alumno"> | boolean
   }
 
@@ -10600,7 +10601,6 @@ export namespace Prisma {
     id?: IntFilter<"Gasto"> | number
     idSucursal?: IntFilter<"Gasto"> | number
     titulo?: StringFilter<"Gasto"> | string
-    decripcion?: StringNullableFilter<"Gasto"> | string | null
     monto?: FloatFilter<"Gasto"> | number
     concepto?: StringFilter<"Gasto"> | string
     fecha?: StringFilter<"Gasto"> | string
@@ -10611,7 +10611,6 @@ export namespace Prisma {
     id?: SortOrder
     idSucursal?: SortOrder
     titulo?: SortOrder
-    decripcion?: SortOrderInput | SortOrder
     monto?: SortOrder
     concepto?: SortOrder
     fecha?: SortOrder
@@ -10625,7 +10624,6 @@ export namespace Prisma {
     NOT?: GastoWhereInput | GastoWhereInput[]
     idSucursal?: IntFilter<"Gasto"> | number
     titulo?: StringFilter<"Gasto"> | string
-    decripcion?: StringNullableFilter<"Gasto"> | string | null
     monto?: FloatFilter<"Gasto"> | number
     concepto?: StringFilter<"Gasto"> | string
     fecha?: StringFilter<"Gasto"> | string
@@ -10636,7 +10634,6 @@ export namespace Prisma {
     id?: SortOrder
     idSucursal?: SortOrder
     titulo?: SortOrder
-    decripcion?: SortOrderInput | SortOrder
     monto?: SortOrder
     concepto?: SortOrder
     fecha?: SortOrder
@@ -10654,7 +10651,6 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Gasto"> | number
     idSucursal?: IntWithAggregatesFilter<"Gasto"> | number
     titulo?: StringWithAggregatesFilter<"Gasto"> | string
-    decripcion?: StringNullableWithAggregatesFilter<"Gasto"> | string | null
     monto?: FloatWithAggregatesFilter<"Gasto"> | number
     concepto?: StringWithAggregatesFilter<"Gasto"> | string
     fecha?: StringWithAggregatesFilter<"Gasto"> | string
@@ -10908,7 +10904,8 @@ export namespace Prisma {
     aMaterno: string
     tutor: string
     contacto: string
-    edad: number
+    fechaNac: string
+    curp: string
     activo: boolean
     clases?: AlumnoClaseCreateNestedManyWithoutAlumnoInput
     pagos?: PagosCreateNestedManyWithoutAlumnoInput
@@ -10921,7 +10918,8 @@ export namespace Prisma {
     aMaterno: string
     tutor: string
     contacto: string
-    edad: number
+    fechaNac: string
+    curp: string
     activo: boolean
     clases?: AlumnoClaseUncheckedCreateNestedManyWithoutAlumnoInput
     pagos?: PagosUncheckedCreateNestedManyWithoutAlumnoInput
@@ -10933,7 +10931,8 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     tutor?: StringFieldUpdateOperationsInput | string
     contacto?: StringFieldUpdateOperationsInput | string
-    edad?: IntFieldUpdateOperationsInput | number
+    fechaNac?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     activo?: BoolFieldUpdateOperationsInput | boolean
     clases?: AlumnoClaseUpdateManyWithoutAlumnoNestedInput
     pagos?: PagosUpdateManyWithoutAlumnoNestedInput
@@ -10946,7 +10945,8 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     tutor?: StringFieldUpdateOperationsInput | string
     contacto?: StringFieldUpdateOperationsInput | string
-    edad?: IntFieldUpdateOperationsInput | number
+    fechaNac?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     activo?: BoolFieldUpdateOperationsInput | boolean
     clases?: AlumnoClaseUncheckedUpdateManyWithoutAlumnoNestedInput
     pagos?: PagosUncheckedUpdateManyWithoutAlumnoNestedInput
@@ -10958,7 +10958,8 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     tutor?: StringFieldUpdateOperationsInput | string
     contacto?: StringFieldUpdateOperationsInput | string
-    edad?: IntFieldUpdateOperationsInput | number
+    fechaNac?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     activo?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -10969,7 +10970,8 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     tutor?: StringFieldUpdateOperationsInput | string
     contacto?: StringFieldUpdateOperationsInput | string
-    edad?: IntFieldUpdateOperationsInput | number
+    fechaNac?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     activo?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -11057,7 +11059,6 @@ export namespace Prisma {
 
   export type GastoCreateInput = {
     titulo: string
-    decripcion?: string | null
     monto: number
     concepto: string
     fecha: string
@@ -11068,7 +11069,6 @@ export namespace Prisma {
     id?: number
     idSucursal: number
     titulo: string
-    decripcion?: string | null
     monto: number
     concepto: string
     fecha: string
@@ -11076,7 +11076,6 @@ export namespace Prisma {
 
   export type GastoUpdateInput = {
     titulo?: StringFieldUpdateOperationsInput | string
-    decripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: FloatFieldUpdateOperationsInput | number
     concepto?: StringFieldUpdateOperationsInput | string
     fecha?: StringFieldUpdateOperationsInput | string
@@ -11087,7 +11086,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     idSucursal?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
-    decripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: FloatFieldUpdateOperationsInput | number
     concepto?: StringFieldUpdateOperationsInput | string
     fecha?: StringFieldUpdateOperationsInput | string
@@ -11095,7 +11093,6 @@ export namespace Prisma {
 
   export type GastoUpdateManyMutationInput = {
     titulo?: StringFieldUpdateOperationsInput | string
-    decripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: FloatFieldUpdateOperationsInput | number
     concepto?: StringFieldUpdateOperationsInput | string
     fecha?: StringFieldUpdateOperationsInput | string
@@ -11105,7 +11102,6 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     idSucursal?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
-    decripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: FloatFieldUpdateOperationsInput | number
     concepto?: StringFieldUpdateOperationsInput | string
     fecha?: StringFieldUpdateOperationsInput | string
@@ -11434,13 +11430,13 @@ export namespace Prisma {
     aMaterno?: SortOrder
     tutor?: SortOrder
     contacto?: SortOrder
-    edad?: SortOrder
+    fechaNac?: SortOrder
+    curp?: SortOrder
     activo?: SortOrder
   }
 
   export type AlumnoAvgOrderByAggregateInput = {
     id?: SortOrder
-    edad?: SortOrder
   }
 
   export type AlumnoMaxOrderByAggregateInput = {
@@ -11450,7 +11446,8 @@ export namespace Prisma {
     aMaterno?: SortOrder
     tutor?: SortOrder
     contacto?: SortOrder
-    edad?: SortOrder
+    fechaNac?: SortOrder
+    curp?: SortOrder
     activo?: SortOrder
   }
 
@@ -11461,13 +11458,13 @@ export namespace Prisma {
     aMaterno?: SortOrder
     tutor?: SortOrder
     contacto?: SortOrder
-    edad?: SortOrder
+    fechaNac?: SortOrder
+    curp?: SortOrder
     activo?: SortOrder
   }
 
   export type AlumnoSumOrderByAggregateInput = {
     id?: SortOrder
-    edad?: SortOrder
   }
 
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
@@ -11584,25 +11581,10 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type GastoCountOrderByAggregateInput = {
     id?: SortOrder
     idSucursal?: SortOrder
     titulo?: SortOrder
-    decripcion?: SortOrder
     monto?: SortOrder
     concepto?: SortOrder
     fecha?: SortOrder
@@ -11618,7 +11600,6 @@ export namespace Prisma {
     id?: SortOrder
     idSucursal?: SortOrder
     titulo?: SortOrder
-    decripcion?: SortOrder
     monto?: SortOrder
     concepto?: SortOrder
     fecha?: SortOrder
@@ -11628,7 +11609,6 @@ export namespace Prisma {
     id?: SortOrder
     idSucursal?: SortOrder
     titulo?: SortOrder
-    decripcion?: SortOrder
     monto?: SortOrder
     concepto?: SortOrder
     fecha?: SortOrder
@@ -11638,23 +11618,6 @@ export namespace Prisma {
     id?: SortOrder
     idSucursal?: SortOrder
     monto?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type UserCountOrderByAggregateInput = {
@@ -12036,10 +11999,6 @@ export namespace Prisma {
     connect?: SucursalWhereUniqueInput
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type SucursalUpdateOneRequiredWithoutGastosNestedInput = {
     create?: XOR<SucursalCreateWithoutGastosInput, SucursalUncheckedCreateWithoutGastosInput>
     connectOrCreate?: SucursalCreateOrConnectWithoutGastosInput
@@ -12184,37 +12143,6 @@ export namespace Prisma {
     _max?: NestedFloatFilter<$PrismaModel>
   }
 
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
   export type ClaseCreateWithoutDocenteInput = {
     nombre: string
     cupoMax: number
@@ -12294,7 +12222,6 @@ export namespace Prisma {
 
   export type GastoCreateWithoutSucursalInput = {
     titulo: string
-    decripcion?: string | null
     monto: number
     concepto: string
     fecha: string
@@ -12303,7 +12230,6 @@ export namespace Prisma {
   export type GastoUncheckedCreateWithoutSucursalInput = {
     id?: number
     titulo: string
-    decripcion?: string | null
     monto: number
     concepto: string
     fecha: string
@@ -12353,7 +12279,6 @@ export namespace Prisma {
     id?: IntFilter<"Gasto"> | number
     idSucursal?: IntFilter<"Gasto"> | number
     titulo?: StringFilter<"Gasto"> | string
-    decripcion?: StringNullableFilter<"Gasto"> | string | null
     monto?: FloatFilter<"Gasto"> | number
     concepto?: StringFilter<"Gasto"> | string
     fecha?: StringFilter<"Gasto"> | string
@@ -12578,7 +12503,8 @@ export namespace Prisma {
     aMaterno: string
     tutor: string
     contacto: string
-    edad: number
+    fechaNac: string
+    curp: string
     activo: boolean
     pagos?: PagosCreateNestedManyWithoutAlumnoInput
   }
@@ -12590,7 +12516,8 @@ export namespace Prisma {
     aMaterno: string
     tutor: string
     contacto: string
-    edad: number
+    fechaNac: string
+    curp: string
     activo: boolean
     pagos?: PagosUncheckedCreateNestedManyWithoutAlumnoInput
   }
@@ -12641,7 +12568,8 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     tutor?: StringFieldUpdateOperationsInput | string
     contacto?: StringFieldUpdateOperationsInput | string
-    edad?: IntFieldUpdateOperationsInput | number
+    fechaNac?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     activo?: BoolFieldUpdateOperationsInput | boolean
     pagos?: PagosUpdateManyWithoutAlumnoNestedInput
   }
@@ -12653,7 +12581,8 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     tutor?: StringFieldUpdateOperationsInput | string
     contacto?: StringFieldUpdateOperationsInput | string
-    edad?: IntFieldUpdateOperationsInput | number
+    fechaNac?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     activo?: BoolFieldUpdateOperationsInput | boolean
     pagos?: PagosUncheckedUpdateManyWithoutAlumnoNestedInput
   }
@@ -12694,7 +12623,8 @@ export namespace Prisma {
     aMaterno: string
     tutor: string
     contacto: string
-    edad: number
+    fechaNac: string
+    curp: string
     activo: boolean
     clases?: AlumnoClaseCreateNestedManyWithoutAlumnoInput
   }
@@ -12706,7 +12636,8 @@ export namespace Prisma {
     aMaterno: string
     tutor: string
     contacto: string
-    edad: number
+    fechaNac: string
+    curp: string
     activo: boolean
     clases?: AlumnoClaseUncheckedCreateNestedManyWithoutAlumnoInput
   }
@@ -12733,7 +12664,8 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     tutor?: StringFieldUpdateOperationsInput | string
     contacto?: StringFieldUpdateOperationsInput | string
-    edad?: IntFieldUpdateOperationsInput | number
+    fechaNac?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     activo?: BoolFieldUpdateOperationsInput | boolean
     clases?: AlumnoClaseUpdateManyWithoutAlumnoNestedInput
   }
@@ -12745,7 +12677,8 @@ export namespace Prisma {
     aMaterno?: StringFieldUpdateOperationsInput | string
     tutor?: StringFieldUpdateOperationsInput | string
     contacto?: StringFieldUpdateOperationsInput | string
-    edad?: IntFieldUpdateOperationsInput | number
+    fechaNac?: StringFieldUpdateOperationsInput | string
+    curp?: StringFieldUpdateOperationsInput | string
     activo?: BoolFieldUpdateOperationsInput | boolean
     clases?: AlumnoClaseUncheckedUpdateManyWithoutAlumnoNestedInput
   }
@@ -12850,7 +12783,6 @@ export namespace Prisma {
 
   export type GastoUpdateWithoutSucursalInput = {
     titulo?: StringFieldUpdateOperationsInput | string
-    decripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: FloatFieldUpdateOperationsInput | number
     concepto?: StringFieldUpdateOperationsInput | string
     fecha?: StringFieldUpdateOperationsInput | string
@@ -12859,7 +12791,6 @@ export namespace Prisma {
   export type GastoUncheckedUpdateWithoutSucursalInput = {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
-    decripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: FloatFieldUpdateOperationsInput | number
     concepto?: StringFieldUpdateOperationsInput | string
     fecha?: StringFieldUpdateOperationsInput | string
@@ -12868,7 +12799,6 @@ export namespace Prisma {
   export type GastoUncheckedUpdateManyWithoutSucursalInput = {
     id?: IntFieldUpdateOperationsInput | number
     titulo?: StringFieldUpdateOperationsInput | string
-    decripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: FloatFieldUpdateOperationsInput | number
     concepto?: StringFieldUpdateOperationsInput | string
     fecha?: StringFieldUpdateOperationsInput | string

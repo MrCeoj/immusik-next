@@ -88,3 +88,4 @@ export async function obtenerAlumnosDeClase(id: number) {
 
 	return alumnos
 }
+

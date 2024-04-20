@@ -149,7 +149,8 @@ exports.Prisma.AlumnoScalarFieldEnum = {
   aMaterno: 'aMaterno',
   tutor: 'tutor',
   contacto: 'contacto',
-  edad: 'edad',
+  fechaNac: 'fechaNac',
+  curp: 'curp',
   activo: 'activo'
 };
 
@@ -172,7 +173,6 @@ exports.Prisma.GastoScalarFieldEnum = {
   id: 'id',
   idSucursal: 'idSucursal',
   titulo: 'titulo',
-  decripcion: 'decripcion',
   monto: 'monto',
   concepto: 'concepto',
   fecha: 'fecha'

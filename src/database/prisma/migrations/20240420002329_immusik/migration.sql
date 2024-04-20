@@ -37,7 +37,8 @@ CREATE TABLE "Alumno" (
     "aMaterno" TEXT NOT NULL,
     "tutor" TEXT NOT NULL,
     "contacto" TEXT NOT NULL,
-    "edad" INTEGER NOT NULL,
+    "fechaNac" TEXT NOT NULL,
+    "curp" TEXT NOT NULL,
     "activo" BOOLEAN NOT NULL
 );
 
@@ -66,7 +67,6 @@ CREATE TABLE "Gasto" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "idSucursal" INTEGER NOT NULL,
     "titulo" TEXT NOT NULL,
-    "decripcion" TEXT,
     "monto" REAL NOT NULL,
     "concepto" TEXT NOT NULL,
     "fecha" TEXT NOT NULL,
@@ -88,6 +88,9 @@ CREATE TABLE "MasterKey" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Docente_curp_key" ON "Docente"("curp");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Alumno_curp_key" ON "Alumno"("curp");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_nombre_key" ON "User"("nombre");

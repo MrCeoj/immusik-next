@@ -20,3 +20,20 @@ export async function actualizarEstadoDeAlumno(estado:boolean,id:any){
         data: {activo:estado}
     })
 }
+
+/**
+ * Función para registrar alumnos
+ * @param data Datos del alumno a registrar
+ */
+export async function crearAlumno(data:any){
+    await prisma.alumno.create({data:{
+        nombre: data.nombre,
+        aPaterno: data.aPaterno,
+        aMaterno: data.aMaterno,
+        tutor: data.tutor,
+        curp: data.curp,
+        contacto: data.contacto,
+        fechaNac: data.fechaNac,
+        activo: false
+    }})
+}
