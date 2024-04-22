@@ -20,9 +20,9 @@ export default async function Handler(req: any, res: any) {
     return res.status(200).json(result);
   }
   if (req.method === "POST") {
-    const { nombre, diasDisplay, horario, sucursal, cupo, docente } = req.body;
+    const { nombreFor, diasDisplay, horario, sucursal, cupo, docente } = req.body;
     const data = {
-      nombre: nombre,
+      nombre: nombreFor,
       dias: diasDisplay,
       horario: horario,
       sucursal: sucursal,

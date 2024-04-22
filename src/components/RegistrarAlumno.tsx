@@ -61,12 +61,12 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
   //Función de aceptar
   const handleAceptar = () => {
     //Se aplica trim a todos los datos
-    const nombreTrim = nombre.trim();
-    const aPaternoTrim = aPaterno.trim();
-    const aMaternoTrim = aMaterno.trim();
-    const tutorTrim = tutor.trim();
+    const nombreTrim = nombre.trim().toUpperCase();
+    const aPaternoTrim = aPaterno.trim().toUpperCase();
+    const aMaternoTrim = aMaterno.trim().toUpperCase();
+    const tutorTrim = tutor.trim().toUpperCase();
     const contactoTrim = contacto.trim();
-    const curpTrim = curp.trim();
+    const curpTrim = curp.trim().toUpperCase();
 
     //Validación para campos vacios
     if (
@@ -189,7 +189,7 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
                 <label className="text-lg mr-2 font-bold">Nombre</label>
                 <input
                   value={nombre}
-                  onChange={(e) => setNombre(e.target.value.toUpperCase())}
+                  onChange={(e) => setNombre(e.target.value)}
                   className="text-black text-lg p-1 rounded-md"
                   type="text"
                   placeholder="Nombre"
@@ -201,7 +201,7 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
                 </label>
                 <input
                   value={aPaterno}
-                  onChange={(e) => setAPaterno(e.target.value.toUpperCase())}
+                  onChange={(e) => setAPaterno(e.target.value)}
                   className="text-black text-lg p-1 rounded-md"
                   type="text"
                   placeholder="Apellido Paterno"
@@ -213,7 +213,7 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
                 </label>
                 <input
                   value={aMaterno}
-                  onChange={(e) => setAMaterno(e.target.value.toUpperCase())}
+                  onChange={(e) => setAMaterno(e.target.value)}
                   className="text-black text-lg p-1 rounded-md"
                   type="text"
                   placeholder="Apellido Materno"
@@ -223,12 +223,12 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
             <label className="text-lg mr-2 font-bold">Tutor</label>
             <input
               value={tutor}
-              onChange={(e) => setTutor(e.target.value.toUpperCase())}
+              onChange={(e) => setTutor(e.target.value)}
               className="text-black text-lg p-1 rounded-md mb-3"
               type="text"
               placeholder="Tutor"
             />
-            <label className="text-lg mr-2 font-bold">Contacto</label>
+            <label className="text-lg mr-2 font-bold">Teléfono</label>
             <input
               value={contacto}
               onChange={(e) => setContacto(e.target.value)}

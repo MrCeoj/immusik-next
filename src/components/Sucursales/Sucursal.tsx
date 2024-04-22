@@ -2,6 +2,7 @@ import { Sucursal } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import EditarSucursal from "./EditarSucursal";
+import { toTitleCase } from "@/lib/utils";
 
 /**
  * @param: sucursal, el objeto tipo sucursal que llega desde sucursales.tsx

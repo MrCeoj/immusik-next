@@ -119,6 +119,9 @@ function RegistrarClase({
 
   //Funcion para registrar la sucursal en la base de datos
   const handleAceptar = () => {
+    //se formatea el nombre de la clase
+    let nombreFor = nombre.trim().toUpperCase();
+
     /*Se maneja los días creando un arreglo "dias", al cual se le insertarán los días como String
     dependiendo si están marcados como true*/
     const dias = [""];
@@ -134,7 +137,7 @@ function RegistrarClase({
 
     //Se verifica si exsite algun campo incompleto o vacío
     if (
-      nombre === "" ||
+      nombreFor === "" ||
       diasDisplay === "" ||
       horario === "" ||
       sucursal === "" ||
@@ -163,7 +166,7 @@ function RegistrarClase({
       },
       body: JSON.stringify({
         //Se envía nombre, dias, horario, sucursal, cupo y docente
-        nombre,
+        nombreFor,
         diasDisplay,
         horario,
         sucursal,
@@ -231,7 +234,7 @@ function RegistrarClase({
           <label className="my-1 font-bold">Nombre</label>
           <input
             value={nombre}
-            onChange={(e) => setNombre(e.target.value.toUpperCase())}
+            onChange={(e) => setNombre(e.target.value)}
             className="p-1 rounded-md text-black"
             placeholder="Nombre"
           />
@@ -283,7 +286,9 @@ function RegistrarClase({
             onChange={(e) => setHorario(e.target.value)}
             className="p-1 rounded-md text-black"
           >
-            <option value="">Seleccione un horario</option>
+            <option disabled selected value="">
+              Seleccione un horario
+            </option>
             <option value="15:00 - 16:00">15:00 - 16:00</option>
             <option value="16:00 - 17:00">16:00 - 17:00</option>
             <option value="17:00 - 18:00">17:00 - 18:00</option>
@@ -304,7 +309,9 @@ function RegistrarClase({
             onChange={(e) => setDocente(e.target.value)}
             disabled={docentes.length === 0}
           >
-            <option value="">Seleccione un docente</option>
+            <option disabled selected value="">
+              Seleccione un docente
+            </option>
             {docentes &&
               docentes.map((docente) => (
                 <option key={docente.id} value={docente.id}>
@@ -317,7 +324,9 @@ function RegistrarClase({
             onChange={(e) => setSucursal(e.target.value)}
             className="p-1 rounded-md text-black"
           >
-            <option value="">Seleccione una sucursal</option>
+            <option disabled selected value="">
+              Seleccione una sucursal
+            </option>
             {sucursales.map((sucursal) => (
               <option key={sucursal.id} value={sucursal.id}>
                 {sucursal.nombre}

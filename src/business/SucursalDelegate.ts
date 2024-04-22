@@ -54,7 +54,7 @@ export async function fetchCreateSucursal(data: any) {
 
 		const existeSucursal = sucursalesTemp.some(
 			(sucursalTemp) =>
-				sucursalTemp.nombre.toUpperCase() === data.nombre.toUpperCase()
+				sucursalTemp.nombre === data.nombre
 		)
 
 		if (existeSucursal) {

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ConfirmacionEliminar from "./ConfirmacionEliminar";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { toTitleCase } from "@/lib/utils";
 /*
  * @param sucursal: la sucursal que se va a editar
  * @param setEditar: cambia el valor de Editar, esto para desaparecer este mismo componente
@@ -21,8 +22,12 @@ const EditarSucursal = ({
   setCambio: any;
 }) => {
   //useStates que cambian el valor de los campos que se registran por parte del usuario
-  const [nombre, setNombre] = useState(sucursal.nombre);
-  const [direccion, setDireccion] = useState(sucursal.direccion);
+
+  let nombreFor = toTitleCase(sucursal.nombre);
+  let direccionFor = toTitleCase(sucursal.direccion);
+
+  const [nombre, setNombre] = useState(nombreFor);
+  const [direccion, setDireccion] = useState(direccionFor);
   const [contrasena, setContrasena] = useState("");
 
   //useState para mostrar o no la pantalla de error
@@ -51,11 +56,21 @@ const EditarSucursal = ({
   const handleEditar = () => {
     let id = sucursal.id; //Obtención de id
 
+    nombreFor = nombre.trim().toUpperCase();
+    direccionFor = direccion.trim().toUpperCase();
+
     //Validación de no dejar espacios en blanco
-    if (nombre === "" || direccion === "" || contrasena === "") {
+    if (nombreFor === "" || direccionFor === "" || contrasena === "") {
       toast.error("No deje espacios en blanco.");
       return; //Se corta el flujo
     }
+
+    let data = {
+      id: id,
+      nombre: nombreFor,
+      direccion: direccionFor,
+      contrasena: contrasena,
+    };
 
     //Continua el flujo
     //Petición fetch tipo PATCH para actualizar datos.
@@ -66,10 +81,7 @@ const EditarSucursal = ({
       },
       body: JSON.stringify({
         //Se mandan id, nombre y dirección.
-        id,
-        nombre,
-        direccion,
-        contrasena,
+        data,
       }),
     }).then((response) => {
       if (response.ok) {
@@ -114,7 +126,7 @@ const EditarSucursal = ({
                   placeholder="Nombre"
                   className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                   value={nombre}
-                  onChange={(e) => setNombre(e.target.value.toUpperCase())}
+                  onChange={(e) => setNombre(e.target.value)}
                 ></input>
               </div>
               <div className="mt-5 flex flex-col w-[800px] relative">
@@ -123,7 +135,7 @@ const EditarSucursal = ({
                   placeholder="Dirección"
                   className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                   value={direccion}
-                  onChange={(e) => setDireccion(e.target.value.toUpperCase())}
+                  onChange={(e) => setDireccion(e.target.value)}
                 />
               </div>
               <div className="mt-5 flex flex-col w-[800px] relative">

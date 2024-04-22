@@ -21,10 +21,19 @@ const AgregarSucursal = ({
   /*cuando se envíe el formulario se haran validaciones para que no haya 
   campos vacíos*/
   const handleSubmit = () => {
-    if (nombre === "" || direccion === "") {
+    let nombreFor = nombre.trim().toUpperCase();
+    let direccionFor = direccion.trim().toUpperCase();
+
+    if (nombreFor === "" || direccionFor === "" || contrasena === "") {
       toast.error("No deje espacios en blanco.");
       return; //Se corta el flujo
     }
+
+    let data = {
+      nombre: nombreFor,
+      direccion: direccionFor,
+      contrasena: contrasena,
+    };
 
     /*Si no hay errores se sigue con el flujo haciendo petición fecth POST
     para crear una nueva sucursal, enviando nombre y dirección*/
@@ -34,9 +43,7 @@ const AgregarSucursal = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nombre, //Se envían como cuerpo el nombre y dirección de la nueva sucursal
-        direccion,
-        contrasena,
+        data,
       }),
     }).then((response) => {
       //Se obtiene la respuesta
@@ -71,7 +78,7 @@ const AgregarSucursal = ({
                 className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                 placeholder="Nombre de la sucursal"
                 value={nombre}
-                onChange={(e) => setNombre(e.target.value.toUpperCase())}
+                onChange={(e) => setNombre(e.target.value)}
               />
             </div>
             <div className="mt-2 flex flex-col w-[800px] relative">
@@ -80,7 +87,7 @@ const AgregarSucursal = ({
                 className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                 placeholder="Dirección de la sucursal"
                 value={direccion}
-                onChange={(e) => setDireccion(e.target.value.toUpperCase())}
+                onChange={(e) => setDireccion(e.target.value)}
               />
             </div>
             <div className="mt-2 flex flex-col w-[800px] relative">
