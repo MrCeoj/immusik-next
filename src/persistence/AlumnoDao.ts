@@ -1,11 +1,13 @@
 import prisma from '@/utils/Prisma'
- 
+import { Alumno } from '@/entities' 
+
 /**
  * Función para obtener todos los alumnos en la base de datos
  * @returns todos los alumnos de la base de datos
  */
 export async function getAllAlumnos(){
     const alumnos  = await prisma.alumno.findMany()
+    //console.log("desde persistence:\n", alumnos)
     return alumnos
 }
 
@@ -36,4 +38,26 @@ export async function crearAlumno(data:any){
         fechaNac: data.fechaNac,
         activo: false
     }})
+}
+
+
+/**
+ * Función para modificar la información de un alumno.
+ * @param data datos del alumno que se modificarán
+ */
+export async function modificarAlumno(data:any){
+    await prisma.alumno.update({
+        where: {
+            id:data.id
+        },
+        data: {
+            nombre:data.nombre,
+            aPaterno:data.aPaterno,
+            aMaterno: data.aMaterno,
+            tutor:data.tutor,
+            fechaNac: data.fechaNac, 
+            contacto: data.contacto,
+            curp: data.curp
+        }
+    })
 }

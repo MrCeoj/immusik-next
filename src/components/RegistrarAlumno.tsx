@@ -26,15 +26,20 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
 
   //useEffect para conseguir las clases con cupo disponible cada que se ejecute el componente
   useEffect(() => {
-    fetch("api/clase/clasesConCupo").then((response) => {
-      if (response.ok) {
-        return response.json().then((data) => {
-          setClases(data);
-        });
-      } else {
-        toast.error("Error al encontrar las clases con cupo disponible.");
-      }
-    });
+    fetch("api/clase/clasesConCupo")
+      .then((response) => {
+        if (response.ok) {
+          return response.json().then((data) => {
+            setClases(data);
+          });
+        } else {
+          toast.error("Error al encontrar las clases con cupo disponible.");
+        }
+      })
+      .catch((e) => {
+        toast.error("Hubo un problema, revise su conexión.");
+        handleCancelar();
+      });
   }, []);
 
   //Cierra este modal

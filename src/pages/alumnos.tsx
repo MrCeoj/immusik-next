@@ -1,13 +1,29 @@
+import Alumno from "@/components/Alumno/Alumno";
+import GestionarAlumno from "@/components/Alumno/GestionarAlumno";
 import RegistrarAlumno from "@/components/RegistrarAlumno";
-import React, { useState } from "react";
-import { ToastContainer } from "react-toastify";
+import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
 function alumnos() {
   const [registrar, setRegistrar] = useState(false);
+  const [alumnos, setAlumnos] = useState([]);
 
   const handleRegistrar = () => {
     setRegistrar(true);
   };
+
+  useEffect(() => {
+    fetch("api/alumno/alumno").then(async (response) => {
+      if (response.ok) {
+        return response.json().then((data) => {
+          setAlumnos(data);
+        });
+      } else {
+        alert("error con el fetch");
+        toast.error("Hubo un error al conseguir los alumnos.");
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -19,6 +35,9 @@ function alumnos() {
       >
         Registrar
       </button>
+      {alumnos.map((alumno: any) => (
+        <Alumno alumno={alumno} />
+      ))}
     </>
   );
 }

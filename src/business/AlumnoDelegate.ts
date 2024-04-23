@@ -1,12 +1,14 @@
-import { getAllAlumnos,actualizarEstadoDeAlumno, crearAlumno } from "@/persistence/AlumnoDao"
+import { getAllAlumnos,actualizarEstadoDeAlumno, crearAlumno, modificarAlumno } from "@/persistence/AlumnoDao"
 import { fetchGetClasesDeCiertoAlumno } from "./AlumnoClaseDelegate"
+import { Alumno } from '@/entities' 
 
 /**
  * Función para obtener a todos los alumnos
  * @returns todos los alumnos en la base de datos
  */
-export async function fecthGetAllAlumnos(){
+export async function fetchGetAllAlumnos(){
     const alumnos = await getAllAlumnos()
+    //console.log("desde delegate: \n", alumnos)
     return alumnos
 }
 
@@ -16,7 +18,7 @@ export async function fecthGetAllAlumnos(){
  * o cada que se desasigna una clase a un alumno.
  */
 export async function actualizarEstadoDeAlumnos(){
-    const alumnos = await fecthGetAllAlumnos() //Se obtienen todos los alumnos
+    const alumnos = await fetchGetAllAlumnos() //Se obtienen todos los alumnos
     for(const alumno of alumnos){
         //Por cada alumno se obtienen sus registros AlumnoClase
         const clasesDelAlumno = await fetchGetClasesDeCiertoAlumno(alumno.id)
@@ -52,6 +54,38 @@ export async function fetchCrearAlumno(data:any){
     }else{
         await crearAlumno(data)
         response.message="Alumno registrado correctamente."
+    }
+
+    return response
+}
+
+/**
+ * Función para modificar la información de un alumno
+ * @param data datos del alumno que se va a modificar
+ * @returns la respuesta de la petición
+ */
+export async function fetchModificarAlumno(data:any){
+    let response = {
+        message: ""
+    }
+
+    //Se verifica si se repite la CURP
+    let repetido = false
+
+    const alumnos = await fetchGetAllAlumnos()
+    alumnos.map(alumno=>{
+        if(alumno.id!==data.id){
+            if(alumno.curp===data.curp){
+                repetido = true
+            }
+        }
+    })
+
+    if(!repetido){
+        await modificarAlumno(data)
+        response.message="Se modificó la información del alumno exitosamente."
+    }else{
+        response.message="Ya existe un alumno con esa CURP."
     }
 
     return response

@@ -19,6 +19,7 @@ function ConfirmarRegistrarAlumno({
   //Procede con el registro
   const handleAceptar = () => {
     //petición fetch post
+
     fetch("api/alumno/alumno", {
       method: "POST", //Metodo: POST porque vamos a hacer un nuevo registro
       headers: {
@@ -27,23 +28,29 @@ function ConfirmarRegistrarAlumno({
       body: JSON.stringify({
         data, //se envian los datos de el alumno
       }),
-    }).then((response) => {
-      if (response.ok) {
-        return response.json().then((data) => {
-          if (data.message === "Alumno registrado correctamente.") {
-            toast.success(data.message);
-            setConfirmacionRegistrarAlumno(false);
-            setRegistrar(false);
-          } else {
-            toast.error(data.message);
-            setConfirmacionRegistrarAlumno(false);
-          }
-        });
-      } else {
-        toast.error("Error al registrar al alumno.");
-        setConfirmacionRegistrarAlumno(false);
-      }
-    });
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json().then((data) => {
+            if (data.message === "Alumno registrado correctamente.") {
+              toast.success(data.message);
+              setConfirmacionRegistrarAlumno(false);
+              setRegistrar(false);
+            } else {
+              toast.error(data.message);
+              setConfirmacionRegistrarAlumno(false);
+            }
+          });
+        } else {
+          toast.error("Error al registrar al alumno.");
+          setConfirmacionRegistrarAlumno(false);
+        }
+      })
+      .catch((e) => {
+        toast.error(
+          "Hubo un error al realizar la operación, revise su conexión."
+        );
+      });
   };
 
   return (
