@@ -6,6 +6,9 @@ import "react-toastify/dist/ReactToastify.css";
 import EditarInformacion from "./EditarInformacion";
 import { Card, CardBody } from "@nextui-org/card";
 
+// con esta función se podrán agregar clases de tailwindcss a los componentes de nextui
+import { cn } from "@nextui-org/react";
+
 
 function GestionarAlumno({
   setGestionar,
@@ -30,7 +33,7 @@ function GestionarAlumno({
         <div className="bg-white rounded-lg shadow-lg p-10 flex flex-col items-center justify-center w-1/2">
           <h1 className="m-2 font-bold text-4xl">Detalles de {toTitleCase(alumno.nombre)}{" "}
             {toTitleCase(alumno.aPaterno)}</h1>
-          <Tabs aria-label="Options" className="w-full">
+          <Tabs aria-label="Options" className={cn('w-full font-bold')}>
             <Tab title="Información del alumno" >
               <Card>
                 <CardBody>

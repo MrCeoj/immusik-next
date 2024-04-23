@@ -6,6 +6,7 @@ import '@/styles/scrollbar.css'
 import '@/styles/sucursal.css'
 import Head from 'next/head'
 import { SessionProvider } from 'next-auth/react'
+import { NextUIProvider } from '@nextui-org/react'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 	return (
@@ -22,7 +23,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 				}IMMUSIK`}</title>
 			</Head>
 			<SessionProvider session={session}>
-				<Component {...pageProps} />
+        <NextUIProvider>
+				  <Component {...pageProps} />
+        </NextUIProvider>
 			</SessionProvider>
 		</>
 	)
