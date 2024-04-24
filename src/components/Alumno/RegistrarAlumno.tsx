@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ConfirmarRegistrarAlumno from "./ConfirmarRegistrarAlumno";
+import ConfirmarRegistrarAlumno from "../ConfirmarRegistrarAlumno";
 
 function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
   //useState para capturar la información del alumno

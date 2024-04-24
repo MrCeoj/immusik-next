@@ -1,6 +1,6 @@
 import Alumno from "@/components/Alumno/Alumno";
 import GestionarAlumno from "@/components/Alumno/GestionarAlumno";
-import RegistrarAlumno from "@/components/RegistrarAlumno";
+import RegistrarAlumno from "@/components/Alumno/RegistrarAlumno";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -17,6 +17,7 @@ function alumnos() {
       if (response.ok) {
         return response.json().then((data) => {
           setAlumnos(data);
+          console.log(data);
         });
       } else {
         alert("error con el fetch");
