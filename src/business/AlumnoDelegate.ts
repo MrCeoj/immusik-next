@@ -7,8 +7,20 @@ import { Alumno } from '@/entities'
  * @returns todos los alumnos en la base de datos
  */
 export async function fetchGetAllAlumnos(){
-    const alumnos = await getAllAlumnos()
-    //console.log("desde delegate: \n", alumnos)
+    const alumnos = await getAllAlumnos();
+    
+    alumnos.sort((a:Alumno,b:Alumno) => {
+        if(a.nombre < b.nombre) return -1
+        if(b.nombre > a.nombre) return 1
+        return 0
+    })
+
+    alumnos.sort((a:Alumno, b:Alumno) => {
+        if(a.activo && !b.activo) return -1
+        if(!a.activo && b.activo) return 1
+        return 0
+    })
+
     return alumnos
 }
 

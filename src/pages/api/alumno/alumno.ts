@@ -3,15 +3,27 @@ import { fetchCrearAlumno,fetchGetAllAlumnos, fetchModificarAlumno } from "@/bus
 
 export default async function handler(req:any,res:any){
     if(req.method==="GET"){
-        const result = await fetchGetAllAlumnos()
-        res.status(200).json(result)
-    }else if (req.method==="POST"){
+        try{
+            const result = await fetchGetAllAlumnos()
+            if(result.length===0) return res.status(404).json({message:"No hay alumnos registrados."})
+            
+            return res.status(200).json(result)
+        }catch(e){
+            return res.status(500).json({message:"Error al obtener los alumnos."})
+        }
+    }
+
+    if (req.method==="POST"){
         const {data} = req.body
         const result = await fetchCrearAlumno(data)
-        res.status(200).json(result)
-    }else if (req.method==="PATCH"){
+        return res.status(200).json(result)
+    }
+
+    if (req.method==="PATCH"){
         const {data} = req.body
         const result = await fetchModificarAlumno(data)
-        res.status(200).json(result)
+        return res.status(200).json(result)
     }
+
+    return res.status(405).json({message:"Método no permitido."})
 }

@@ -7,7 +7,6 @@ import { Alumno } from '@/entities'
  */
 export async function getAllAlumnos(){
     const alumnos  = await prisma.alumno.findMany()
-    //console.log("desde persistence:\n", alumnos)
     return alumnos
 }
 

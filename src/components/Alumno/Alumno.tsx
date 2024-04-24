@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import GestionarAlumno from "./GestionarAlumno";
+import { Alumno } from "@/entities/edge";
 
-function Alumno({ alumno }: { alumno: any }) {
+function Alumnos({ alumno }: { alumno: Alumno }) {
   const [gestionar, setGestionar] = useState(false);
 
   const handleGestionar = () => {
@@ -13,7 +14,7 @@ function Alumno({ alumno }: { alumno: any }) {
       {gestionar && (
         <GestionarAlumno setGestionar={setGestionar} alumno={alumno} />
       )}
-      {alumno.nombre} {alumno.aPaterno}
+      {alumno.nombre} {alumno.aPaterno} {alumno.activo.toString()}
       <button className="ml-5" onClick={handleGestionar}>
         gestionar
       </button>
@@ -21,4 +22,4 @@ function Alumno({ alumno }: { alumno: any }) {
   );
 }
 
-export default Alumno;
+export default Alumnos;
