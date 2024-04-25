@@ -46,7 +46,7 @@ function ConfirmarPago({
     setCambio2(!cambio2);
   }
   return (
-    <div className="bg-black bg-opacity-50 top-0 left-0 absolute z-100 h-screen w-screen flex items-center justify-center">
+    <div className="bg-black bg-opacity-50 top-0 left-0 absolute z-100 h-full w-full flex items-center justify-center">
       <div className="bg-white rounded-lg shadow-lg p-5">
         <h1 className="font-bold">
           ¿Está seguro que quiere registrar el pago?

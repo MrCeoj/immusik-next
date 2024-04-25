@@ -20,6 +20,7 @@ function RegistrarPago({
   const [confirmar, setConfirmar] = useState(false);
   const [data, setData] = useState();
   const [cambio2, setCambio2] = useState(false);
+  
 
   function handleDateChange(newDate: any) {
     setFecha(newDate);
@@ -127,35 +128,47 @@ function RegistrarPago({
         />
       )}
       <div>
-        <h1 className="font-bold">Registrar pago</h1>
-        <form className="flex flex-col">
-          <label>Fecha</label>
-          <DatePicker onChange={handleDateChange} />
-          <label>Monto</label>
-          <input
-            type="number"
-            placeholder="Monto"
-            value={monto}
-            onChange={(e) => setMonto(e.target.value)}
-          ></input>
-          <label>Concepto</label>
-          <textarea
-            placeholder="Concepto"
-            value={concepto}
-            onChange={(e) => setConcepto(e.target.value)}
-          />
-          <label>Método de pago</label>
-          <select onChange={(e) => setMetodo(e.target.value)}>
-            <option disabled selected value="">
-              Método de pago
-            </option>
-            <option value="efectivo">Efectivo</option>
-            <option value="tarjeta">Tarjeta</option>
-            <option value="cheque">Cheque</option>
-            <option value="otro">Otro</option>
-          </select>
+        <h1 className="font-bold text-2xl text-center text-white">Registrar pago</h1>
+        <form className="flex flex-col text-white text-lg">
+          <div className="flex flex-col my-2">
+            <label>Fecha</label>
+            <DatePicker onChange={handleDateChange}/>
+          </div>
+          <div className="flex flex-col my-2">
+            <label>Monto</label>
+            <input
+              type="number"
+              placeholder="$"
+              value={monto}
+              onChange={(e) => setMonto(e.target.value)}
+              className="rounded-lg p-1 text-black"
+            ></input>
+          </div>
+          <div className="flex flex-col my-2">
+            <label>Concepto</label>
+            <textarea
+              placeholder="Concepto"
+              value={concepto}
+              onChange={(e) => setConcepto(e.target.value)}
+              className="rounded-lg p-1 text-black"
+            />
+          </div>
+          <div className="flex flex-col my-2">
+            <label>Método de pago</label>
+            <select onChange={(e) => setMetodo(e.target.value)} className="text-black rounded-lg p-1">
+              <option disabled selected value="">
+                Método de pago
+              </option>
+              <option value="efectivo">Efectivo</option>
+              <option value="tarjeta">Tarjeta</option>
+              <option value="cheque">Cheque</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
         </form>
-        <button onClick={handleAceptar}>Aceptar</button>
+        <div className="flex justify-center">
+          <button onClick={handleAceptar} className="bg-pink-500 hover:bg-pink-600 text-white rounded px-3 py-2 mt-3 justify-self-end self-center disabled:bg-disabled transition-all duration-75">Registrar</button>
+        </div>
       </div>
     </>
   );

@@ -1,6 +1,6 @@
 import Alumnos from "@/components/Alumno/Alumno";
 import GestionarAlumno from "@/components/Alumno/GestionarAlumno";
-import RegistrarAlumno from "@/components/RegistrarAlumno";
+import RegistrarAlumno from "@/components/Alumno/RegistrarAlumno";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 

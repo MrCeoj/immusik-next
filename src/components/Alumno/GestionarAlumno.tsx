@@ -1,13 +1,14 @@
 import { toTitleCase } from "@/lib/utils";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import React, { useEffect, useState } from "react";
+
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditarInformacion from "./EditarInformacion";
 import { Card, CardBody } from "@nextui-org/card";
 
 // con esta función se podrán agregar clases de tailwindcss a los componentes de nextui
-import { cn } from "@nextui-org/react";
+ import { cn } from "@nextui-org/react";
 import HistoricoDePagos from "./HistoricoDePagos";
 import TodosLosPagos from "./TodosLosPagos";
 import RegistrarPago from "./RegistrarPago";
@@ -72,17 +73,23 @@ function GestionarAlumno({
         <TodosLosPagos pagos={pagosCompletos} setVerTodos={setVerTodos} />
       )}
       <div className="absolute z-10 top-0 left-0 h-screen w-screen flex justify-center items-center bg-black bg-opacity-50">
-        <div className="bg-white rounded-lg shadow-lg p-10 flex flex-col items-center w-4/5 h-5/6">
-          <h1 className="m-2 font-bold text-4xl">
+        <div className="bg-secciones opacity-95 rounded-lg shadow-lg p-10 flex flex-col items-center w-4/5 h-5/6 relative">
+        <button
+            onClick={handleCancelar}
+            className="right-4 top-4 absolute text-xl text-white hover:bg-black/10 w-8 h-8 flex items-center justify-center"
+          >
+            X
+          </button>
+          <h1 className="m-2 font-bold text-4xl text-white">
             Detalles de {toTitleCase(alumno.nombre)}{" "}
             {toTitleCase(alumno.aPaterno)}
           </h1>
-          <Tabs aria-label="Options" className={cn("w-full font-bold")}>
-            <Tab className="w-full" title="Información del alumno">
+          <Tabs aria-label="Options" className={cn("w-full font-bold flex flex-col justify-center ")}>
+            <Tab className="w-full text-xl py-1 " title="Información del alumno">
               <Card>
                 <CardBody>
                   <div className="flex flex-row">
-                    <div className="w-1/2">
+                    <div className="w-1/2 ">
                       Editar información del alumno
                       <EditarInformacion alumno={alumno} />
                     </div>
@@ -96,18 +103,18 @@ function GestionarAlumno({
                 </CardBody>
               </Card>
             </Tab>
-            <Tab className="w-full" title="Pagos del alumno">
-              <Card>
+            <Tab className="w-full text-xl py-1" title="Pagos del alumno">
+              <Card className="bg-secciones">
                 <CardBody>
-                  <div className="flex flex-row ">
-                    <div className="w-1/2">
+                  <div className="flex flex-row">
+                    <div className="w-1/2 mr-4">
                       <RegistrarPago
                         alumno={alumno}
                         cambio={cambio}
                         setCambio={setCambio}
                       />
                     </div>
-                    <div className="w-1/2 flex flex-col p-2">
+                    <div className="w-1/2 flex flex-col p-2 ml-2">
                       <h1>Histórico de pagos</h1>
                       {pagos.length > 0 ? (
                         <div>
@@ -129,12 +136,7 @@ function GestionarAlumno({
               </Card>
             </Tab>
           </Tabs>
-          <button
-            onClick={handleCancelar}
-            className="bg-zinc-400 py-1 px-5 rounded-md text-white hover:bg-zinc-500 active:bg-zinc-600"
-          >
-            Regresar
-          </button>
+          
         </div>
       </div>
     </>
