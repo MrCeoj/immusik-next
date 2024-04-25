@@ -1,4 +1,4 @@
-import { getPagosDeAlumno } from "@/persistence/PagosDao"
+import { crearPago, getPagosDeAlumno } from "@/persistence/PagosDao"
 import { fetchGetAllAlumnos } from "./AlumnoDelegate"
 
 /**
@@ -46,4 +46,22 @@ const convertirAFecha = (str:string)=>{
     const [dia,mes,ano] = str.split("/").map(Number)
     const fechaCompleta = new Date(2000+ano,mes-1,dia)
     return fechaCompleta
+}
+
+/**
+ * Función que registra un pago
+ * @author Fong
+ * @param data datos del pago a registrar
+ */
+export async function fetchCrearPago(data:any){
+    let response = {
+        message: ""
+    }
+    const pago = await crearPago(data)
+    if(!pago){
+        response.message="No se pudo registrar el pago."
+    }else{
+        response.message="Se registó el pago correctamente."
+    }
+    return response
 }

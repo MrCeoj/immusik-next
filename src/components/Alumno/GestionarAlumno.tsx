@@ -10,6 +10,7 @@ import { Card, CardBody } from "@nextui-org/card";
 import { cn } from "@nextui-org/react";
 import HistoricoDePagos from "./HistoricoDePagos";
 import TodosLosPagos from "./TodosLosPagos";
+import RegistrarPago from "./RegistrarPago";
 
 function GestionarAlumno({
   setGestionar,
@@ -28,6 +29,8 @@ function GestionarAlumno({
   const [verTodos, setVerTodos] = useState(false);
 
   const [activeTab, setActiveTab] = useState(0); // Estado para controlar la pestaña activa
+
+  const [cambio, setCambio] = useState(false);
 
   const handleTabChange = (index: React.SetStateAction<number>) => {
     setActiveTab(index); // Actualizar el estado de la pestaña activa
@@ -61,7 +64,7 @@ function GestionarAlumno({
         toast.error("Hubo un error al encontrar los datos del alumno.");
       }
     });
-  }, []);
+  }, [cambio]);
 
   return (
     <>
@@ -98,10 +101,11 @@ function GestionarAlumno({
                 <CardBody>
                   <div className="flex flex-row ">
                     <div className="w-1/2">
-                      Registrar pago{" "}
-                      <p className="font-bold">
-                        NOTA: esto lo va a hacer fong 🤠💀
-                      </p>
+                      <RegistrarPago
+                        alumno={alumno}
+                        cambio={cambio}
+                        setCambio={setCambio}
+                      />
                     </div>
                     <div className="w-1/2 flex flex-col p-2">
                       <h1>Histórico de pagos</h1>
