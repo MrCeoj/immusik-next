@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ConfirmarPago from "./ConfirmarPago";
+import { DateValue, now, parseAbsoluteToLocal, parseDate} from "@internationalized/date";
 
 function RegistrarPago({
   alumno,
@@ -21,7 +22,7 @@ function RegistrarPago({
   const [data, setData] = useState();
   const [cambio2, setCambio2] = useState(false);
   
-
+  
   function handleDateChange(newDate: any) {
     setFecha(newDate);
   }
@@ -30,7 +31,7 @@ function RegistrarPago({
     setMetodo("");
     setMonto("");
     setConcepto("");
-    setFecha("");
+    setFecha('')
   }, [cambio2]);
 
   function handleAceptar() {
@@ -115,6 +116,10 @@ function RegistrarPago({
     }
   }
 
+  const resetSelect = () => {
+    setMetodo(''); // Establece metodo a una cadena vacía para resetear el select
+  };
+
   return (
     <>
       {confirmar && (
@@ -130,9 +135,9 @@ function RegistrarPago({
       <div>
         <h1 className="font-bold text-2xl text-center text-white">Registrar pago</h1>
         <form className="flex flex-col text-white text-lg">
-          <div className="flex flex-col my-2">
+          <div className="flex flex-col my-2 z-10">
             <label>Fecha</label>
-            <DatePicker onChange={handleDateChange}/>
+            <DatePicker onChange={handleDateChange}/>  
           </div>
           <div className="flex flex-col my-2">
             <label>Monto</label>
@@ -155,7 +160,7 @@ function RegistrarPago({
           </div>
           <div className="flex flex-col my-2">
             <label>Método de pago</label>
-            <select onChange={(e) => setMetodo(e.target.value)} className="text-black rounded-lg p-1">
+            <select onChange={(e) => setMetodo(e.target.value)} value={metodo} className="text-black rounded-lg p-1">
               <option disabled selected value="">
                 Método de pago
               </option>

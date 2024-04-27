@@ -1,27 +1,26 @@
 import { toTitleCase } from "@/lib/utils";
-import { Tabs, Tab } from "@nextui-org/tabs";
+  import { Tabs, Tab } from "@nextui-org/tabs";
 import React, { useEffect, useState } from "react";
-import { Pagos } from "@/entities";
+
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import EditarInformacion from "./EditarInformacion";
 import { Card, CardBody } from "@nextui-org/card";
-import { Alumno } from "@/entities";
+
 // con esta función se podrán agregar clases de tailwindcss a los componentes de nextui
-import { cn } from "@nextui-org/react";
+ import { cn } from "@nextui-org/react";
 import HistoricoDePagos from "./HistoricoDePagos";
 import TodosLosPagos from "./TodosLosPagos";
 import RegistrarPago from "./RegistrarPago";
-import TablaClases from "./TablaClases";
+import { color } from "framer-motion";
 
 function GestionarAlumno({
   setGestionar,
   alumno,
 }: {
   setGestionar: any;
-  alumno: Alumno;
+  alumno: any;
 }) {
-  
   //useStates para almacenar los pagos, todos los pagos, si son más de 6 pagos y la id del alumno
   const [pagos, setPagos] = useState([]);
   const [alumnoId, setAlumnoId] = useState(alumno.id);
@@ -69,14 +68,19 @@ function GestionarAlumno({
     });
   }, [cambio]);
 
+  const colors = [
+    "secondary",
+    "success",
+  ];
+
   return (
     <>
       {verTodos && (
-        <TodosLosPagos pagos={pagosCompletos} setVerTodos={setVerTodos} />
+        <TodosLosPagos pagos={pagosCompletos} setVerTodos={setVerTodos} alumno={alumno} />
       )}
       <div className="absolute z-10 top-0 left-0 h-screen w-screen flex justify-center items-center bg-black bg-opacity-50">
         <div className="bg-secciones opacity-95 rounded-lg shadow-lg p-10 flex flex-col items-center w-4/5 h-5/6 relative">
-          <button
+        <button
             onClick={handleCancelar}
             className="right-4 top-4 absolute text-xl text-white hover:bg-black/10 w-8 h-8 flex items-center justify-center"
           >
@@ -86,15 +90,9 @@ function GestionarAlumno({
             Detalles de {toTitleCase(alumno.nombre)}{" "}
             {toTitleCase(alumno.aPaterno)}
           </h1>
-          <Tabs
-            aria-label="Options"
-            className={cn("w-full font-bold flex flex-col justify-center ")}
-          >
-            <Tab
-              className="w-full text-xl py-1 "
-              title="Información del alumno"
-            >
-              <Card>
+          <Tabs aria-label="Options" color={"secondary"} variant="bordered" className={cn("w-full font-bold flex flex-col justify-center shadow-lg rounded-lg")}>
+            <Tab className="w-full text-xl py-1" title="Información del alumno">
+              <Card className="mt-3">
                 <CardBody>
                   <div className="flex flex-row">
                     <div className="w-1/2 ">
@@ -103,14 +101,16 @@ function GestionarAlumno({
                     </div>
                     <div className="w-1/2">
                       <h1>Clases</h1>
-                        <TablaClases idAlumno={alumno.id} />
+                      <p className="font-bold">
+                        NOTA: esto lo va a hacer Marcelo
+                      </p>
                     </div>
                   </div>
                 </CardBody>
               </Card>
             </Tab>
             <Tab className="w-full text-xl py-1" title="Pagos del alumno">
-              <Card className="bg-secciones">
+              <Card className="bg-secciones mt-3">
                 <CardBody>
                   <div className="flex flex-row">
                     <div className="w-1/2 mr-4">
@@ -120,22 +120,28 @@ function GestionarAlumno({
                         setCambio={setCambio}
                       />
                     </div>
-                    <div className="w-1/2 flex flex-col p-2 ml-2">
-                      <h1>Histórico de pagos</h1>
-                      {pagos.length > 0 ? (
-                        <div>
-                          <div className="grid grid-cols-3 gap-3">
-                            {pagos.map((pago: Pagos) => (
-                              <HistoricoDePagos key={pago.id} pago={pago} />
-                            ))}
+                    <div className="w-1/2 flex flex-col ">
+                      <h1 className="font-bold text-2xl text-center text-white">Histórico de pagos</h1>
+                      <div className="mt-5">
+                        {pagos.length > 0 ? (
+                          <div>
+                            <div className="grid grid-cols-3 gap-3">
+                              {pagos.map((pago) => (
+                                <HistoricoDePagos pago={pago} />
+                              ))}
+                            </div>
+                            {masDeSeis && (
+                              <div className="flex justify-center">
+                                <button onClick={handleVerTodos} 
+                                className="bg-pink-500 hover:bg-pink-600 text-white rounded px-3 py-2 mt-3 justify-self-end self-center disabled:bg-disabled transition-all duration-75">Ver todos</button>
+                              </div>
+                              
+                            )}
                           </div>
-                          {masDeSeis && (
-                            <button onClick={handleVerTodos}>Ver todos</button>
-                          )}
-                        </div>
-                      ) : (
-                        <p>No hay pagos registrados</p>
-                      )}
+                        ) : (
+                          <p>No hay pagos registrados</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </CardBody>

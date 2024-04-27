@@ -28,6 +28,7 @@ const config: Config = {
 			},
 			colors: {
 				primary: "#FB038F",
+				secondary: "#5E5E5E",
 				"back-dark": "#1B1B1B",
 				"pink-focus": "#FB038F",
 				"pink-accent": "#F837A4",
