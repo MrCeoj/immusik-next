@@ -191,7 +191,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\fomi0\\Documents\\GitHub\\immusik-next\\src\\entities",
+      "value": "C:\\Users\\ortiz\\Desktop\\Sad\\guabece\\Semestre 6\\Desarrollo\\immusik\\src\\entities",
       "fromEnvVar": null
     },
     "config": {
@@ -218,7 +218,7 @@ const config = {
     "db"
   ],
   "activeProvider": "sqlite",
-  "postinstall": false,
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {

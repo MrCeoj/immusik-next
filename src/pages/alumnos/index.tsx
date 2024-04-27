@@ -3,6 +3,7 @@ import GestionarAlumno from "@/components/Alumno/GestionarAlumno";
 import RegistrarAlumno from "@/components/Alumno/RegistrarAlumno";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { Alumno } from "@prisma/client";
 
 function Index() {
   const [registrar, setRegistrar] = useState(false);
@@ -35,7 +36,7 @@ function Index() {
       >
         Registrar
       </button>
-      {alumnos.map((alumno: any) => (
+      {alumnos.map((alumno: Alumno) => (
         <Alumnos key={alumno.id} alumno={alumno} />
       ))}
     </>

@@ -1,6 +1,7 @@
 import React from "react";
+import { Pagos } from "@/entities/edge";
 
-function HistoricoDePagos({ pago }: { pago: any }) {
+function HistoricoDePagos({ pago }: { pago: Pagos }) {
   return (
     <div className="bg-white py-2 px-4 rounded-lg flex flex-col shadow-md">
       <div className="w-full flex flex-row justify-between items-center">

@@ -1,5 +1,4 @@
-import prisma from '@/utils/Prisma'
-import { User } from '@/entities/edge'
+import prisma from "@/utils/Prisma";
 
 /*
  * Un registro AlumnoClase es una tabla intermedia en nuestra base de datos,
@@ -13,7 +12,7 @@ import { User } from '@/entities/edge'
 
 //Regresa todos los registros AlumnoClase
 export async function getAllAlumnoClase() {
-	return await prisma.alumnoClase.findMany()
+  return await prisma.alumnoClase.findMany();
 }
 
 /**
@@ -23,12 +22,12 @@ export async function getAllAlumnoClase() {
  * @returns registro AlumnoClase
  */
 export async function getAlumnoClase(idClase: number, idAlumno: number) {
-	return await prisma.alumnoClase.findFirst({
-		where: {
-			alumnoId: idAlumno,
-			claseId: idClase
-		}
-	})
+  return await prisma.alumnoClase.findFirst({
+    where: {
+      alumnoId: idAlumno,
+      claseId: idClase,
+    },
+  });
 }
 
 /*
@@ -36,7 +35,7 @@ export async function getAlumnoClase(idClase: number, idAlumno: number) {
  * @param id: id del registro AlumnoClase que se eliminará
  *  */
 export async function deleteAlumnoClase(id: any) {
-	return await prisma.alumnoClase.delete({ where: { id } })
+  return await prisma.alumnoClase.delete({ where: { id } });
 }
 
 /*
@@ -44,11 +43,11 @@ export async function deleteAlumnoClase(id: any) {
  * @param id: id de la clase de la cual se eliminarán los registros AlumnoClase
  *  */
 export async function deleteAlumnoClaseFromClase(id: any) {
-	return await prisma.alumnoClase.deleteMany({
-		where: {
-			claseId: id
-		}
-	})
+  return await prisma.alumnoClase.deleteMany({
+    where: {
+      claseId: id,
+    },
+  });
 }
 
 /**
@@ -57,10 +56,10 @@ export async function deleteAlumnoClaseFromClase(id: any) {
  * @returns los registros AlumnoClase relacionadas al alumno
  */
 export async function getClasesDeCiertoAlumno(id: any) {
-	const clases = await prisma.alumnoClase.findMany({
-		where: { alumnoId: id }
-	})
-	return clases
+  const clases = await prisma.alumnoClase.findMany({
+    where: { alumnoId: id },
+  });
+  return clases;
 }
 
 /**
@@ -69,19 +68,78 @@ export async function getClasesDeCiertoAlumno(id: any) {
  * @returns Arreglo de alumnos que pertenecen a la clase
  */
 export async function getAlumnosFromClase(id: number) {
-	const alumnosClase = await prisma.alumnoClase.findMany({
-		where: {
-			claseId: id
-		}
-	})
+  const alumnosClase = await prisma.alumnoClase.findMany({
+    where: {
+      claseId: id,
+    },
+  });
 
-	const alumnos = alumnosClase.map((alumnoClase) => {
-		return prisma.alumno.findUnique({
-			where: {
-				id: alumnoClase.alumnoId
-			}
-		})
-	})
+  const alumnos = alumnosClase.map((alumnoClase) => {
+    return prisma.alumno.findUnique({
+      where: {
+        id: alumnoClase.alumnoId,
+      },
+    });
+  });
 
-	return Promise.all(alumnos)
+  return Promise.all(alumnos);
+}
+
+/**
+ * Función que regresa un arreglo de objetos de clases que pertenece
+ * un alumno con su nombre de sucursal
+ * @param id - Id del alumno
+ * @returns Arreglo de objetos de clases con nombre de sucursal
+ */
+export async function getClaseByIdAl(id: number) {
+  const clases = await prisma.alumnoClase.findMany({
+    where: {
+      alumnoId: id,
+    },
+    select: {
+      id: false,
+      clase: {
+        select: {
+          id: true,
+          nombre: true,
+          cupoMax: true,
+          dias: true,
+          hora: true,
+          sucursal: {
+            select: {
+              nombre: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // Esto se hace porque cuando se hace la consulta se hace con un scope extra, lo cual es molesto, aqui se lo quito
+  const clasesWithoutWrapper = clases.map((claseWrapper) => claseWrapper.clase);
+  return clasesWithoutWrapper;
+}
+
+/**
+ * Función que actaliza el estado de un alumno de acuerdo al valor ingresado
+ * @param estado - Estado al que se actualizará el alumno
+ * @param idAlumno - Id del alumno al que se actualizará el estado
+ * @returns Registro actualizado
+ */
+export async function changeEstado(estado:boolean, idAlumno: number){
+  try{
+    const transaction = await prisma.$transaction([
+      prisma.alumno.update({
+        where: {
+          id: idAlumno,
+        },
+        data: {
+          activo: estado,
+        },
+      }),
+    ]);
+    return transaction;
+  }catch(error){
+    return error
+  }
 }
