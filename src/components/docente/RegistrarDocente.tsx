@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import "react-toastify/dist/ReactToastify.css";
@@ -6,22 +7,24 @@ import { setEstado } from "@/persistence/DocenteDao";
 import FormDocente from "./form-docente";
 import { toast } from "react-toastify"; // Importa la función toast
 
-function RegistrarDocente({
-  setCambio,
-  cambio,
-}: {
-  setCambio: React.Dispatch<React.SetStateAction<boolean>>;
-  cambio: boolean;
-}) {
-  const [modalOpen, setModalOpen] = useState(false);
 
-  const handleCancelar = () => {
-    setModalOpen(false);
-  };
+function RegistrarDocente({ 
+  setCambio, 
+  cambio
+  } : { 
+    setCambio: React.Dispatch<React.SetStateAction<boolean>>, 
+    cambio: boolean,
+  }) {
 
-  const handleRegistrar = () => {
-    setModalOpen(true);
-  };
+   const [modalOpen, setModalOpen] = useState(false);
+
+   const handleCancelar = () => {
+     setModalOpen(false);
+   };
+
+   const handleRegistrar = () => {
+     setModalOpen(true);
+   };
 
   return (
     <>

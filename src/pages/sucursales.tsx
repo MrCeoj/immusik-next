@@ -54,7 +54,7 @@ export default function Sucursales() {
       {agregar && (
         <AgregarSucursal setAgregar={setAgregar} handleCambio={handleCambio} />
       )}
-      <BarraNavegacion titulo="Editar sucursales" />
+      <BarraNavegacion titulo="Editar sucursales"/>
       <div className="bg-[url('../img/fondo.svg')] bg-cover h-screen w-screen bg-gray-100 flex items-center justify-center">
         <div className="p-10 bg-zinc-800 bg-opacity-80 rounded-lg shadow-lg flex flex-col items-center justify-center">
           <h1 className="text-3xl font-bold mb-5 text-white">Sucursales</h1>
