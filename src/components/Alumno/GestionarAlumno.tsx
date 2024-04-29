@@ -13,6 +13,7 @@ import HistoricoDePagos from "./HistoricoDePagos";
 import TodosLosPagos from "./TodosLosPagos";
 import RegistrarPago from "./RegistrarPago";
 import { color } from "framer-motion";
+import { Pagos } from "@prisma/client";
 
 function GestionarAlumno({
   setGestionar,
@@ -78,8 +79,8 @@ function GestionarAlumno({
       {verTodos && (
         <TodosLosPagos pagos={pagosCompletos} setVerTodos={setVerTodos} alumno={alumno} />
       )}
-      <div className="absolute z-10 top-0 left-0 h-screen w-screen flex justify-center items-center bg-black bg-opacity-50">
-        <div className="bg-secciones opacity-95 rounded-lg shadow-lg p-10 flex flex-col items-center w-4/5 h-5/6 relative">
+      <div className="absolute z-10 top-0 left-0 h-screen w-screen flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm">
+        <div className="bg-secciones opacity-95 rounded-lg shadow-lg p-10 flex flex-col items-center w-4/5 h-5/6 relative overflow-y-auto">
         <button
             onClick={handleCancelar}
             className="right-4 top-4 absolute text-xl text-white hover:bg-black/10 w-8 h-8 flex items-center justify-center"
@@ -90,24 +91,19 @@ function GestionarAlumno({
             Detalles de {toTitleCase(alumno.nombre)}{" "}
             {toTitleCase(alumno.aPaterno)}
           </h1>
-          <Tabs aria-label="Options" color={"secondary"} variant="bordered" className={cn("w-full font-bold flex flex-col justify-center shadow-lg rounded-lg")}>
+          <Tabs aria-label="Options" color={"secondary"} variant="light" className={cn("w-full font-bold flex flex-col justify-center shadow-lg rounded-lg")} classNames={{tabList: "bg-gray-contrast bg-opacity-40", tabContent: "text-white", tab: "py-4"}}>
             <Tab className="w-full text-xl py-1" title="Información del alumno">
-              <Card className="mt-3">
-                <CardBody>
-                  <div className="flex flex-row">
-                    <div className="w-1/2 ">
-                      Editar información del alumno
-                      <EditarInformacion alumno={alumno} />
-                    </div>
-                    <div className="w-1/2">
-                      <h1>Clases</h1>
-                      <p className="font-bold">
-                        NOTA: esto lo va a hacer Marcelo
-                      </p>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
+              <div className="flex flex-row gap-8">
+                <div className="w-1/2 ">
+                  <EditarInformacion alumno={alumno} />
+                </div>
+                <div className="w-1/2">
+                  <h1>Clases</h1>
+                  <p className="font-bold">
+                    NOTA: esto lo va a hacer Marcelo
+                  </p>
+                </div>
+              </div>
             </Tab>
             <Tab className="w-full text-xl py-1" title="Pagos del alumno">
               <Card className="bg-secciones mt-3">
@@ -126,8 +122,8 @@ function GestionarAlumno({
                         {pagos.length > 0 ? (
                           <div>
                             <div className="grid grid-cols-3 gap-3">
-                              {pagos.map((pago) => (
-                                <HistoricoDePagos pago={pago} />
+                              {pagos.map((pago: Pagos) => (
+                                <HistoricoDePagos key={pago.id} pago={pago} />
                               ))}
                             </div>
                             {masDeSeis && (

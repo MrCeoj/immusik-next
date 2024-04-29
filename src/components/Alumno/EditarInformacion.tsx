@@ -1,60 +1,40 @@
 import { toTitleCase } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ConfirmacionEditar from "./ConfirmacionEditar";
+import { cn } from "@nextui-org/react";
+import Label from "../form/Label";
+import Input from "../form/Input";
+import { useForm } from "react-hook-form";
+import { Alumno } from "@/entities";
 
-function EditarInformacion({ alumno }: { alumno: any }) {
-  //Función que llena un arreglo de números del 1 al 31 para la selección de días.
-  let dias = [];
-  for (let i = 1; i <= 31; i++) {
-    dias.push(i + "");
-  }
+function EditarInformacion({ alumno }: { alumno: Alumno }) {
+  // useForm para manejar los inputs del formulario
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const fechaActual = new Date();
+
+  // useState para guardar si el formulario ha sido modificado
+  const [isModified, setIsModified] = useState(false);
 
   //Arreglo de meses para la selección de meses
   let mesesStr = "Ene,Feb,Mar,Abr,May,Jun,Jul,Ago,Sep,Oct,Nov,Dic";
   let meses = mesesStr.split(",");
 
   //Se crea un nombreDisplay que será el que se presente en el mensaje de confirmación
-  const [nomDisplay, setNom] = useState(
-    toTitleCase(alumno.nombre) + " " + toTitleCase(alumno.aPaterno)
-  );
-
-  //Se les aplica formato normalizado a los datos del alumno For=Formato
-  let nombreFor = toTitleCase(alumno.nombre);
-  let aPaternoFor = toTitleCase(alumno.aPaterno);
-  let aMaternoFor = toTitleCase(alumno.aMaterno);
-  let tutorFor = toTitleCase(alumno.tutor);
-
-  //Se separa la fecha por dia, mes y año Temp=Temporal
-  let temp = alumno.fechaNac.split("/");
-
-  //Se consigue la id del alumno
-  let id = alumno.id;
-
-  //Se asignan los datos ya con formato a los useState
-  const [nombre, setNombre] = useState(nombreFor);
-  const [aPaterno, setAPaterno] = useState(aPaternoFor);
-  const [aMaterno, setAMaterno] = useState(aMaternoFor);
-  const [tutor, setTutor] = useState(tutorFor);
-
-  //Se separa la fecha en dia mes y año
-  const [dia, setDia] = useState(temp[0]);
-  const [mes, setMes] = useState(temp[1]);
-  const [ano, setAno] = useState(temp[2]);
-
-  //La curp no se formatea ya que siempre debe de estar en mayúsculas.
-  const [curp, setCurp] = useState(alumno.curp);
-
-  //Contacto no se formatea ya que es numérico
-  const [contacto, setContacto] = useState(alumno.contacto);
+  const nomDisplay = toTitleCase(alumno.nombre) + " " + toTitleCase(alumno.aPaterno);
 
   //useState para abrir y cerrar el modal para confirmar la edición
   const [editar, setEditar] = useState(false);
 
   //useState para los datos que se enviarán
-  const [data, setData] = useState();
+  const [data, setData] = useState({});
 
   //Función para saber si tiene Números
   const tieneNum = (str: string) => {
@@ -62,110 +42,31 @@ function EditarInformacion({ alumno }: { alumno: any }) {
     return regex.test(str);
   };
 
-  //Función para saber si tiene letras
-  const tieneLetra = (str: string) => {
-    const regex = /[a-zA-Z]/;
-    return regex.test(str);
-  };
-
-  //Se ejecuta cuando se presiona editar
-  const handleEditar = () => {
-    //Se formatean los datos necesarios con trim y pasandolos a mayusculas
-    nombreFor = nombre.trim().toUpperCase();
-    aPaternoFor = aPaterno.trim().toUpperCase();
-    aMaternoFor = aMaterno.trim().toUpperCase();
-    tutorFor = tutor.trim().toUpperCase();
-    let mesFor = mes.toUpperCase();
-    let contactoFor = contacto.trim();
-    let curpFor = curp.trim();
-
-    //Validación para campos vacíos
-    if (
-      nombreFor === "" ||
-      aMaternoFor === "" ||
-      aPaternoFor === "" ||
-      tutorFor === "" ||
-      ano === "" ||
-      dia === "" ||
-      mesFor === "" ||
-      contactoFor === "" ||
-      curpFor === ""
-    ) {
-      toast.error("No deje espacios vacios.");
-      return;
-    }
-
-    //Validación para saber si el nombre del alumno tiene números
-    if (tieneNum(nombreFor) || tieneNum(aPaternoFor) || tieneNum(aMaternoFor)) {
-      toast.error("El nombre del alumno no puede contener números.");
-      return;
-    }
-
-    //Validación para saber si el nombre del tutor tiene números
-    if (tieneNum(tutorFor)) {
-      toast.error("El nombre del tutor no puede contener números.");
-      return;
-    }
-
-    //Validación para saber si el teléfono tiene letras
-    if (tieneLetra(contactoFor)) {
-      toast.error("El número de teléfono no puede contener letras.");
-      return;
-    }
-
-    //Validación para la fecha
-    let fechaValida = true;
-    if (ano < 1 || ano % 1 !== 0) {
-      fechaValida = false;
-    }
-
-    if (mesFor === "FEB") {
-      if (ano % 4 === 0) {
-        if (dia === "30" || dia === "31") fechaValida = false;
-      } else {
-        if (dia === "29" || dia === "30" || dia === "31") fechaValida = false;
-      }
-    } else if (
-      mesFor === "ABR" ||
-      mesFor === "JUN" ||
-      mesFor === "SEP" ||
-      mesFor === "NOV"
-    ) {
-      if (dia === "31") fechaValida = false;
-    }
-
-    if (!fechaValida) {
-      toast.error("Ingrese una fecha válida.");
-      return;
-    }
-
-    //Validación para CURP
-    if (curpFor.length !== 18) {
-      toast.error("Ingrese una CURP con formato correcto.");
-      return;
-    }
-
-    //Se pasa la fecha de nacimiento a Formato STRING
-    let fds = dia + "/" + mesFor + "/" + ano;
-
-    //Se junta toda la información en dataTemp
-    let dataTemp = {
-      id: id,
-      nombre: nombreFor,
-      aPaterno: aPaternoFor,
-      aMaterno: aMaternoFor,
-      tutor: tutorFor,
-      contacto: contactoFor,
-      fechaNac: fds,
-      curp: curpFor,
+  // Verificar si el formulario ha sido modificado
+  useEffect(() => {
+    const initialFormState = {
+      nombre: alumno.nombre,
+      aPaterno: alumno.aPaterno,
+      aMaterno: alumno.aMaterno,
+      tutor: alumno.tutor,
+      contacto: alumno.contacto,
+      fechaNac: alumno.fechaNac,
+      curp: alumno.curp,
     };
 
+    watch((value) => {
+      setIsModified(JSON.stringify(value) !== JSON.stringify(initialFormState));
+    });
+  }, [watch]);
+
+  //Se ejecuta cuando se presiona editar
+  const handleEditar = handleSubmit((data) => {
     //se asigna a data los datos
-    setData(dataTemp);
+    setData(data);
 
     //Se abre el modal de confirmación de editar
     setEditar(true);
-  };
+  });
 
   return (
     <>
@@ -176,105 +77,247 @@ function EditarInformacion({ alumno }: { alumno: any }) {
           nomDisplay={nomDisplay}
         />
       )}
-      <form className="flex flex-col">
-        <div className="grid grid-cols-3">
-          <div>
-            <label>Nombre</label>
-            <input
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              placeholder="Nombre"
-            ></input>
-          </div>
-          <div>
-            <label>Apellido Paterno</label>
-            <input
-              value={aPaterno}
-              onChange={(e) => setAPaterno(e.target.value)}
-              placeholder="Apellido Paterno"
-            ></input>
-          </div>
-          <div>
-            <label>Apellido Materno</label>
-            <input
-              value={aMaterno}
-              onChange={(e) => setAMaterno(e.target.value)}
-              placeholder="Apellido Materno"
-            ></input>
-          </div>
+      <form onSubmit={handleEditar} className="flex flex-col bg-secciones">
+
+        <div>
+          <Label
+            htmlFor="nombre"
+            label="Nombre"
+            error={Boolean(errors.nombre?.type === "required")}
+            className="block text-white text-lg"
+          />
+          <Input
+            type="text"
+            id="nombre"
+            error={errors.nombre}
+            className="w-full border border-gray-300 font-bold px-2"
+            register={register("nombre", {
+              required: {
+                value: true,
+                message: "El nombre del alumno es requerido.",
+              },
+              validate: (value) => {
+                if (tieneNum(value)) {
+                  return "El nombre del alumno no puede contener números.";
+                }
+              },
+              value: toTitleCase(alumno.nombre),
+              // El valor que se mandará una vez enviado el formulario
+              setValueAs: (value: string) => value.trim().toUpperCase(),
+            })}
+          />
         </div>
-        <label>Tutor</label>
-        <input
-          placeholder="Tutor"
-          value={tutor}
-          onChange={(e) => setTutor(e.target.value)}
-        />
-        <label>Teléfono</label>
-        <input
-          placeholder="Teléfono"
-          value={contacto}
-          onChange={(e) => setContacto(e.target.value)}
-        />
-        <div className="grid grid-cols-3">
-          <div className="flex flex-col">
-            <label>Día</label>
-            <select onChange={(e) => setDia(e.target.value)}>
-              <option disabled value="">
-                Día
-              </option>
-              {dias.map((d) =>
-                d === dia ? (
-                  <option selected value={d}>
-                    {d}
-                  </option>
-                ) : (
-                  <option value={d}>{d}</option>
-                )
-              )}
-            </select>
-          </div>
-          <div className="flex flex-col">
-            <label>Mes</label>
-            <select onChange={(e) => setMes(e.target.value)}>
-              <option disabled value="">
-                Mes
-              </option>
-              {meses.map((m) =>
-                m.toUpperCase() === mes ? (
-                  <option selected value={m}>
-                    {m}
-                  </option>
-                ) : (
-                  <option value={m}>{m}</option>
-                )
-              )}
-            </select>
-          </div>
-          <div className="flex flex-col">
-            <label>Año</label>
-            <input
-              type="number"
-              placeholder="Año"
-              value={ano}
-              onChange={(e) => setAno(e.target.value)}
-            ></input>
-          </div>
+          
+        <div>
+          <Label
+            htmlFor="aPaterno"
+            label="Apellido Paterno"
+            error={Boolean(errors.aPaterno?.type === "required")}
+            className="block text-white text-lg"
+          />
+          <Input
+            type="text"
+            id="aPaterno"
+            error={errors.aPaterno}
+            className="w-full border border-gray-300 font-bold px-2"
+            register={register("aPaterno", {
+              required: {
+                value: true,
+                message: "El apellido paterno es requerido.",
+              },
+              validate: (value) => {
+                if (tieneNum(value)) {
+                  return "El nombre del alumno no puede contener números.";
+                }
+              },
+              value: toTitleCase(alumno.aPaterno),
+              setValueAs: (value: string) => value.trim().toUpperCase(),
+            })}
+          />
         </div>
-        <label>CURP</label>
-        <input
-          placeholder="CURP"
-          value={curp}
-          onChange={(e) => setCurp(e.target.value.toUpperCase())}
-        />
+
+        <div>
+          <Label
+            htmlFor="aMaterno"
+            label="Apellido Materno"
+            error={Boolean(errors.aMaterno?.type === "required")}
+            className="block text-white text-lg"
+          />
+          <Input
+            type="text"
+            id="aMaterno"
+            error={errors.aMaterno}
+            className="w-full border border-gray-300 font-bold px-2"
+            register={register("aMaterno", {
+              required: {
+                value: true,
+                message: "El apellido materno es requerido.",
+              },
+              validate: (value) => {
+                if (tieneNum(value)) {
+                  return "El nombre del alumno no puede contener números.";
+                }
+              },
+              value: toTitleCase(alumno.aMaterno),
+              setValueAs: (value: string) => value.trim().toUpperCase(),
+            })}
+          />
+        </div>
+
+        <div>
+          <Label
+            htmlFor="tutor"
+            label="Tutor"
+            error={Boolean(errors.tutor?.type === "required")}
+            className="block text-white text-lg"
+          />
+          <Input
+            type="text"
+            id="tutor"
+            error={errors.tutor}
+            className="w-full border border-gray-300 font-bold px-2"
+            register={register("tutor", {
+              required: {
+                value: true,
+                message: "El nombre del tutor es requerido.",
+              },
+              validate: (value) => {
+                if (tieneNum(value)) {
+                  return "El nombre del tutor no puede contener números.";
+                }
+              },
+              value: toTitleCase(alumno.tutor),
+              setValueAs: (value: string) => value.trim().toUpperCase(),
+            })}
+          />
+        </div>
+
+        <div>
+          <Label
+            htmlFor="contacto"
+            label="Contacto"
+            error={Boolean(errors.contacto?.type === "required")}
+            className="block text-white text-lg"
+          />
+          <Input
+            type="text"
+            id="contacto"
+            error={errors.contacto}
+            className="w-full border border-gray-300 font-bold px-2"
+            register={register("contacto", {
+              required: {
+                value: true,
+                message: "El dato de contacto es requerido.",
+              },
+              value: alumno.contacto,
+              setValueAs: (value: string) => value.trim(),
+            })}
+          />
+        </div>
+
+        {/* Hace que el DatePicker cambie a español */}
+        <div>
+          <Label 
+            htmlFor="fechaNac"
+            label="Fecha de Nacimiento"
+            error={Boolean(errors.fechaNac?.type === "required")}
+            className="block text-white text-lg"
+          />
+          <Input
+            type="date"
+            id="fechaNac"
+            error={errors.fechaNac}
+            className="w-full border border-gray-300 font-bold px-2"
+            register={register("fechaNac", {
+              required: {
+                value: true,
+                message: "La fecha es requerida.",
+              },
+              validate: {
+                invalidDate: (value) => {
+                  const fehcaIngresada = new Date(formatearFechaParaForm(value, meses));
+                  
+                  if (fehcaIngresada > fechaActual) {
+                    return "La fecha de nacimiento no puede ser mayor a la fecha actual";  
+                  }
+                  
+                  return true;
+                }
+              },
+              value: formatearFechaParaForm(alumno.fechaNac, meses),
+              setValueAs: (value: string) => formatearFechaParaBD(value, meses),
+            })}
+          />
+        </div>
+
+        <div>
+          <Label
+            htmlFor="curp"
+            label="CURP"
+            error={Boolean(errors.curp?.type === "required")}
+            className="block text-white text-lg"
+          />
+          <Input
+            type="text"
+            id="curp"
+            error={errors.curp}
+            className="w-full border border-gray-300 font-bold px-2"
+            register={register("curp", {
+              required: {
+                value: true,
+                message: "La CURP es requerida.",
+              },
+              validate: {
+                length: (value) => {
+                  if (value.length !== 18) {
+                    return "La CURP debe tener 18 caracteres.";
+                  }
+                },
+              },
+              onChange: (e) => {
+                e.target.value = e.target.value.toUpperCase();
+              },
+              value: alumno.curp,
+              setValueAs: (value: string) => value.trim(),
+            })}
+          />
+        </div>
+        <button
+          className={cn(
+            "bg-disabled text-white rounded px-3 py-2 mt-3 justify-self-end self-center",
+            {
+              "bg-pink-500 hover:bg-pink-600": isModified
+            }
+          )}
+          disabled={!isModified}
+        >
+          Guardar cambios
+        </button>
       </form>
-      <button
-        onClick={handleEditar}
-        className="bg-pink-500 text-white hover:bg-pink-600 py-1 px-5 rounded-md"
-      >
-        Editar
-      </button>
     </>
   );
 }
 
 export default EditarInformacion;
+
+//Función para formatear la fecha
+const formatearFechaParaBD = (fecha: string, meses: Array<string>) => {
+  const temp = fecha.split("-");
+  const ano = Number(temp[0]) || 1;
+  const mes = Number(temp[1]) || 1;
+  const dia = Number(temp[2]) || 1;
+  const nombreMes = meses[mes - 1].toUpperCase();
+  const fds = dia + "/" + nombreMes + "/" + ano;
+  return fds;
+}
+
+const formatearFechaParaForm = (fecha: string, meses: Array<string>) => {
+  const temp = fecha.split("/");
+  const dia = temp[0];
+  const mes = temp[1];
+  const ano = temp[2];
+  const numMes = String(meses.indexOf(toTitleCase(mes)) + 1);
+  const fds = ano + "-" + numMes.padStart(2, "0") + "-" + dia.padStart(2, "0");
+
+  return fds;
+}

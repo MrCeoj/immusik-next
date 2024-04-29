@@ -49,7 +49,7 @@ function ConfirmacionEditar({
 
   return (
     <div className="absolute z-20 top-0 left-0 h-screen w-screen bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white rounded-lg shadow-lg p-10">
+      <div className="bg-white rounded-lg shadow-lg p-10 text-black">
         <h1>¿Está seguro que quiere editar la información de {nomDisplay}?</h1>
         <h2>Nueva información:</h2>
         <div className="flex flex-col">
