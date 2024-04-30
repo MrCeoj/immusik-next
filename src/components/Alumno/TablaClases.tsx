@@ -20,7 +20,7 @@ function TablaClases({ idAlumno }: { idAlumno: number }) {
 
   return (
     <>
-      <Table aria-label="Clases">
+      <Table aria-label="Clases" className="text-black">
         <TableHeader>
           <TableColumn>Clase</TableColumn>
           <TableColumn>Dias</TableColumn>
@@ -39,9 +39,7 @@ function TablaClases({ idAlumno }: { idAlumno: number }) {
             ))
           ) : (
             <TableRow>
-              <TableCell>
-                No hay clases inscritas
-              </TableCell>
+              <TableCell>No hay clases inscritas</TableCell>
               <TableCell>.</TableCell>
               <TableCell>.</TableCell>
               <TableCell>.</TableCell>

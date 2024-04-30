@@ -18,10 +18,12 @@ function ConfirmarPago({
   cambio2: any;
   setCambio2: any;
 }) {
+  //Cierra este componente
   function handleCancelar() {
     setConfirmar(false);
   }
 
+  //Confirma el registro del pago
   function handleAceptar() {
     fetch("api/pagos/pagos", {
       method: "POST",
@@ -35,6 +37,8 @@ function ConfirmarPago({
           if ((data.message = "Se registó el pago correctamente.")) {
             toast.success(data.message);
             setCambio(!cambio);
+            setCambio2(!cambio2);
+            setConfirmar(false);
           } else {
             toast.error(data.message);
           }
@@ -43,9 +47,6 @@ function ConfirmarPago({
         toast.error("No se pudo registrar el pago.");
       }
     });
-    
-    setConfirmar(false);
-    setCambio2(!cambio2);
   }
   return (
     <div className="bg-black bg-opacity-50 top-0 left-0 absolute z-50 h-full w-full flex items-center justify-center">
@@ -63,7 +64,8 @@ function ConfirmarPago({
           </p>
           <p>
             <span className="font-bold">Concepto: </span>
-            {data.concepto.charAt(0).toUpperCase() + data.concepto.slice(1).toLowerCase()}
+            {data.concepto.charAt(0).toUpperCase() +
+              data.concepto.slice(1).toLowerCase()}
           </p>
           <p>
             <span className="font-bold">Método de pago: </span>

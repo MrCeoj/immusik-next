@@ -1,5 +1,5 @@
 import { toTitleCase } from "@/lib/utils";
-  import { Tabs, Tab } from "@nextui-org/tabs";
+import { Tabs, Tab } from "@nextui-org/tabs";
 import React, { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
@@ -8,12 +8,13 @@ import EditarInformacion from "./EditarInformacion";
 import { Card, CardBody } from "@nextui-org/card";
 
 // con esta función se podrán agregar clases de tailwindcss a los componentes de nextui
- import { cn } from "@nextui-org/react";
+import { cn } from "@nextui-org/react";
 import HistoricoDePagos from "./HistoricoDePagos";
 import TodosLosPagos from "./TodosLosPagos";
 import RegistrarPago from "./RegistrarPago";
 import { color } from "framer-motion";
 import { Pagos } from "@prisma/client";
+import TablaClases from "./TablaClases";
 
 function GestionarAlumno({
   setGestionar,
@@ -33,6 +34,7 @@ function GestionarAlumno({
 
   const [activeTab, setActiveTab] = useState(0); // Estado para controlar la pestaña activa
 
+  //useState para detectar si se hizo algun cambio.
   const [cambio, setCambio] = useState(false);
 
   const handleTabChange = (index: React.SetStateAction<number>) => {
@@ -69,19 +71,20 @@ function GestionarAlumno({
     });
   }, [cambio]);
 
-  const colors = [
-    "secondary",
-    "success",
-  ];
+  const colors = ["secondary", "success"];
 
   return (
     <>
       {verTodos && (
-        <TodosLosPagos pagos={pagosCompletos} setVerTodos={setVerTodos} alumno={alumno} />
+        <TodosLosPagos
+          pagos={pagosCompletos}
+          setVerTodos={setVerTodos}
+          alumno={alumno}
+        />
       )}
       <div className="absolute z-10 top-0 left-0 h-screen w-screen flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm">
         <div className="bg-secciones opacity-95 rounded-lg shadow-lg p-10 flex flex-col items-center w-4/5 h-5/6 relative overflow-y-auto">
-        <button
+          <button
             onClick={handleCancelar}
             className="right-4 top-4 absolute text-xl text-white hover:bg-black/10 w-8 h-8 flex items-center justify-center"
           >
@@ -91,7 +94,19 @@ function GestionarAlumno({
             Detalles de {toTitleCase(alumno.nombre)}{" "}
             {toTitleCase(alumno.aPaterno)}
           </h1>
-          <Tabs aria-label="Options" color={"secondary"} variant="light" className={cn("w-full font-bold flex flex-col justify-center shadow-lg rounded-lg")} classNames={{tabList: "bg-gray-contrast bg-opacity-40", tabContent: "text-white", tab: "py-4"}}>
+          <Tabs
+            aria-label="Options"
+            color={"secondary"}
+            variant="light"
+            className={cn(
+              "w-full font-bold flex flex-col justify-center shadow-lg rounded-lg"
+            )}
+            classNames={{
+              tabList: "bg-gray-contrast bg-opacity-40",
+              tabContent: "text-white",
+              tab: "py-4",
+            }}
+          >
             <Tab className="w-full text-xl py-1" title="Información del alumno">
               <div className="flex flex-row gap-8">
                 <div className="w-1/2 ">
@@ -99,9 +114,7 @@ function GestionarAlumno({
                 </div>
                 <div className="w-1/2">
                   <h1>Clases</h1>
-                  <p className="font-bold">
-                    NOTA: esto lo va a hacer Marcelo
-                  </p>
+                  <TablaClases idAlumno={alumno.id} />
                 </div>
               </div>
             </Tab>
@@ -117,7 +130,9 @@ function GestionarAlumno({
                       />
                     </div>
                     <div className="w-1/2 flex flex-col ">
-                      <h1 className="font-bold text-2xl text-center text-white">Histórico de pagos</h1>
+                      <h1 className="font-bold text-2xl text-center text-white">
+                        Histórico de pagos
+                      </h1>
                       <div className="mt-5">
                         {pagos.length > 0 ? (
                           <div>
@@ -128,10 +143,13 @@ function GestionarAlumno({
                             </div>
                             {masDeSeis && (
                               <div className="flex justify-center">
-                                <button onClick={handleVerTodos} 
-                                className="bg-pink-500 hover:bg-pink-600 text-white rounded px-3 py-2 mt-3 justify-self-end self-center disabled:bg-disabled transition-all duration-75">Ver todos</button>
+                                <button
+                                  onClick={handleVerTodos}
+                                  className="bg-pink-500 hover:bg-pink-600 text-white rounded px-3 py-2 mt-3 justify-self-end self-center disabled:bg-disabled transition-all duration-75"
+                                >
+                                  Ver todos
+                                </button>
                               </div>
-                              
                             )}
                           </div>
                         ) : (
