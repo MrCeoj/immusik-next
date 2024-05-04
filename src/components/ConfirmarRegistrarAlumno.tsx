@@ -1,20 +1,17 @@
-import React from "react";
+import { useClases } from "@/hooks/clases/useClases";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function ConfirmarRegistrarAlumno({
-  setConfirmacionRegistrarAlumno,
-  data,
-  setRegistrar,
-}: {
-  setConfirmacionRegistrarAlumno: any;
-  data: any;
-  setRegistrar: any;
-}) {
+function ConfirmarRegistrarAlumno({ setConfirmacionRegistrarAlumno, data, setRegistrar,}: {
+  setConfirmacionRegistrarAlumno: any; data: any; setRegistrar: any;}) {
+  
   //Cierra este modal
   const handleCancelar = () => {
     setConfirmacionRegistrarAlumno(false);
   };
+
+  const { inscribirPorCurp } = useClases();
 
   //Procede con el registro
   const handleAceptar = () => {
@@ -31,6 +28,7 @@ function ConfirmarRegistrarAlumno({
     })
       .then((response) => {
         if (response.ok) {
+          inscribirPorCurp(data.curp, parseInt(data.clase))
           return response.json().then((data) => {
             if (data.message === "Alumno registrado correctamente.") {
               toast.success(data.message);
@@ -53,9 +51,12 @@ function ConfirmarRegistrarAlumno({
       });
   };
 
+  useEffect(() => {
+    console.log(data)
+  },[])
   return (
     <div className="absolute z-20 top-0 left-0 h-screen w-screen bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg text-lg">
+      <div className="bg-back-dark p-8 rounded-lg shadow-lg text-lg">
         <h1 className="font-bold text-2xl mb-3">
           ¿Está seguro que quiere registrar al alumno?
         </h1>

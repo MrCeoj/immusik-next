@@ -1,9 +1,7 @@
 import Alumnos from "@/components/Alumno/Alumno";
-import GestionarAlumno from "@/components/Alumno/GestionarAlumno";
 import RegistrarAlumno from "@/components/Alumno/RegistrarAlumno";
 import React, { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import { Alumno } from "@prisma/client";
+import { ToastContainer } from "react-toastify";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Navbar from "@/components/Navbar";
 import Paginador from "@/components/Paginador";

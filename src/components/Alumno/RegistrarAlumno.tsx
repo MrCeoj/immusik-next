@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ConfirmarRegistrarAlumno from "../ConfirmarRegistrarAlumno";
+import { useClases } from "@/hooks/clases/useClases";
 
 function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
   //useState para capturar la información del alumno
@@ -16,6 +17,7 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
   const [curp, setCurp] = useState("");
   const [clase, setClase] = useState("");
   const [data, setData] = useState();
+  const { inscribirAlumno } = useClases(state => state)
 
   //useState para almacenar las clases
   const [clases, setClases] = useState([]);
@@ -256,7 +258,7 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
                       Día
                     </option>
                     {dias.map((dia) => (
-                      <option value={dia}>{dia}</option>
+                      <option key={dia} value={dia}>{dia}</option>
                     ))}
                   </select>
                   <select
@@ -315,7 +317,7 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
                 Seleccione una clase
               </option>
               {clases.map((clase: any) => (
-                <option value={clase.id}>{clase.nombre}</option>
+                <option key={clase.id} value={clase.id}>{clase.nombre}</option>
               ))}
             </select>
           </form>
