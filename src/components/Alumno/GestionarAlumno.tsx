@@ -155,7 +155,7 @@ function GestionarAlumno({
                             )}
                           </div>
                         ) : (
-                          <p>No hay pagos registrados</p>
+                            <p className="text-white font-thin">No hay pagos registrados</p>
                         )}
                       </div>
                     </div>
