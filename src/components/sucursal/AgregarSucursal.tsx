@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -17,18 +17,6 @@ const AgregarSucursal = ({
   const handleCancelar = () => {
     setAgregar(false);
   };
-
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        handleCancelar();
-      }
-    };
-    document.addEventListener("keydown", handleKeyPress);
-    return () => {
-      document.removeEventListener("keydown", handleKeyPress);
-    };
-  }, []);
 
   /*cuando se envíe el formulario se haran validaciones para que no haya 
   campos vacíos*/
@@ -81,13 +69,7 @@ const AgregarSucursal = ({
   return (
     <>
       <div className="absolute backdrop-blur-md w-screen h-screen z-20 top-0 left-0 bg-black bg-opacity-50 flex justify-center items-center">
-        <div className="relative bg-secciones bg-opacity-95 p-10 flex flex-col rounded-lg shadow-lg items-center justify-center w-[1000px] h-[450px]">
-          <button
-            onClick={handleCancelar}
-            className="absolute text-white font-bold top-6 right-8"
-          >
-            X
-          </button>
+        <div className="bg-secciones bg-opacity-95 p-10 flex flex-col rounded-lg shadow-lg items-center justify-center w-[1000px] h-[450px]">
           <h1 className="font-bold text-3xl mb-3 text-white">Agregar</h1>
           <form>
             <div className="mt-2 flex flex-col w-[800px] relative">
