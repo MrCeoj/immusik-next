@@ -1,6 +1,6 @@
 import { Sucursal } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditarSucursal from "./EditarSucursal";
 import { toTitleCase } from "@/lib/utils";
 
@@ -23,6 +23,9 @@ const SucursalInfo = ({
   cambio: any;
   setCambio: any;
 }) => {
+
+  
+
   const router = useRouter();
   //Editar se usa para mostrar o no la pantalla donde se registran los cambios de la sucursal a editar.
   const [editar, setEditar] = useState(false);

@@ -255,6 +255,7 @@ export default function ModalClase({
               />
               <Input
                 type="number"
+                placeholder="Hora"
                 id="hora"
                 error={errors.hora}
                 className="w-full text-black border-gray-300 font-bold px-2 py-1"
@@ -292,6 +293,7 @@ export default function ModalClase({
                 type="number"
                 id="cupoMax"
                 error={errors.cupoMax}
+                placeholder="De 1 a 10"
                 className="w-full border text-black border-gray-300 font-bold rounded px-2 py-1"
                 register={register("cupoMax", {
                   required: {

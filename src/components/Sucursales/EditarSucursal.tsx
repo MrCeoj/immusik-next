@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ConfirmacionEliminar from "./ConfirmacionEliminar";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,6 +38,17 @@ const EditarSucursal = ({
     setEditar(false);
   };
 
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleCancelar();
+      }
+    };
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
   //Si hay un cambio en una sucursal se ejecuta esto, para cambiar el valor de cambio, para
   //que se actualice sucursales.tsx
   const toggleCambio = () => {
@@ -114,7 +125,13 @@ const EditarSucursal = ({
         />
       )}
       <div className="h-screen w-screen absolute backdrop-blur-md top-0 left-0 flex justify-center items-center z-100">
-        <div className="bg-secciones bg-opacity-95 p-7 pt-10 flex flex-col items-center w-[1000px] h-300 justify-center rounded-lg shadow-lg">
+        <div className="relative bg-secciones bg-opacity-95 p-7 pt-10 flex flex-col items-center w-[1000px] h-300 justify-center rounded-lg shadow-lg">
+          <button
+            onClick={handleCancelar}
+            className="absolute top-5 right-8 font-bold text-white"
+          >
+            X
+          </button>
           <h1 className="text-3xl font-bold mb-7 text-white mx-64">
             SUCURSAL {sucursal.nombre}
           </h1>
