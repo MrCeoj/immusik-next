@@ -60,3 +60,16 @@ export async function modificarAlumno(data:any){
         }
     })
 }
+
+/**
+ * Función que regresa registro de alumno por su CURP
+ * @param curp - Curp del alumno
+ * @returns registro del alumno
+ */
+export async function porCurp(curp: string){
+    return await prisma.alumno.findUnique({
+        where:{
+            curp: curp
+        }
+    })
+}

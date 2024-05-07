@@ -126,8 +126,8 @@ export async function getClaseByIdAl(id: number) {
  * @param idAlumno - Id del alumno al que se actualizará el estado
  * @returns Registro actualizado
  */
-export async function changeEstado(estado:boolean, idAlumno: number){
-  try{
+export async function changeEstado(estado: boolean, idAlumno: number) {
+  try {
     const transaction = await prisma.$transaction([
       prisma.alumno.update({
         where: {
@@ -139,7 +139,94 @@ export async function changeEstado(estado:boolean, idAlumno: number){
       }),
     ]);
     return transaction;
-  }catch(error){
-    return error
+  } catch (error) {
+    return error;
   }
+}
+
+/**
+ * Función que desinscribe a un alumno de determinada clase eliminando su registro
+ * en tabla alumnoclase.
+ * @param idAlumno - Id del alumno al cual desinscribir.
+ * @param idClase - Id de la clase de la cual desinscribir.
+ * @returns Mensaje de éxito o error.
+ */
+export async function desinscribirAlumno(idAlumno: number, idClase: number) {
+  try {
+    const idAlumnoClase = await getAlumnoClase(idClase, idAlumno);
+
+    if (idAlumnoClase === null || idAlumnoClase === undefined) {
+      throw Error("No se encontró el registro de alumno en la clase");
+    }
+
+    const transaction = await prisma.$transaction([
+      prisma.alumnoClase.delete({
+        where: {
+          id: idAlumnoClase?.id,
+        },
+      }),
+    ]);
+    return transaction;
+  } catch (error) {
+    return error;
+  }
+}
+
+/**
+ * Función que devuelve una lista de clases con disponibilidad de cupo
+ * La lógica de traslape de usuarios se realiza en business
+ * @returns Lista de clases disponibles
+ */
+export async function getClasesDisponibles() {
+  const clasesLlenas: any[] = [];
+
+  const allClases = await prisma.clase.findMany({
+    select: {
+      id: true,
+      cupoMax: true,
+    },
+  });
+
+  allClases.forEach(async (clase) => {
+    const count = await prisma.alumnoClase.count({
+      where: {
+        claseId: clase.id,
+      },
+    });
+
+    if (count >= clase.cupoMax) clasesLlenas.push(clase.id);
+  });
+
+  const clases = await prisma.clase.findMany({
+    where: {
+      id: {
+        not: {
+          in: clasesLlenas,
+        },
+      },
+    },
+  });
+
+  console.log("clases disponibles por cupo; ", clases);
+
+  return clases;
+}
+
+/**
+ * Función que inscribe a un alumno en determinada clase por sus Id
+ * @params IdAlumno - identificador del alumno
+ * @params IdClase - Identificador de la clase.
+ */
+export async function createAlumnoClase(idAlumno: number, idClase: number) {
+  try {
+    const transaction = await prisma.$transaction([
+      prisma.alumnoClase.create({
+        data: {
+          alumnoId: idAlumno,
+          claseId: idClase,
+        },
+      }),
+    ]);
+    return transaction;
+  } catch (error: any) {}
 }

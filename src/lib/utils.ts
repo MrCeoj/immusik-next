@@ -20,6 +20,9 @@ export function toArrayDiasClase(dias: string) {
 }
 
 export function toStringDiasClase(dias: string[]) {
+	if(typeof dias === 'string') {
+		dias = toArrayDiasClase(dias)
+	}
 	return dias.join(',').toUpperCase()
 }
 

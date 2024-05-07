@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { obtenerClasesDeAlumno, checkEstado } from "@/business/AlumnoClaseDelegate";
+import { obtenerClasesDeAlumno, checkEstado,anularInscripcion } from "@/business/AlumnoClaseDelegate";
 
 /**
  * Función que llama al backend para obtener arreglo de clases con nombre de sucursal a las que pertenece un alumno
@@ -14,7 +14,6 @@ export default async function handler(
     try {
       const id = Number(req.query.id);
       const clases = await obtenerClasesDeAlumno(id);
-      console.log(clases)
       res.status(200).json(clases);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
@@ -30,6 +29,25 @@ export default async function handler(
       res.status(500).json({message: error.message})
     }
   }
+
+  if(req.method === 'DELETE'){
+    try{
+      const idAlumno = Number(req.query.id)
+      const idClase = Number(req.body)
+      if(idClase === null || idClase === undefined){
+        throw Error("Error al desinscribir: Clase no proporcionada")
+      }
+      if(idAlumno === null || idAlumno === undefined){
+        throw Error("Error al desinscribir: Alumno no proporcionado")
+      }
+      await anularInscripcion(idClase, idAlumno)
+      res.status(200).json({message: 'Alumno desinscrito'})
+    }catch(error:any){
+      res.status(500).json({message: error.message})
+    }
+  }
+
+  i
 
   res.status(405).statusMessage = "Método no permitido";
 }

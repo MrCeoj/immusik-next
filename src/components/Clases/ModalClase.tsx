@@ -67,9 +67,10 @@ export default function ModalClase({
 
     if (alumnos.length === 0) {
       return "No hay alumnos inscritos";
-    } else {
-      return "Cargando...";
     }
+
+    if(!alumnos)
+      return "Cargando...";
 
     return null;
   };

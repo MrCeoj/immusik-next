@@ -15,6 +15,7 @@ import RegistrarPago from "./RegistrarPago";
 import { color } from "framer-motion";
 import { Pagos } from "@prisma/client";
 import TablaClases from "./TablaClases";
+import InscribirAlumno from "./InscribirAlumno";
 
 function GestionarAlumno({
   setGestionar,
@@ -115,6 +116,7 @@ function GestionarAlumno({
                 <div className="w-1/2">
                   <h1>Clases</h1>
                   <TablaClases idAlumno={alumno.id} />
+                  <InscribirAlumno idAlumno={alumno.id} />
                 </div>
               </div>
             </Tab>
