@@ -107,18 +107,12 @@ function Index() {
             </button>
           </div>
         </div>
-        <div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-10 mt-3 gap-5 px-5">
-          <div className="text-2xl font-bold col-span-3 text-left ">Nombre</div>
-          <div className="text-2xl font-bold col-span-2 text-left ">Tutor</div>
-          <div className="text-2xl font-bold col-span-2 text-left ">
-            Contacto
-          </div>
-          <div className="text-2xl font-bold col-span-2 text-left ">
-            Nacimiento
-          </div>
-          <div className="text-2xl font-bold col-span-1 text-left ">
-            Detalles
-          </div>
+        <div className="w-full bg-neutral-400 rounded-lg mt-3 bg-opacity-40 grid grid-cols-10 py-2 px-4">
+          <div className="text-2xl font-bold col-span-3">Nombre</div>
+          <div className="text-2xl font-bold col-span-2">Tutor</div>
+          <div className="text-2xl font-bold col-span-2">Contacto</div>
+          <div className="text-2xl font-bold col-span-2">Estado</div>
+          <div className="text-2xl font-bold col-span-1">Detalles</div>
         </div>
         <div className="overflow-y-auto w-full h-[55%]">
           {alumnosFiltrados.length >= 0

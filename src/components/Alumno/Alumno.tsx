@@ -11,19 +11,31 @@ function Alumnos({ alumno }: { alumno: Alumno }) {
 
   return (
     <div>
-      <div className="grid grid-cols-10 my-4 text-lg bg-gray-100 bg-opacity-50 py-2 rounded-lg font-bold pl-4 gap-5 items-center">
+      <div className="px-4 py-2 grid grid-cols-10 my-4 text-lg bg-gray-100 bg-opacity-50 rounded-lg font-bold items-center">
         {gestionar && (
           <GestionarAlumno setGestionar={setGestionar} alumno={alumno} />
         )}
-        <div className="col-span-3 text-left">
+        <div className="col-span-3">
           {alumno.nombre} {alumno.aPaterno} {alumno.aMaterno}
         </div>
-        <div className="col-span-2 text-left">{alumno.tutor}</div>
-        <div className="col-span-2 text-left">{alumno.contacto}</div>
-        <div className="col-span-1 text-left">{alumno.fechaNac}</div>
-        <button className="w-200 ml-28" onClick={handleGestionar}>
-          <u>Detalles</u>
-        </button>
+        <div className="col-span-2">{alumno.tutor}</div>
+        <div className="col-span-2">{alumno.contacto}</div>
+        <div className="col-span-2">
+          {alumno.activo.toString() === "true" ? (
+            <div className="max-w-28 min-w-20 justify-center bg-active-fill rounded-xl border-4 border-active-stroke text-center text-active-stroke">
+              ACTIVO
+            </div>
+          ) : (
+            <div className="max-w-28 min-w-20 justify-center bg-inactive-fill rounded-xl border-4 border-inactive-stroke text-center text-inactive-stroke">
+              INACTIVO
+            </div>
+          )}
+        </div>
+        <div className="col-span-1">
+          <button onClick={handleGestionar}>
+            <u>Detalles</u>
+          </button>
+        </div>
       </div>
     </div>
   );
