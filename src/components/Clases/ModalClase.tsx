@@ -293,16 +293,27 @@ export default function ModalClase({
                 type="number"
                 id="cupoMax"
                 error={errors.cupoMax}
+                min={1}
+                max={10}
+                placeholder="1 a 10"
                 className="w-full border text-black border-gray-300 font-bold rounded px-2 py-1"
                 register={register("cupoMax", {
                   required: {
                     value: true,
                     message: "El cupo máximo es requerido",
                   },
+                  validate: (cupoMax) => {
+                    if (cupoMax < alumnos.length) {
+                      return "El cupo máximo debe ser mayor o igual al número de alumnos inscritos"
+                    }
+                  },
                   min: {
-                    value: alumnos?.length ?? 0,
-                    message:
-                      "El cupo máximo debe ser mayor o igual al número de alumnos inscritos",
+                    value: 1,
+                    message: "El cupo mínimo no puede ser menor a 1",
+                  },
+                  max: {
+                    value: 10,
+                    message: "El cupo máximo no puede ser mayor a 10",
                   },
                   value: clase.cupoMax,
                 })}
