@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { ComponentPropsWithoutRef, useEffect, useRef } from 'react'
 import {
 	FieldError,
 	FieldErrorsImpl,
@@ -8,25 +8,12 @@ import {
 import { Id, toast } from 'react-toastify'
 import { cn } from '@/lib/utils'
 
-const Input = ({
-	type,
-	id,
-	defaultValue,
-	defaultChecked,
-	placeholder,
-	error,
-	register,
-	className
-}: {
-	type: string
-	id: string
-	defaultValue?: string
-	defaultChecked?: boolean
-	placeholder?: string
-	error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
+interface InputProps extends ComponentPropsWithoutRef<"input"> {
+  error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 	register: UseFormRegisterReturn<string>
-	className?: string
-}) => {
+}
+
+const Input = ({ error, register, ...rest }: InputProps) => {
 	const toastId = useRef(null as Id | null)
 
 	useEffect(() => {
@@ -42,15 +29,11 @@ const Input = ({
 
 	return (
 		<input
-			type={type}
-			id={id}
-			defaultValue={defaultValue}
-			defaultChecked={defaultChecked}
-			placeholder={placeholder}
-			className={cn('border text-black font-bold px-2 py-1 rounded', className, {
+			className={cn('border text-black font-bold px-2 py-1 rounded', rest.className, {
 				'border-red-600 outline-red-600': error
 			})}
 			{...register}
+      {...rest}
 		/>
 	)
 }
