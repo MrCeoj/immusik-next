@@ -7,7 +7,7 @@ export default function Navbar() {
     router.push("/clases");
   };
   const regresarMenu = () => {
-    router.push("/inicio");
+    router.push("/");
   };
 
   return (
@@ -21,7 +21,7 @@ export default function Navbar() {
         </button>
         <button
           className="text-white font-medium p-2 rounded-lg hover:bg-primary hover:relative hover:-translate-y-1 hover:shadow-[0px_0px_20px_8px_rgba(251,_3,_143,_0.25)] transition-all ease-out"
-          onClick={() => router.push("/docente")}
+          onClick={() => router.push("/docentes")}
         >
           Docentes
         </button>

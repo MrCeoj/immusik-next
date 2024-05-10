@@ -25,16 +25,16 @@ const datos = [
   {
     id: 3,
     img: Cursos,
-    titulo: "Cursos",
+    titulo: "Clases",
     desc: "Gestión de clases",
-    href: "cursos",
+    href: "clases",
   },
   {
     id: 4,
     img: Sucursales,
     titulo: "Sucursal",
     desc: "Información y gastos",
-    href: "informacion",
+    href: "sucursales",
   },
 ];
 
@@ -44,7 +44,7 @@ const Tarjeta = ({ sucursal }: { sucursal: Sucursal }) => {
       {datos.map(({ id, img, titulo, desc, href }) => {
         return (
           <Link
-            href={`/sucursal/${sucursal.id}/${href}`}
+            href={`/${href}`}
             key={id}
             className="group bg-gradient-to-b from-black to-white rounded-2xl cursor-pointer"
           >

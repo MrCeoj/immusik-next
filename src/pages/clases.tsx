@@ -5,13 +5,20 @@ import Clase from "@/components/Clases/Clase";
 import Navbar from "@/components/Navbar";
 import Paginador from "@/components/Paginador";
 import RegistrarClase from "@/components/Clases/RegistrarClase";
+import { sucursalContext } from "@/hooks/sucursalContext";
+import { useRouter } from "next/navigation";
+import { toTitleCase } from "@/lib/utils";
 
 export default function Clases() {
+  const router = useRouter(); //Hook para moverse entre páginas
+  const context = sucursalContext((state: any) => state.context); // Obtiene el contexto de la sucursal
+
   /*Funciones useState para detectar cambios en variables */
   const [cambio, setCambio] = useState(false); //Detecta cambios en alguna clase
   const [clases, setClases] = useState([]); //Almacena las clases que existen
   const [busqueda, setBusqueda] = useState(""); //Almacena el texto que se buscará en el nombre de las clases
   const [clasesFiltradas, setClasesFiltradas] = useState([]); //Clases filtradas dependiendo de el texto que contenga la variable "busqueda"
+  const [cargando, setCargando] = useState(true); //Variable para saber si se están cargando las clases
 
   //usestates para la paginación
   const [currentPage, setCurrentPage] = useState(1); // Define en que página va a empezar, por defecto en página 1
@@ -21,6 +28,13 @@ export default function Clases() {
   const indexOfLastItem = currentPage * itemsPerPage; // Define el índice del último elemento que se va a mostrar
   const indexOfFirstItem = indexOfLastItem - itemsPerPage; // Define el índice del primer elemento que se va a mostrar
   const currentItems = clasesFiltradas.slice(indexOfFirstItem, indexOfLastItem); // Define los elementos que se van a mostrar en la página actual
+
+  useEffect(() => {
+    console.log(context);
+    if (context === null || context === undefined) {
+      router.push("/inicio");
+    }
+  }, [context]);
 
   // UseEffect para obtener las clases, asumo que si se hacen cambios se actualiza igual
   useEffect(() => {
@@ -45,9 +59,15 @@ export default function Clases() {
   // Función para obtener las clases
   const obtenerClases = async () => {
     const response = await fetch("/api/clase/clases");
-    const data = await response.json();
+    const incoming = await response.json();
+    console.log(incoming);
+    const data = incoming.filter(
+      (clase: any) => clase.idSucursal === context?.id
+    ); // Filtra las clases dependiendo de la sucursal
+    console.log(data);
     setClases(data);
     contarPaginas(clases); // Se manda llamar el método contarPaginas para contar cuantas páginas habrá dependiendo de la cantidad de clases
+    setCargando(false);
   };
 
   // Método para contar las páginas
@@ -83,7 +103,9 @@ export default function Clases() {
       <Navbar />
       <div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pt-10 text-white">
         <div className="flex w-full items-end mb-1">
-          <h1 className="text-5xl font-semibold mr-20">Clases</h1>
+          <h1 className="text-5xl font-semibold mr-20">
+            {context && `Clases - ${toTitleCase(context.nombre)}`}
+          </h1>
           <div className="flex h-3/4 items-center">
             <form className="h-full relative flex items-center mr-5">
               <input
@@ -100,6 +122,7 @@ export default function Clases() {
             <RegistrarClase setCambio={setCambio} cambio={cambio} />
           </div>
         </div>
+
         <div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-12 mt-3 gap-3">
           {/**
            * Esto puede ser complicado de entender, pero entendí que la fila está "formateada"
@@ -115,23 +138,24 @@ export default function Clases() {
           <div className="text-xl font-bold col-span-1">Detalles</div>
         </div>
         <div className="overflow-y-auto w-full h-[55%]">
-          {clasesFiltradas.length >= 0
-            ? currentItems.map((clase, index) => (
-                <Clase
-                  key={index}
-                  clase={clase}
-                  actualizarClases={handleCambio}
-                />
-              ))
-            : clases
-                .slice(indexOfFirstItem, indexOfLastItem)
-                .map((clase, index) => (
-                  <Clase
-                    key={index}
-                    clase={clase}
-                    actualizarClases={handleCambio}
-                  />
-                ))}
+          {cargando ? (
+            <div className="text-white text-2xl text-center mt-12">
+              Cargando clases...
+            </div>
+          ) : clasesFiltradas.length > 0 ? (
+            currentItems.map((clase, index) => (
+              <Clase
+                key={index}
+                clase={clase}
+                actualizarClases={handleCambio}
+              />
+            ))
+          ) : (
+            <div className="text-white text-2xl text-center mt-12">
+              {context &&
+                `No existen clases en sucursal ${toTitleCase(context.nombre)}`}
+            </div>
+          )}
         </div>
         <Paginador
           currentPage={currentPage}
