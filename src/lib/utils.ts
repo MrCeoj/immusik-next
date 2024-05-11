@@ -41,3 +41,16 @@ export function convertirAMinutosYSegundos(milisegundos: number) {
 	// Devolver la cadena en formato minutos:segundos
 	return formatoMinutos + ':' + formatoSegundos
 }
+
+const ordenFecha = {
+  "dd/mm/aaaa": (fecha: number[]) => [fecha[0], fecha[1], fecha[2]],
+  "aaaa/mm/dd": (fecha: number[]) => [fecha[2], fecha[1], fecha[0]]
+}
+
+export const convertirAFecha = (str: string, separador: string, orden: "dd/mm/aaaa"|"aaaa/mm/dd") => {
+  const fecha = str.split(separador).map(Number)
+  
+  const [dia, mes, ano] = ordenFecha[orden](fecha)
+  const fechaCompleta = new Date(ano, mes-1 ,dia)
+  return fechaCompleta
+}

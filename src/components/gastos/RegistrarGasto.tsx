@@ -1,0 +1,239 @@
+import React, { use, useEffect, useState } from "react"
+import Modal from "react-modal"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import Input from "../form/Input"
+import Label from "../form/Label"
+import { useForm } from "react-hook-form"
+import { sucursalContext } from "@/hooks/sucursalContext"
+import { categoriasGasto } from "@/lib/data"
+
+function RegistrarClase({
+	setCambio,
+	cambio,
+}: {
+	setCambio: React.Dispatch<React.SetStateAction<boolean>>
+	cambio: boolean
+}) {
+	//useState para manejar el abrir y cerrar el modal
+	const [modalOpen, setModalOpen] = useState(false)
+	const context = sucursalContext((state: any) => state.context)
+
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm()
+
+	//Función para cerrar el modal
+	const handleCancelar = () => {
+		setModalOpen(false)
+	}
+
+	useEffect(() => {
+		if (errors.concepto) {
+			toast.error(errors.concepto.message?.toString(), {
+				toastId: "concepto",
+				autoClose: false,
+			})
+		} else {
+			toast.dismiss("concepto")
+		}
+
+		if (errors.categoria) {
+			toast.error(errors.categoria.message?.toString(), {
+				toastId: "categoria",
+				autoClose: false,
+			})
+		} else {
+			toast.dismiss("categoria")
+		}
+	}, [errors])
+
+	//Funcion para registrar la sucursal en la base de datos
+	const handleAceptar = handleSubmit(async (data) => {
+		const response = await fetch("/api/gastos/registrar", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				gasto: {
+					idSucursal: context.id,
+					monto: data.monto,
+					fecha: data.fecha,
+					categoria: data.categoria,
+					concepto: data.concepto,
+				},
+			}),
+		})
+
+		const resJSON = await response.json()
+
+		if (response.status === 500) {
+			toast.error(resJSON.message)
+		} else {
+			if (cambio) {
+				setCambio(false)
+			} else {
+				setCambio(true)
+			}
+
+			toast.success(resJSON.message, {
+				className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
+				bodyClassName: "font-semibold text-sm text-green-500",
+				autoClose: 2000,
+				draggable: false,
+				onClose: () => setModalOpen(false),
+			})
+
+			setModalOpen(false)
+		}
+	})
+
+	//Función para abrir el modal
+	const handleRegistrar = () => {
+		reset()
+		setModalOpen(true)
+	}
+
+	return (
+		<>
+			<button
+				className="bg-pink-focus px-4 py-2 text-md rounded-md font-semibold hover:shadow-md hover:shadow-pink-accent hover:-translate-y-1 transition-all duration-25 ease-out"
+				onClick={handleRegistrar}
+			>
+				<span>Registrar gasto</span>
+			</button>
+			<Modal
+				isOpen={modalOpen}
+				ariaHideApp={false}
+				onRequestClose={() => setModalOpen(false)}
+				overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
+				className="relative bg-secciones bg-opacity-95 p-6 w-full max-w-xl min-h-min rounded-md text-white"
+			>
+				<div className="flex items-center justify-center">
+					<h1 className="font-bold text-3xl">Alta de gasto</h1>
+				</div>
+				<form className="flex flex-col p-10">
+					<div>
+						<Label
+							htmlFor="monto"
+							label="Monto"
+							error={Boolean(errors.monto?.type === "required")}
+							className="block"
+						/>
+						<Input
+							type="text"
+							id="monto"
+							error={errors.monto}
+							className="w-full border text-black border-gray-300 font-bold px-2"
+							onChange={(e) => {
+								const value = e.target.value
+
+								// valida que el monto sea un número o un número con punto decimal
+								if (!value.match(/^\d+(\.\d*)?$/)) {
+									// si no es un número, elimina el último caracter ingresado
+									e.target.value = value.replace(/\D/g, "")
+								}
+							}}
+							register={register("monto", {
+								required: {
+									value: true,
+									message: "El monto es requerido.",
+								},
+								valueAsNumber: true,
+							})}
+						/>
+					</div>
+					<div>
+						<Label
+							htmlFor="fecha"
+							label="Fecha en la que se realizó el gasto"
+							error={Boolean(errors.fecha?.type === "required")}
+							className="block"
+						/>
+						<Input
+							type="date"
+							id="fecha"
+							error={errors.fecha}
+							className="w-full border text-black border-gray-300 font-bold px-2"
+							register={register("fecha", {
+								required: {
+									value: true,
+									message: "La fecha es requerida.",
+								},
+							})}
+						/>
+					</div>
+					<div>
+						<Label
+							htmlFor="categoria"
+							label="Categoría"
+							error={Boolean(errors.categoria?.type === "required")}
+							className="block"
+						/>
+						<select
+							id="categoria"
+							className="w-full border text-black border-gray-300 font-bold px-2"
+							{...register("categoria", {
+								required: {
+									value: true,
+									message: "La categoría es requerida.",
+								},
+							})}
+						>
+							<option value="">Selecciona una categoría</option>
+							{categoriasGasto.map((categoria, index) => (
+								<option key={index} value={categoria}>
+									{categoria}
+								</option>
+							))}
+						</select>
+					</div>
+					<div>
+						<Label
+							htmlFor="concepto"
+							label="Concepto"
+							error={Boolean(errors.concepto?.type === "required")}
+							className="block"
+						/>
+						<textarea
+							id="concepto"
+							className="w-full max-h-32 min-h-7 border text-black border-gray-300 font-bold px-2"
+							{...register("concepto", {
+								required: {
+									value: true,
+									message: "El concepto es requerido.",
+								},
+							})}
+						/>
+					</div>
+				</form>
+				<div className="flex justify-center items-center mt-3">
+					<button
+						className="bg-gray-500 py-1 px-3 rounded-md text-lg shadow-md mr-2 hover:bg-gray-600"
+						onClick={handleCancelar}
+					>
+						Cancelar
+					</button>
+					<button
+						onClick={handleAceptar}
+						className="bg-pink-500 py-1 px-3 rounded-md text-lg shadow-md ml-2 hover:bg-pink-600"
+					>
+						Aceptar
+					</button>
+				</div>
+				<button
+					onClick={() => setModalOpen(false)}
+					className="absolute top-4 right-4 font-bold rounded hover:bg-black/10 w-8 h-8 flex items-center justify-center"
+				>
+					X
+				</button>
+			</Modal>
+		</>
+	)
+}
+
+export default RegistrarClase

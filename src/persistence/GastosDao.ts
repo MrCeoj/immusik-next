@@ -12,3 +12,12 @@ export async function gastosPorId(idSucursal: number) {
     },
   });
 }
+
+/**
+ * Función que crea un gasto
+ * @param data - Datos del gasto
+ * @returns Gasto creado
+ */
+export async function crearGasto(data: any) {
+  return await prisma.gasto.create({ data });
+}
