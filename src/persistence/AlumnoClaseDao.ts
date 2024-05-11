@@ -230,3 +230,27 @@ export async function createAlumnoClase(idAlumno: number, idClase: number) {
     return transaction;
   } catch (error: any) {}
 }
+
+/**
+ * Función para borrar relaciones alumnoClase en lotes
+ * @author Fong
+ * @param alumnoId alumno del cual se desasignarán clases
+ * @param claseId clases que serán desasignadas
+ */
+export async function desasignarMuchos(alumnoId:number,claseId:number[]){
+  try{
+    //Método de prisma para borrar varios registros alumnoClase
+    const respuesta = await prisma.alumnoClase.deleteMany({
+      where: {
+        alumnoId: alumnoId,
+        claseId: {
+          in: claseId
+        }
+      },
+    })
+    return respuesta
+  }catch(e:any){
+    console.log("AlumnoClaseDAO: "+e.message)
+    return null
+  }
+}

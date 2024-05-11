@@ -115,7 +115,7 @@ function GestionarAlumno({
                 </div>
                 <div className="w-1/2">
                   <h1>Clases</h1>
-                  <TablaClases idAlumno={alumno.id} />
+                  <TablaClases idAlumno={alumno.id} alumno={alumno} />
                   <InscribirAlumno idAlumno={alumno.id} />
                 </div>
               </div>
@@ -155,7 +155,9 @@ function GestionarAlumno({
                             )}
                           </div>
                         ) : (
-                            <p className="text-white font-thin">No hay pagos registrados</p>
+                          <p className="text-white font-thin">
+                            No hay pagos registrados
+                          </p>
                         )}
                       </div>
                     </div>

@@ -11,9 +11,11 @@ import {
   desinscribirAlumno,
   getClasesDisponibles,
   createAlumnoClase,
+  desasignarMuchos,
 } from "@/persistence/AlumnoClaseDao";
 import { actualizarEstadoDeAlumno, porCurp } from "@/persistence/AlumnoDao";
 import { Clase } from "@prisma/client";
+import { actualizarEstadoDeAlumnos } from "./AlumnoDelegate";
 
 /*
  * Elimina registros AlumnoClase solo de cierta clase
@@ -268,5 +270,25 @@ export async function inscribirPorCurp(curp: string, idClase: number){
     return mensaje
   }catch(error:any){
     return error.message
+  }
+}
+
+/**
+ * Función para desasignar muchas clases a un alumno
+ * @author Fong
+ * @param alumnoId id del alumno cuyas clases se van a desasignar
+ * @param claseId id de las clases que se van a desasignar
+ * @returns la respuesta del método desasignarMuchos
+ */
+export async function fetchDesasignarMuchos(alumnoId:number,claseId:number[]){
+  try{
+    //Se manda llamar la función a la capa de persistencia
+    const respuesta = await desasignarMuchos(alumnoId,claseId)
+    //Se actualiza el estado de los alumnos
+    actualizarEstadoDeAlumnos()
+    return respuesta
+  }catch(e:any){
+    console.log("AlumnoClaseDelegate: "+e.message)
+    return null
   }
 }
