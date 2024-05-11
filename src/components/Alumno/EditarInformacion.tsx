@@ -28,7 +28,8 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
   let meses = mesesStr.split(",");
 
   //Se crea un nombreDisplay que será el que se presente en el mensaje de confirmación
-  const nomDisplay = toTitleCase(alumno.nombre) + " " + toTitleCase(alumno.aPaterno);
+  const nomDisplay =
+    toTitleCase(alumno.nombre) + " " + toTitleCase(alumno.aPaterno);
 
   //useState para abrir y cerrar el modal para confirmar la edición
   const [editar, setEditar] = useState(false);
@@ -77,8 +78,10 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
           nomDisplay={nomDisplay}
         />
       )}
-      <form onSubmit={handleEditar} className="flex flex-col bg-secciones">
-
+      <form
+        onSubmit={handleEditar}
+        className="flex flex-col bg-secciones text-black"
+      >
         <div>
           <Label
             htmlFor="nombre"
@@ -107,7 +110,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
             })}
           />
         </div>
-          
+
         <div>
           <Label
             htmlFor="aPaterno"
@@ -217,7 +220,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
 
         {/* Hace que el DatePicker cambie a español */}
         <div>
-          <Label 
+          <Label
             htmlFor="fechaNac"
             label="Fecha de Nacimiento"
             error={Boolean(errors.fechaNac?.type === "required")}
@@ -235,14 +238,16 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
               },
               validate: {
                 invalidDate: (value) => {
-                  const fehcaIngresada = new Date(formatearFechaParaForm(value, meses));
-                  
+                  const fehcaIngresada = new Date(
+                    formatearFechaParaForm(value, meses)
+                  );
+
                   if (fehcaIngresada > fechaActual) {
-                    return "La fecha de nacimiento no puede ser mayor a la fecha actual";  
+                    return "La fecha de nacimiento no puede ser mayor a la fecha actual";
                   }
-                  
+
                   return true;
-                }
+                },
               },
               value: formatearFechaParaForm(alumno.fechaNac, meses),
               setValueAs: (value: string) => formatearFechaParaBD(value, meses),
@@ -286,7 +291,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
           className={cn(
             "bg-disabled text-white rounded px-3 py-2 mt-3 justify-self-end self-center",
             {
-              "bg-pink-500 hover:bg-pink-600": isModified
+              "bg-pink-500 hover:bg-pink-600": isModified,
             }
           )}
           disabled={!isModified}
@@ -309,7 +314,7 @@ const formatearFechaParaBD = (fecha: string, meses: Array<string>) => {
   const nombreMes = meses[mes - 1].toUpperCase();
   const fds = dia + "/" + nombreMes + "/" + ano;
   return fds;
-}
+};
 
 const formatearFechaParaForm = (fecha: string, meses: Array<string>) => {
   const temp = fecha.split("/");
@@ -320,4 +325,4 @@ const formatearFechaParaForm = (fecha: string, meses: Array<string>) => {
   const fds = ano + "-" + numMes.padStart(2, "0") + "-" + dia.padStart(2, "0");
 
   return fds;
-}
+};

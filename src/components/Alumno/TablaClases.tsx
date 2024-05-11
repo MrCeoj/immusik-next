@@ -6,14 +6,53 @@ import {
   TableColumn,
   TableCell,
   cn,
+  Checkbox,
 } from "@nextui-org/react";
 import { useClases } from "@/hooks/clases/useClases";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 function TablaClases({ idAlumno }: { idAlumno: number }) {
   // Este objeto es manejado por zustand, revisar directirio de hooks useClases.ts
-  const { clases, fetchClases, fetchEstado, fetchDesiniscribir } = useClases((state) => state);
+  const { clases, fetchClases, fetchEstado, fetchDesiniscribir } = useClases(
+    (state) => state
+  );
+
+  const [todos, setTodos] = useState(false);
+  const [idsAEliminar, setIdsAEliminar] = useState<number[]>([]);
+  const [clasesAEliminar, setClasesAEliminar] = useState<string[]>([]);
+
+  const handleEliminar = () => {
+    if (idsAEliminar.length !== 0) {
+      alert("Vas a eliminar " + clasesAEliminar);
+    } else {
+      toast.error("Seleccione las clases a desasignar.");
+    }
+  };
+
+  const selectAll = () => {
+    if (todos) {
+      setIdsAEliminar([]);
+      setClasesAEliminar([]);
+      setTodos(false);
+    } else {
+      setIdsAEliminar(clases.map((cl) => cl.id));
+      setClasesAEliminar(clases.map((cl) => cl.nombre));
+      setTodos(true);
+    }
+  };
+
+  const handleSelectClase = (id: number, nombre: string) => {
+    const idIndex = idsAEliminar.indexOf(id);
+
+    if (idIndex === -1) {
+      setIdsAEliminar([...idsAEliminar, id]);
+      setClasesAEliminar([...clasesAEliminar, nombre]);
+    } else {
+      setIdsAEliminar(idsAEliminar.filter((idAE) => idAE !== id));
+      setClasesAEliminar(clasesAEliminar.filter((cl) => cl !== nombre));
+    }
+  };
 
   // Se ejecuta al cargar el componente
   useEffect(() => {
@@ -30,17 +69,22 @@ function TablaClases({ idAlumno }: { idAlumno: number }) {
     }
     toast.success(result.message);
     fetchClases(idAlumno); // Refrescar la tabla tras desinscribir
-  }
+  };
 
   return (
-    <>
+    <div className="flex flex-col items-center">
       <Table aria-label="Clases" className="text-black">
         <TableHeader>
           <TableColumn>Clase</TableColumn>
           <TableColumn>Dias</TableColumn>
           <TableColumn>Hora</TableColumn>
           <TableColumn>Sucursal</TableColumn>
-          <TableColumn> </TableColumn>
+          <TableColumn>
+            <Checkbox
+              isSelected={idsAEliminar.length === clases.length}
+              onChange={selectAll}
+            />
+          </TableColumn>
         </TableHeader>
         <TableBody>
           {clases.length > 0 ? (
@@ -51,11 +95,10 @@ function TablaClases({ idAlumno }: { idAlumno: number }) {
                 <TableCell>{clase.hora}</TableCell>
                 <TableCell>{clase.sucursal.nombre}</TableCell>
                 <TableCell>
-                  <button
-                    onClick={() => handleDesinscribir(clase.id)} 
-                    className="bg-rose-600 text-white font-bold w-6 h-6 rounded hover:bg-rose-900">
-                    ×
-                  </button>
+                  <Checkbox
+                    isSelected={idsAEliminar.includes(clase.id)}
+                    onChange={() => handleSelectClase(clase.id, clase.nombre)}
+                  />
                 </TableCell>
               </TableRow>
             ))
@@ -70,7 +113,13 @@ function TablaClases({ idAlumno }: { idAlumno: number }) {
           )}
         </TableBody>
       </Table>
-    </>
+      <button
+        onClick={handleEliminar}
+        className="my-2 bg-red-500 py-1 px-2 rounded-md text-white font-normal text-base hover:bg-red-600 active:bg-red-700"
+      >
+        Desasignar clases
+      </button>
+    </div>
   );
 }
 
