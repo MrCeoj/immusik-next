@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { Clase } from "@/entities"
-import { sucursalContext } from "../sucursalContext";
 
 /**
  * Interfaz que define la estructura de una clase con el nombre de la sucursal
@@ -126,10 +125,8 @@ export const useClases = create<State>((set, get) => ({
         console.error(error.message)
         throw new Error("Error al obtener clases disponibles, verifique su conexión a internet")
       })
-      const context = sucursalContext((state: any) => state.context)
       const clases: Clase[] = await response.json()
       console.log(clases)
-      clases.filter(clase => clase.idSucursal === context.id)
       set({ disponibles: clases })
       return clases
     }catch(error: any){

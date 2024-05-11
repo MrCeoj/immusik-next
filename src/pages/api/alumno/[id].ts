@@ -47,7 +47,5 @@ export default async function handler(
     }
   }
 
-  i
-
   res.status(405).statusMessage = "Método no permitido";
 }
