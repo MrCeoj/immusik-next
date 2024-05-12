@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react"
+import React, { useState } from "react"
 import Modal from "react-modal"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -7,6 +7,9 @@ import Label from "../form/Label"
 import { useForm } from "react-hook-form"
 import { sucursalContext } from "@/hooks/sucursalContext"
 import { categoriasGasto } from "@/lib/data"
+import Select from "../form/Select"
+import TextArea from "../form/TextArea"
+import { convertirAStringFecha } from "@/lib/utils"
 
 function RegistrarClase({
 	setCambio,
@@ -18,6 +21,7 @@ function RegistrarClase({
 	//useState para manejar el abrir y cerrar el modal
 	const [modalOpen, setModalOpen] = useState(false)
 	const context = sucursalContext((state: any) => state.context)
+	const [monto, setMonto] = useState("")
 
 	const {
 		register,
@@ -30,26 +34,6 @@ function RegistrarClase({
 	const handleCancelar = () => {
 		setModalOpen(false)
 	}
-
-	useEffect(() => {
-		if (errors.concepto) {
-			toast.error(errors.concepto.message?.toString(), {
-				toastId: "concepto",
-				autoClose: false,
-			})
-		} else {
-			toast.dismiss("concepto")
-		}
-
-		if (errors.categoria) {
-			toast.error(errors.categoria.message?.toString(), {
-				toastId: "categoria",
-				autoClose: false,
-			})
-		} else {
-			toast.dismiss("categoria")
-		}
-	}, [errors])
 
 	//Funcion para registrar la sucursal en la base de datos
 	const handleAceptar = handleSubmit(async (data) => {
@@ -88,6 +72,7 @@ function RegistrarClase({
 				onClose: () => setModalOpen(false),
 			})
 
+			reset()
 			setModalOpen(false)
 		}
 	})
@@ -111,12 +96,12 @@ function RegistrarClase({
 				ariaHideApp={false}
 				onRequestClose={() => setModalOpen(false)}
 				overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
-				className="relative bg-secciones bg-opacity-95 p-6 w-full max-w-xl min-h-min rounded-md text-white"
+				className="relative bg-secciones bg-opacity-95 p-6 w-full max-w-lg min-h-min rounded-md text-white"
 			>
 				<div className="flex items-center justify-center">
 					<h1 className="font-bold text-3xl">Alta de gasto</h1>
 				</div>
-				<form className="flex flex-col p-10">
+				<form className="flex flex-col gap-1">
 					<div>
 						<Label
 							htmlFor="monto"
@@ -129,13 +114,14 @@ function RegistrarClase({
 							id="monto"
 							error={errors.monto}
 							className="w-full border text-black border-gray-300 font-bold px-2"
+							value={monto}
+							placeholder="$0.00"
 							onChange={(e) => {
 								const value = e.target.value
 
 								// valida que el monto sea un número o un número con punto decimal
-								if (!value.match(/^\d+(\.\d*)?$/)) {
-									// si no es un número, elimina el último caracter ingresado
-									e.target.value = value.replace(/\D/g, "")
+								if (value.match(/^\d+(\.\d*)?$/) || value === "") {
+									setMonto(value)
 								}
 							}}
 							register={register("monto", {
@@ -143,6 +129,7 @@ function RegistrarClase({
 									value: true,
 									message: "El monto es requerido.",
 								},
+								value: monto,
 								valueAsNumber: true,
 							})}
 						/>
@@ -159,6 +146,7 @@ function RegistrarClase({
 							id="fecha"
 							error={errors.fecha}
 							className="w-full border text-black border-gray-300 font-bold px-2"
+							max={convertirAStringFecha(new Date(), "fr-CA")}
 							register={register("fecha", {
 								required: {
 									value: true,
@@ -174,23 +162,18 @@ function RegistrarClase({
 							error={Boolean(errors.categoria?.type === "required")}
 							className="block"
 						/>
-						<select
+						<Select
 							id="categoria"
+							error={errors.categoria}
 							className="w-full border text-black border-gray-300 font-bold px-2"
-							{...register("categoria", {
+							items={categoriasGasto}
+							register={register("categoria", {
 								required: {
 									value: true,
 									message: "La categoría es requerida.",
 								},
 							})}
-						>
-							<option value="">Selecciona una categoría</option>
-							{categoriasGasto.map((categoria, index) => (
-								<option key={index} value={categoria}>
-									{categoria}
-								</option>
-							))}
-						</select>
+						/>
 					</div>
 					<div>
 						<Label
@@ -199,10 +182,11 @@ function RegistrarClase({
 							error={Boolean(errors.concepto?.type === "required")}
 							className="block"
 						/>
-						<textarea
+						<TextArea
 							id="concepto"
-							className="w-full max-h-32 min-h-7 border text-black border-gray-300 font-bold px-2"
-							{...register("concepto", {
+							error={errors.concepto}
+							className="w-full max-h-32 min-h-9 border text-black border-gray-300 font-bold px-2"
+							register={register("concepto", {
 								required: {
 									value: true,
 									message: "El concepto es requerido.",

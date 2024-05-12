@@ -11,9 +11,10 @@ import { cn } from '@/lib/utils'
 interface InputProps extends ComponentPropsWithoutRef<"input"> {
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 	register: UseFormRegisterReturn<string>
+  className?: string
 }
 
-const Input = ({ error, register, ...rest }: InputProps) => {
+const Input = ({ error, register, className, ...rest }: InputProps) => {
 	const toastId = useRef(null as Id | null)
 
 	useEffect(() => {
@@ -29,7 +30,7 @@ const Input = ({ error, register, ...rest }: InputProps) => {
 
 	return (
 		<input
-			className={cn('border text-black font-bold px-2 py-1 rounded', rest.className, {
+			className={cn(className, 'border text-black font-bold px-2 py-1 rounded', {
 				'border-red-600 outline-red-600': error
 			})}
 			{...register}

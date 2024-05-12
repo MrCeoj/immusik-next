@@ -54,3 +54,13 @@ export const convertirAFecha = (str: string, separador: string, orden: "dd/mm/aa
   const fechaCompleta = new Date(ano, mes-1 ,dia)
   return fechaCompleta
 }
+
+export const convertirAStringFecha = (fecha: Date, lang: string) => {
+	const fechaFormateada = new Intl.DateTimeFormat(lang, {
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+	}).format(fecha)
+
+	return fechaFormateada
+}
