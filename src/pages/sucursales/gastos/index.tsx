@@ -5,6 +5,7 @@ import { sucursalContext } from "@/hooks/sucursalContext";
 import { useGastos } from "@/hooks/gastos/useGastos";
 import RegistrarGasto from "@/components/gastos/RegistrarGasto";
 import { ToastContainer } from "react-toastify";
+import ModalGasto from "@/components/gastos/ModalGasto";
 
 const Index = () => {
   const router = useRouter();
@@ -28,19 +29,24 @@ const Index = () => {
     setCargando(false);
   };
 
+  const handleCambio = () => {
+    setCambio(!cambio);
+  };
+
   return (
     <>
       <ToastContainer />
       <div className="h-screen bg-back-dark text-white">
         <h1>{context && `Gastos Sucursal ${context.nombre}`}</h1>
-        <RegistrarGasto setCambio={setCambio} cambio={cambio} />
+        <RegistrarGasto actualizarGastos={handleCambio} />
         <div>
           {cargando ? (
             <p>Cargando</p>
           ) : gastos.length > 0 ? (
             gastos.map((gasto) => (
-              <div key={gasto.id}>
+              <div key={gasto.id} className="flex gap-2">
                 <p>{gasto.concepto} - {gasto.fecha} - ${gasto.monto}</p>
+                <ModalGasto gastoArgs={gasto} actualizarGastos={handleCambio} />
               </div>
             ))
           ) : (

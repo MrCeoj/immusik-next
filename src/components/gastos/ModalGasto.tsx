@@ -1,88 +1,94 @@
-import React, { useState } from "react"
+import {
+	convertirAFecha,
+	convertirAStringFecha,
+	toSentenceCase,
+} from "@/lib/utils"
+import { Gasto } from "@/entities"
+import { useState } from "react"
 import Modal from "react-modal"
+import { useForm } from "react-hook-form"
 import { toast } from "react-toastify"
+import Label from "../form/Label"
 import "react-toastify/dist/ReactToastify.css"
 import Input from "../form/Input"
-import Label from "../form/Label"
-import { useForm } from "react-hook-form"
-import { sucursalContext } from "@/hooks/sucursalContext"
 import { categoriasGasto } from "@/lib/data"
 import Select from "../form/Select"
 import TextArea from "../form/TextArea"
-import { convertirAStringFecha } from "@/lib/utils"
 
-function RegistrarClase({ actualizarGastos }: {
+export default function ModalGasto({
+	gastoArgs,
+	actualizarGastos,
+}: {
+	gastoArgs: Gasto
 	actualizarGastos: any
 }) {
-	//useState para manejar el abrir y cerrar el modal
+	const [gasto, setGasto] = useState<Gasto>(gastoArgs)
+	// useState para guardar la visibilidad del modal
 	const [modalOpen, setModalOpen] = useState(false)
-	const context = sucursalContext((state: any) => state.context)
-	const [monto, setMonto] = useState("")
+	const [monto, setMonto] = useState(gasto.monto.toString())
 
 	const {
 		register,
 		handleSubmit,
 		reset,
+		setValue,
 		formState: { errors },
 	} = useForm()
 
-	//Función para cerrar el modal
-	const handleCancelar = () => {
-		setModalOpen(false)
+	// Función que se ejecuta al hacer click en el botón Editar
+	// Muestra un modal con la información del gasto
+	const handleEditar = async () => {
+		/**
+		 * Se resetean los valores del formulario para evitar que
+		 * se guarden los valores del gasto anterior
+		 */
+		reset()
+		setGasto(gastoArgs)
+		setMonto(gastoArgs.monto.toString())
+		// se abre el modal primero para dar una experiencia más fluida
+		setModalOpen(true)
 	}
 
-	//Funcion para registrar la sucursal en la base de datos
-	const handleAceptar = handleSubmit(async (data) => {
-		const response = await fetch("/api/gastos/registrar", {
-			method: "POST",
+	const onSubmit = handleSubmit(async (data) => {
+		// Se hace una petición a la API para modificar el gasto
+		const res = await fetch("/api/gastos/modificar", {
+			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				gasto: {
-					idSucursal: context.id,
-					monto: data.monto,
-					fecha: data.fecha,
-					categoria: data.categoria,
-					concepto: data.concepto,
-				},
+				id: gasto.id,
+				...data,
 			}),
 		})
 
-		const resJSON = await response.json()
+		const dataRes = await res.json()
 
-		if (response.status === 500) {
-			toast.error(resJSON.message)
-		} else {
-      actualizarGastos()
+		// Si hay un error, se muestra un toast con el mensaje de error
+		if (dataRes?.error) {
+			toast.error(dataRes.error)
+		}
 
-			toast.success(resJSON.message, {
+		// Si el gasto se modificó correctamente, se muestra un toast con un mensaje de éxito
+		else {
+			// Actualiza la información de los gastos
+			actualizarGastos()
+			toast.success("Gasto modificado correctamente", {
 				className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
 				bodyClassName: "font-semibold text-sm text-green-500",
 				autoClose: 2000,
 				draggable: false,
-				onClose: () => setModalOpen(false),
 			})
-
-			reset()
-      setMonto("")
 		}
 	})
-
-	//Función para abrir el modal
-	const handleRegistrar = () => {
-		reset()
-    setMonto("")
-		setModalOpen(true)
-	}
 
 	return (
 		<>
 			<button
-				className="bg-pink-focus px-4 py-2 text-md rounded-md font-semibold hover:shadow-md hover:shadow-pink-accent hover:-translate-y-1 transition-all duration-25 ease-out"
-				onClick={handleRegistrar}
+				onClick={handleEditar}
+				className="col-span-1 underline hover:text-pink-500 cursor-pointer"
 			>
-				<span>Registrar gasto</span>
+				Editar (icono de lápiz)
 			</button>
 			<Modal
 				isOpen={modalOpen}
@@ -91,14 +97,12 @@ function RegistrarClase({ actualizarGastos }: {
 				overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
 				className="relative bg-secciones bg-opacity-95 p-6 w-full max-w-lg min-h-min rounded-md text-white"
 			>
-				<div className="flex items-center justify-center">
-					<h1 className="font-bold text-3xl">Alta de gasto</h1>
-				</div>
-				<form className="flex flex-col gap-1">
+				<h1 className="font-bold text-4xl mb-3 text-center">Modificar gasto</h1>
+				<form onSubmit={onSubmit} className="flex flex-col gap-2">
 					<div>
 						<Label
-							htmlFor="monto"
 							label="Monto"
+							htmlFor="monto"
 							error={Boolean(errors.monto?.type === "required")}
 							className="block"
 						/>
@@ -106,7 +110,7 @@ function RegistrarClase({ actualizarGastos }: {
 							type="text"
 							id="monto"
 							error={errors.monto}
-							className="w-full border text-black border-gray-300 font-bold px-2"
+							className="w-full text-black border-gray-300 font-bold px-2 py-1"
 							value={monto}
 							placeholder="$0.00"
 							onChange={(e) => {
@@ -115,14 +119,14 @@ function RegistrarClase({ actualizarGastos }: {
 								// valida que el monto sea un número o un número con punto decimal
 								if (value.match(/^\d+(\.\d*)?$/) || value === "") {
 									setMonto(value)
+									setValue("monto", value)
 								}
 							}}
 							register={register("monto", {
 								required: {
 									value: true,
-									message: "El monto es requerido.",
+									message: "El monto es requerido",
 								},
-								value: monto,
 								valueAsNumber: true,
 							})}
 						/>
@@ -130,7 +134,7 @@ function RegistrarClase({ actualizarGastos }: {
 					<div>
 						<Label
 							htmlFor="fecha"
-							label="Fecha en la que se realizó el gasto"
+							label="Fecha"
 							error={Boolean(errors.fecha?.type === "required")}
 							className="block"
 						/>
@@ -145,6 +149,10 @@ function RegistrarClase({ actualizarGastos }: {
 									value: true,
 									message: "La fecha es requerida.",
 								},
+								value: convertirAStringFecha(
+									convertirAFecha(gasto.fecha, "/", "dd/mm/aaaa"),
+									"fr-CA"
+								),
 							})}
 						/>
 					</div>
@@ -165,13 +173,14 @@ function RegistrarClase({ actualizarGastos }: {
 									value: true,
 									message: "La categoría es requerida.",
 								},
+								value: gasto.titulo,
 							})}
 						/>
 					</div>
 					<div>
 						<Label
-							htmlFor="concepto"
 							label="Concepto"
+							htmlFor="concepto"
 							error={Boolean(errors.concepto?.type === "required")}
 							className="block"
 						/>
@@ -184,24 +193,14 @@ function RegistrarClase({ actualizarGastos }: {
 									value: true,
 									message: "El concepto es requerido.",
 								},
+								value: toSentenceCase(gasto.concepto.trim()),
 							})}
 						/>
 					</div>
+					<button className="bg-pink-500 hover:bg-pink-600 text-white rounded px-3 py-2 mt-3 justify-self-end self-center disabled:bg-disabled disabled:text-black/75 transition-all duration-75">
+						Modificar
+					</button>
 				</form>
-				<div className="flex justify-center items-center mt-3">
-					<button
-						className="bg-gray-500 py-1 px-3 rounded-md text-lg shadow-md mr-2 hover:bg-gray-600"
-						onClick={handleCancelar}
-					>
-						Cancelar
-					</button>
-					<button
-						onClick={handleAceptar}
-						className="bg-pink-500 py-1 px-3 rounded-md text-lg shadow-md ml-2 hover:bg-pink-600"
-					>
-						Aceptar
-					</button>
-				</div>
 				<button
 					onClick={() => setModalOpen(false)}
 					className="absolute top-4 right-4 font-bold rounded hover:bg-black/10 w-8 h-8 flex items-center justify-center"
@@ -212,5 +211,3 @@ function RegistrarClase({ actualizarGastos }: {
 		</>
 	)
 }
-
-export default RegistrarClase

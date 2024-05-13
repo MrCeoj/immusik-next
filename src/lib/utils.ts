@@ -14,6 +14,13 @@ export function toTitleCase(text: string) {
 		: capitalizeWord(text)
 }
 
+export function toSentenceCase(text: string) {
+  const sentences = text.split('.').map((sentence) => sentence.trim())
+  return sentences.map((sentence) => {
+    return sentence.charAt(0).toUpperCase() + sentence.slice(1).toLowerCase()
+  }).join('. ')
+}
+
 export function toArrayDiasClase(dias: string) {
 	const diasArray = dias.split(',')
 	return diasArray.map((dia) => dia.toLowerCase())

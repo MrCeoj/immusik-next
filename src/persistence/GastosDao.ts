@@ -21,3 +21,22 @@ export async function gastosPorId(idSucursal: number) {
 export async function crearGasto(data: any) {
   return await prisma.gasto.create({ data });
 }
+
+/**
+ * Función que modifica un gasto
+ * @param data - Datos del gasto
+ * @returns Gasto modificado
+ */
+export async function modGasto(data: any) {
+  return await prisma.gasto.update({
+    where: {
+      id: data.id,
+    },
+    data: {
+      monto: data.monto,
+      titulo: data.titulo,
+      concepto: data.concepto,
+      fecha: data.fecha,
+    },
+  });
+}

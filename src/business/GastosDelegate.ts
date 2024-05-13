@@ -1,6 +1,5 @@
 import { convertirAFecha } from "@/lib/utils";
-import { crearGasto, gastosPorId } from "@/persistence/GastosDao";
-import { Gasto } from "@prisma/client";
+import { crearGasto, gastosPorId, modGasto } from "@/persistence/GastosDao";
 
 /**
  * Función que obtiene todos los gastos de acuerdo a la id de una sucursal
@@ -31,15 +30,15 @@ export async function registrarGasto(data: any) {
 
 
   const fechaIngresada = convertirAFecha(data.fecha, "-", "aaaa/mm/dd");
-  const fechaFin    = new Date().getTime();
+  const fechaActual    = new Date().getTime();
 
-  const diff = fechaFin - fechaIngresada.getTime();
+  const diff = fechaActual - fechaIngresada.getTime();
   const diffDias = diff/(1000*60*60*24);
 
   if (diffDias > 30) {
     throw { message: "La diferencia de días debe ser menor a 30" };
   } else if (diffDias < 0) {
-    throw { message: "La fecha capturada debe ser menor a la fecha actual" };
+    throw { message: "La fecha capturada debe ser menor o igual a la fecha actual" };
   }
 
   const fechaFormateada = Intl.DateTimeFormat("es-MX", {
@@ -48,13 +47,59 @@ export async function registrarGasto(data: any) {
     day: "2-digit",
   }).format(fechaIngresada);
 
+  const conceptoFormateado = data.concepto.split(".").map((sentence: string) => {
+    return sentence.trim()
+  }).join(". ").toUpperCase();
+
   const nuevoGasto = {
     idSucursal: data.idSucursal,
     titulo: data.categoria.toUpperCase(),
     monto: parseFloat(data.monto.toFixed(2)),
-    concepto: data.concepto.toUpperCase(),
+    concepto: conceptoFormateado.trim(),
     fecha: fechaFormateada,
   };
 
   return await crearGasto(nuevoGasto);
+}
+
+/**
+ * Función que modifica un gasto
+ * @param data - Datos del gasto
+ * @returns Gasto modificado o mensaje de error
+ */
+export async function modificarGasto(data: any) {
+  if (data === null || data === undefined)
+    throw { message: "Error al modificar el gasto, datos inválidos" };
+
+  const fechaIngresada = convertirAFecha(data.fecha, "-", "aaaa/mm/dd");
+  const fechaActual    = new Date().getTime();
+
+  const diff = fechaActual - fechaIngresada.getTime();
+  const diffDias = diff/(1000*60*60*24);
+
+  if (diffDias > 31) {
+    throw { message: "La diferencia de días debe ser menor a 31" };
+  } else if (diffDias < 0) {
+    throw { message: "La fecha capturada debe ser menor o igual a la fecha actual" };
+  }
+
+  const fechaFormateada = Intl.DateTimeFormat("es-MX", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(fechaIngresada);
+
+  const conceptoFormateado = data.concepto.split(".").map((sentence: string) => {
+    return sentence.trim()
+  }).join(". ").toUpperCase();
+
+  const gasto = {
+    id: data.id,
+    titulo: data.categoria.toUpperCase(),
+    monto: parseFloat(data.monto.toFixed(2)),
+    concepto: conceptoFormateado.trim(),
+    fecha: fechaFormateada,
+  };
+  
+  return await modGasto(gasto);
 }
