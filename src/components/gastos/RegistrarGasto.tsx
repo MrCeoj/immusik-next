@@ -116,7 +116,7 @@ function RegistrarClase({
 				<div className="flex items-center justify-center">
 					<h1 className="font-bold text-3xl">Alta de gasto</h1>
 				</div>
-				<form className="flex flex-col p-10">
+				<form className="flex flex-col p-5 gap-y-3">
 					<div>
 						<Label
 							htmlFor="monto"
@@ -128,7 +128,7 @@ function RegistrarClase({
 							type="text"
 							id="monto"
 							error={errors.monto}
-							className="w-full border text-black border-gray-300 font-bold px-2"
+							className="w-full border text-black border-gray-300 font-bold px-2 rounded-md"
 							onChange={(e) => {
 								const value = e.target.value
 
@@ -158,7 +158,7 @@ function RegistrarClase({
 							type="date"
 							id="fecha"
 							error={errors.fecha}
-							className="w-full border text-black border-gray-300 font-bold px-2"
+							className="w-full border text-black border-gray-300 font-bold px-2 rounded-md"
 							register={register("fecha", {
 								required: {
 									value: true,
@@ -176,7 +176,7 @@ function RegistrarClase({
 						/>
 						<select
 							id="categoria"
-							className="w-full border text-black border-gray-300 font-bold px-2"
+							className="w-full border text-black border-gray-300 font-bold px-2 rounded-md"
 							{...register("categoria", {
 								required: {
 									value: true,
@@ -201,7 +201,7 @@ function RegistrarClase({
 						/>
 						<textarea
 							id="concepto"
-							className="w-full max-h-32 min-h-7 border text-black border-gray-300 font-bold px-2"
+							className="w-full max-h-32 min-h-7 border text-black border-gray-300 font-bold px-2 rounded-md"
 							{...register("concepto", {
 								required: {
 									value: true,
