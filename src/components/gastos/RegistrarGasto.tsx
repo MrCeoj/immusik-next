@@ -94,7 +94,7 @@ function RegistrarClase({ actualizarGastos }: {
 				<div className="flex items-center justify-center">
 					<h1 className="font-bold text-3xl">Alta de gasto</h1>
 				</div>
-				<form className="flex flex-col gap-1">
+				<form className="flex flex-col p-5 gap-y-3">
 					<div>
 						<Label
 							htmlFor="monto"
@@ -106,7 +106,7 @@ function RegistrarClase({ actualizarGastos }: {
 							type="text"
 							id="monto"
 							error={errors.monto}
-							className="w-full border text-black border-gray-300 font-bold px-2"
+							className="w-full border text-black border-gray-300 font-bold px-2 rounded-md"
 							value={monto}
 							placeholder="$0.00"
 							onChange={(e) => {
@@ -138,7 +138,7 @@ function RegistrarClase({ actualizarGastos }: {
 							type="date"
 							id="fecha"
 							error={errors.fecha}
-							className="w-full border text-black border-gray-300 font-bold px-2"
+							className="w-full border text-black border-gray-300 font-bold px-2 rounded-md"
 							max={convertirAStringFecha(new Date(), "fr-CA")}
 							register={register("fecha", {
 								required: {
@@ -158,7 +158,7 @@ function RegistrarClase({ actualizarGastos }: {
 						<Select
 							id="categoria"
 							error={errors.categoria}
-							className="w-full border text-black border-gray-300 font-bold px-2"
+							className="w-full border text-black border-gray-300 font-bold px-2 rounded-md"
 							items={categoriasGasto}
 							register={register("categoria", {
 								required: {
@@ -178,7 +178,7 @@ function RegistrarClase({ actualizarGastos }: {
 						<TextArea
 							id="concepto"
 							error={errors.concepto}
-							className="w-full max-h-32 min-h-9 border text-black border-gray-300 font-bold px-2"
+							className="w-full max-h-32 min-h-9 border text-black border-gray-300 font-bold px-2 rounded-md"
 							register={register("concepto", {
 								required: {
 									value: true,
