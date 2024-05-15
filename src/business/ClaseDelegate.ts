@@ -179,7 +179,7 @@ export async function fetchCrearClase(data: any) {
 
   //Se obtienen las clases de la sucursal en la que se va a crear la clase
   let sucursalIdNum: number = data.sucursal
-  console.log(sucursalIdNum)
+  //console.log(sucursalIdNum)
   const clasesDeSucursal = await getClasesDeDeterminadaSucursal(sucursalIdNum)
 
   //Se encuentra si ya existe una clase con ese nombre en la sucursal.
