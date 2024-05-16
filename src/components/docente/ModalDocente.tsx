@@ -182,12 +182,12 @@ export default function ModalDocente({
         ariaHideApp={false}
         onRequestClose={() => setModalOpen(false)}
         overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
-        className="relative bg-customGray p-6 w-full max-w-5xl min-h-min rounded"
+        className="relative bg-customGray p-9 w-full max-w-5xl min-h-min rounded"
       >
         <h1 className="font-bold text-4xl mb-3 text-center text-white">
           Detalles de {toTitleCase(docente.nombre)} {toTitleCase(docente.aPaterno)}
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <form
             onSubmit={onSubmit}
             className="flex flex-col gap-1 bg-secciones"

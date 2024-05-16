@@ -104,7 +104,7 @@ export default function ModalGasto({
 							label="Monto"
 							htmlFor="monto"
 							error={Boolean(errors.monto?.type === "required")}
-							className="block"
+							className="block text-lg"
 						/>
 						<Input
 							type="text"
@@ -131,18 +131,18 @@ export default function ModalGasto({
 							})}
 						/>
 					</div>
-					<div>
+					<div className="pointer-events-none">
 						<Label
 							htmlFor="fecha"
 							label="Fecha"
 							error={Boolean(errors.fecha?.type === "required")}
-							className="block"
+							className="block text-lg"
 						/>
 						<Input
 							type="date"
 							id="fecha"
 							error={errors.fecha}
-							className="w-full border text-black border-gray-300 font-bold px-2"
+							className="w-full border text-black border-gray-300 font-bold px-2 "
 							max={convertirAStringFecha(new Date(), "fr-CA")}
 							register={register("fecha", {
 								required: {
@@ -154,14 +154,14 @@ export default function ModalGasto({
 									"fr-CA"
 								),
 							})}
-						/>
+						/> 
 					</div>
 					<div>
 						<Label
 							htmlFor="categoria"
 							label="Categoría"
 							error={Boolean(errors.categoria?.type === "required")}
-							className="block"
+							className="block text-lg"
 						/>
 						<Select
 							id="categoria"
@@ -182,7 +182,7 @@ export default function ModalGasto({
 							label="Concepto"
 							htmlFor="concepto"
 							error={Boolean(errors.concepto?.type === "required")}
-							className="block"
+							className="block text-lg"
 						/>
 						<TextArea
 							id="concepto"

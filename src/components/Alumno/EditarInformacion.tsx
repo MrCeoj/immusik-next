@@ -87,7 +87,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
             htmlFor="nombre"
             label="Nombre"
             error={Boolean(errors.nombre?.type === "required")}
-            className="block text-white text-lg"
+            className="block text-white text-lg font-normal"
           />
           <Input
             type="text"
@@ -116,7 +116,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
             htmlFor="aPaterno"
             label="Apellido Paterno"
             error={Boolean(errors.aPaterno?.type === "required")}
-            className="block text-white text-lg"
+            className="block text-white text-lg font-normal"
           />
           <Input
             type="text"
@@ -144,7 +144,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
             htmlFor="aMaterno"
             label="Apellido Materno"
             error={Boolean(errors.aMaterno?.type === "required")}
-            className="block text-white text-lg"
+            className="block text-white text-lg font-normal"
           />
           <Input
             type="text"
@@ -172,7 +172,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
             htmlFor="tutor"
             label="Tutor"
             error={Boolean(errors.tutor?.type === "required")}
-            className="block text-white text-lg"
+            className="block text-white text-lg font-normal"
           />
           <Input
             type="text"
@@ -200,7 +200,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
             htmlFor="contacto"
             label="Contacto"
             error={Boolean(errors.contacto?.type === "required")}
-            className="block text-white text-lg"
+            className="block text-white text-lg font-normal"
           />
           <Input
             type="text"
@@ -224,7 +224,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
             htmlFor="fechaNac"
             label="Fecha de Nacimiento"
             error={Boolean(errors.fechaNac?.type === "required")}
-            className="block text-white text-lg"
+            className="block text-white text-lg font-normal"
           />
           <Input
             type="date"
@@ -260,7 +260,7 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
             htmlFor="curp"
             label="CURP"
             error={Boolean(errors.curp?.type === "required")}
-            className="block text-white text-lg"
+            className="block text-white text-lg font-normal"
           />
           <Input
             type="text"
