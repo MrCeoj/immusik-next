@@ -65,9 +65,9 @@ export default function Clase({
             clase.idDocente === null && (
               <Image
                 src={warningIcon}
-                alt="¡Esta clase no tiene un profesor asignado!"
+                alt="¡Esta clase no tiene un docente asignado!"
                 className="w-8 h-8"
-                title="¡Esta clase no tiene un profesor asignado!"
+                title="¡Esta clase no tiene un docente asignado!"
               />
             )
           }
