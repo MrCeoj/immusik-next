@@ -1,4 +1,5 @@
-import { create } from "zustand"
+/* src/hooks/gastos/useGastos.ts */
+import { create } from "zustand" 
 import { Gasto } from "@/entities"
 
 type State = {
