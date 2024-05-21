@@ -93,42 +93,36 @@ const Index = () => {
             }}
           >
             <Tab className="w-full text-xl py-1 " title="Registros">
-              <div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-10 mt-3 gap-5 px-5">
-                <div className="text-2xl font-bold col-span-2 text-left ">
-                  Fecha
-                </div>
-                <div className="text-2xl font-bold col-span-3 text-left ">
-                  Concepto
-                </div>
-                <div className="text-2xl font-bold col-span-2 text-left ">
-                  Categoría
-                </div>
-                <div className="text-2xl font-bold col-span-2 text-left ">
-                  Cantidad
-                </div>
+              <div className="w-full bg-neutral-400 rounded-lg mt-3 bg-opacity-40 grid grid-cols-10 py-2 px-4">
+                <div className="text-2xl font-bold col-span-2">Fecha</div>
+                <div className="text-2xl font-bold col-span-3">Concepto</div>
+                <div className="text-2xl font-bold col-span-2">Categoría</div>
+                <div className="text-2xl font-bold col-span-2">Cantidad</div>
               </div>
-              {cargando ? (
-                <p>Cargando</p>
-              ) : gastosFiltrados.length >= 0 ? (
-                gastos.map((gasto) => (
-                  <div
-                    key={gasto.id}
-                    className="px-4 py-2 grid grid-cols-10 my-4 text-lg bg-gray-100 bg-opacity-50 rounded-lg font-bold items-center"
-                  >
-                    <div className="col-span-2">{gasto.fecha}</div>
-                    <div className="col-span-3">{gasto.concepto}</div>
-                    <div className="col-span-2">{gasto.titulo}</div>
-                    <div className="col-span-2">${gasto.monto}</div>
+              <div className="overflow-y-auto w-full h-[55%]">
+                {cargando ? (
+                  <p>Cargando</p>
+                ) : gastosFiltrados.length >= 0 ? (
+                  gastos.map((gasto) => (
+                    <div
+                      key={gasto.id}
+                      className="px-4 py-2 grid grid-cols-10 my-4 text-lg bg-gray-100 bg-opacity-50 rounded-lg font-bold items-center"
+                    >
+                      <div className="col-span-2">{gasto.fecha}</div>
+                      <div className="col-span-3">{gasto.concepto}</div>
+                      <div className="col-span-2">{gasto.titulo}</div>
+                      <div className="col-span-2">${gasto.monto}</div>
 
-                    <ModalGasto
-                      gastoArgs={gasto}
-                      actualizarGastos={handleCambio}
-                    />
-                  </div>
-                ))
-              ) : (
-                <p>No hay gastos</p>
-              )}
+                      <ModalGasto
+                        gastoArgs={gasto}
+                        actualizarGastos={handleCambio}
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p>No hay gastos</p>
+                )}
+              </div>
               <Paginador
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
