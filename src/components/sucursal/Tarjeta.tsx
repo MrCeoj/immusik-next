@@ -62,7 +62,7 @@ const Tarjeta = ({ sucursal }: { sucursal: Sucursal }) => {
                 aria-hidden={true}
                 width={1000}
                 height={1000}
-                className="object-cover absolute w-full right-0 -bottom-14 translate-y-0 transition-transform group-hover:-translate-y-5 filter blur-sm mix-blend-multiply"
+                className="object-cover absolute w-full right-0 -bottom-14 translate-y-0 transition-transform group-hover:-translate-y-5 filter blur-sm opacity-80"
                 src="/wave-tarjeta-menu.svg"
               />
               <Image
@@ -73,6 +73,7 @@ const Tarjeta = ({ sucursal }: { sucursal: Sucursal }) => {
                 className="object-cover absolute w-full right-0 -bottom-14 translate-y-0 transition-transform group-hover:-translate-y-5 filter opacity-80"
                 src="/wave-tarjeta-menu-bg.svg"
               />
+
               <div className="absolute bottom-0 left-0 right-0 pb-8">
                 <h3 className="text-white text-center font-bold text-3xl">
                   {titulo}
