@@ -11,27 +11,23 @@ import Select from "../form/Select"
 import TextArea from "../form/TextArea"
 import { convertirAStringFecha } from "@/lib/utils"
 
-function RegistrarClase({ actualizarGastos }: {
-	actualizarGastos: any
-}) {
-	//useState para manejar el abrir y cerrar el modal
+function RegistrarClase({ actualizarGastos }: { actualizarGastos: any }) {
 	const [modalOpen, setModalOpen] = useState(false)
 	const context = sucursalContext((state: any) => state.context)
 	const [monto, setMonto] = useState("")
+	const [formData, setFormData] = useState<any>(null)
 
 	const {
 		register,
 		handleSubmit,
 		reset,
-		formState: { errors },
-	} = useForm()
+		formState: { errors, isValid },
+	} = useForm({ mode: "onChange" }) // 'onChange' mode to validate in real-time
 
-	//Función para cerrar el modal
 	const handleCancelar = () => {
 		setModalOpen(false)
 	}
 
-	//Funcion para registrar la sucursal en la base de datos
 	const handleAceptar = handleSubmit(async (data) => {
 		const response = await fetch("/api/gastos/registrar", {
 			method: "POST",
@@ -54,7 +50,7 @@ function RegistrarClase({ actualizarGastos }: {
 		if (response.status === 500) {
 			toast.error(resJSON.message)
 		} else {
-      actualizarGastos()
+			actualizarGastos()
 
 			toast.success(resJSON.message, {
 				className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
@@ -65,33 +61,21 @@ function RegistrarClase({ actualizarGastos }: {
 			})
 
 			reset()
-      setMonto("")
+			setMonto("")
+			setFormData(null)
+			setModalOpen(false)
 		}
 	})
 
-	//Función para abrir el modal
-	const handleRegistrar = () => {
-		reset()
-    setMonto("")
+	const handleRegistrar = handleSubmit((data) => {
+		setFormData(data)  // Save form data in state
 		setModalOpen(true)
-	}
+	})
 
 	return (
 		<>
-			<button
-				className="bg-pink-focus px-4 py-2 text-md rounded-md font-semibold hover:shadow-md hover:shadow-pink-accent hover:-translate-y-1 transition-all duration-25 ease-out"
-				onClick={handleRegistrar}
-			>
-				<span>Registrar gasto</span>
-			</button>
-			<Modal
-				isOpen={modalOpen}
-				ariaHideApp={false}
-				onRequestClose={() => setModalOpen(false)}
-				overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
-				className="relative bg-secciones bg-opacity-95 p-6 w-full max-w-lg min-h-min rounded-md text-white"
-			>
-				<div className="flex items-center justify-center">
+			<div className="flex flex-col w-3/4">
+				<div className="flex items-center justify-center mt-5">
 					<h1 className="font-bold text-3xl">Alta de gasto</h1>
 				</div>
 				<form className="flex flex-col p-5 gap-y-3">
@@ -111,8 +95,6 @@ function RegistrarClase({ actualizarGastos }: {
 							placeholder="$0.00"
 							onChange={(e) => {
 								const value = e.target.value
-
-								// valida que el monto sea un número o un número con punto decimal
 								if (value.match(/^\d+(\.\d*)?$/) || value === "") {
 									setMonto(value)
 								}
@@ -190,25 +172,45 @@ function RegistrarClase({ actualizarGastos }: {
 				</form>
 				<div className="flex justify-center items-center mt-3">
 					<button
-						className="bg-gray-500 py-1 px-3 rounded-md text-lg shadow-md mr-2 hover:bg-gray-600"
-						onClick={handleCancelar}
-					>
-						Cancelar
-					</button>
-					<button
-						onClick={handleAceptar}
+						onClick={handleRegistrar}
 						className="bg-pink-500 py-1 px-3 rounded-md text-lg shadow-md ml-2 hover:bg-pink-600"
 					>
-						Aceptar
+						Dar de alta
 					</button>
+					<Modal
+						isOpen={modalOpen}
+						ariaHideApp={false}
+						onRequestClose={() => setModalOpen(false)}
+						overlayClassName="fixed inset-0 px-3 grid place-items-center bg-black/50 backdrop-blur-sm"
+						className="relative bg-secciones bg-opacity-95 p-6 w-full max-w-xl min-h-min rounded-md text-white"
+					>
+						<h1 className="text-xl">¿Estás seguro de que deseas registrar el siguiente pago?</h1>
+						{formData && (
+							<div className="mt-4">
+								<p><strong>Monto:</strong> {formData.monto}</p>
+								<p><strong>Fecha:</strong> {formData.fecha}</p>
+								<p><strong>Categoría:</strong> {formData.categoria}</p>
+								<p><strong>Concepto:</strong> {formData.concepto}</p>
+							</div>
+						)}
+						<div className="flex justify-end mt-4">
+							<button
+								className="bg-gray-500 py-1 px-3 rounded-md text-lg shadow-md mr-2 hover:bg-gray-600"
+								onClick={handleCancelar}
+							>
+								Cancelar
+							</button>
+							<button
+								onClick={handleAceptar}
+								className="bg-pink-500 py-1 px-3 rounded-md text-lg shadow-md ml-2 hover:bg-pink-600"
+								disabled={!isValid} // Desactiva el botón si el formulario no es válido
+							>
+								Dar de alta
+							</button>
+						</div>
+					</Modal>
 				</div>
-				<button
-					onClick={() => setModalOpen(false)}
-					className="absolute top-4 right-4 font-bold rounded hover:bg-black/10 w-8 h-8 flex items-center justify-center"
-				>
-					X
-				</button>
-			</Modal>
+			</div>
 		</>
 	)
 }

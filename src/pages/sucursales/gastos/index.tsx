@@ -130,7 +130,7 @@ const Index = () => {
                 handleItemsPags={handleItemsPags}
               />
             </Tab>
-            <Tab className="w-full text-xl py-1" title="Registrar">
+            <Tab className="w-full text-xl py-1 flex justify-center" title="Registrar">
               <RegistrarGasto actualizarGastos={handleCambio} />
             </Tab>
           </Tabs>
