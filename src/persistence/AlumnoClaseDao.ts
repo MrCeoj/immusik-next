@@ -38,14 +38,17 @@ export async function deleteAlumnoClase(id: any) {
   return await prisma.alumnoClase.delete({ where: { id } });
 }
 
-/*
- * Borra registro AlumnoClase solo de una clase específica.
- * @param id: id de la clase de la cual se eliminarán los registros AlumnoClase
- *  */
-export async function deleteAlumnoClaseFromClase(id: any) {
+/**
+ * Función para borrar registros alumnoClase
+ * @author Fong
+ * @param id id de la clase de la cual se borrarán los registros alumnoClase
+ * @returns los registros eliminados
+ */
+export async function alumnoClaseBorrarMuchos(id: any) {
+  const idNum:number = parseInt(id)
   return await prisma.alumnoClase.deleteMany({
     where: {
-      claseId: id,
+      claseId: idNum,
     },
   });
 }

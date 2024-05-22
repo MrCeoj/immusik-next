@@ -1,18 +1,18 @@
 import {
-  getClase,
-  deleteClase,
-  deleteClasesFromSucursal,
-  getClasesFromSucursal,
-  deleteDocenteFromClase,
-  deleteSingelDocente,
-  getAllClases,
-  getClasesDeDeterminadoDocente,
-  crearClaseSinDocente,
-  crearClaseConDocente,
-  modClase,
+  claseBuscarPorSucursal,
+  claseBorrarPorSucursal,
+  claseObtenerTodas,
+  claseEliminar,
+  claseDesasignarDocente,
+  claseDesasignarDocentePorIdDeClase,
+  claseObtenerPorDocente,
+  claseCrearSinDocente,
+  claseCrearConDocente,
+  claseEditar,
+  claseObtener,
 } from "@/persistence/ClaseDao";
 import { Clase } from "@/entities/edge";
-import { borrarAlumnoClaseConDeterminadaClase, fetchGetAllAlumnoClases } from "./AlumnoClaseDelegate";
+import { desasignarAlumnosDeClase, eliminarAlumnoDeClase, fetchGetAllAlumnoClases } from "./AlumnoClaseDelegate";
 import {
   actualizarEstadoDeDocentes,
   verificarEstado,
@@ -29,7 +29,7 @@ import { getDocente, setEstado } from "@/persistence/DocenteDao";
  */
 export async function obtenerClase(id: number) {
   try {
-    return await getClase(id);
+    return await claseObtener(id);
   } catch (error) {
     return error;
   }
@@ -37,29 +37,30 @@ export async function obtenerClase(id: number) {
 
 /**
  * Regresa las clases que se imparten en cierta sucursal
+ * @author Fong
  * @param id - id de la sucursal de la cual se regresarán sus clases
  *
  */
-export async function getClasesDeDeterminadaSucursal(id: any) {
-  return await getClasesFromSucursal(id);
+export async function obtenerClasesDeSucursal(id: any) {
+  return await claseBuscarPorSucursal(id);
 }
 
 /**
  * Borra una clase
  * @param id: id de la clase a borrar
  */
-export async function fetchEliminarClase(id: any) {
+export async function eliminarClase(id: any) {
   const response = {
     success: false,
     message: "",
   };
 
-  const clases = await getAllClases();
+  const clases = await claseObtenerTodas();
   const existe = clases.some((clase) => clase.id === id);
 
   if (existe) {
-    await borrarAlumnoClaseConDeterminadaClase(id);
-    await deleteClase(id);
+    await desasignarAlumnosDeClase(id);
+    await claseEliminar(id);
     await actualizarEstadoDeDocentes();
     await actualizarEstadoDeAlumnos();
     response.message = "Clase eliminada exitosamente.";
@@ -72,10 +73,11 @@ export async function fetchEliminarClase(id: any) {
 
 /**
  * Borra clases pertenecientes a determinada sucursal
+ * @author Fong
  * @param id: id de la sucursal cuyas clases serán eliminadas.
  */
-export async function deleteClasesDeDeterminadaSucursal(id: any) {
-  await deleteClasesFromSucursal(id);
+export async function borrarClasesDeSucursal(id: any) {
+  await claseBorrarPorSucursal(id);
 }
 
 /**
@@ -83,7 +85,7 @@ export async function deleteClasesDeDeterminadaSucursal(id: any) {
  * @param id
  * @return la clase con el docente eliminado
  */
-export async function eliminarDocentedeClase(id: number) {
+export async function eliminarDocenteDeClase(id: number) {
   try {
     // Obtener clase de la base de datos para hacer validaciones
     const clase = (await obtenerClase(id)) as Clase;
@@ -96,7 +98,7 @@ export async function eliminarDocentedeClase(id: number) {
       throw new Error("La clase no tiene docente asignado");
     }
 
-    return await deleteDocenteFromClase(id);
+    return await claseDesasignarDocente(id);
   } catch (error) {
     if (error instanceof Error) {
       return error;
@@ -124,7 +126,7 @@ export async function eliminarUnDocente(id: number, idDocente: number) {
       throw new Error("El docente no está asignado a la clase");
     }
     verificarEstado(idDocente);
-    return await deleteSingelDocente(id);
+    return await claseDesasignarDocentePorIdDeClase(id);
   } catch (error) {
     console.error("Error al eliminar docente:", error);
     return error;
@@ -135,9 +137,9 @@ export async function eliminarUnDocente(id: number, idDocente: number) {
  * Función para encontrar todas las clases en la base de datos.
  * @returns se regresan las clases obtenidas
  */
-export async function fecthGetAllClases() {
+export async function obtenerTodasLasClases() {
   //Se buscan todas las clases
-  const clasesTemp = await getAllClases();
+  const clasesTemp = await claseObtenerTodas();
 
   //Las clases se dividen en aquellas que no tienen docente y aquellas donde si tienen docente
   //De igual forma cada uno de estos 2 sub-arreglos se ordena por orden alfabético
@@ -160,8 +162,8 @@ export async function fecthGetAllClases() {
  * @param docenteId la id del docente del cual se regresarán sus clases.
  * @returns las clases de dicho docente.
  */
-export async function fetchGetClasesDeDeterminadoDocente(docenteId: any) {
-  const clases = await getClasesDeDeterminadoDocente(docenteId);
+export async function obtenerClasesDeDocente(docenteId: any) {
+  const clases = await claseObtenerPorDocente(docenteId);
 
   return clases;
 }
@@ -171,7 +173,7 @@ export async function fetchGetClasesDeDeterminadoDocente(docenteId: any) {
  * @param data datos de la clase a registrar
  * @returns respuesta con el mensaje que se tratará en la página de registrar clase.
  */
-export async function fetchCrearClase(data: any) {
+export async function registrarClase(data: any) {
   let response = {
     success: false,
     message: "",
@@ -180,7 +182,7 @@ export async function fetchCrearClase(data: any) {
   //Se obtienen las clases de la sucursal en la que se va a crear la clase
   let sucursalIdNum: number = data.sucursal
   //console.log(sucursalIdNum)
-  const clasesDeSucursal = await getClasesDeDeterminadaSucursal(sucursalIdNum)
+  const clasesDeSucursal = await obtenerClasesDeSucursal(sucursalIdNum)
 
   //Se encuentra si ya existe una clase con ese nombre en la sucursal.
   const repetida = clasesDeSucursal.some((clase)=> clase.nombre === data.nombre)
@@ -192,13 +194,13 @@ export async function fetchCrearClase(data: any) {
     //Primero se determina si la clase se va a crear sin docente o con docente.
     if (data.docente === "") {
       //Si no se crea con docente, la clase se puede crear directamente.
-      await crearClaseSinDocente(data);
+      await claseCrearSinDocente(data);
       response.message = "Se creó la clase.";
     } else {
       //Si hay docente se necesita validar si el docente está disponible a esta hora
       let valido = true;
       let idDocente: number = data.docente; //Se consigue la id del docente como valor numérico
-      const clasesDeDocente = await fetchGetClasesDeDeterminadoDocente(idDocente); //Se obtienen las clases de dicho docente
+      const clasesDeDocente = await obtenerClasesDeDocente(idDocente); //Se obtienen las clases de dicho docente
       const diasARegistrar: string[] = data.dias.split(","); //Se dividen los días de la clase a registrar en un arreglo.
 
       //Si el docnete imparte alguna clase se continua con la validación
@@ -230,11 +232,11 @@ export async function fetchCrearClase(data: any) {
         //Si después de todas las validaciones el horario es válido, se crea la clase
         if (valido) {
           response.message = "Se creó la clase.";
-          await crearClaseConDocente(data);
+          await claseCrearConDocente(data);
         }
       } else {
         //Si el docente no imparte ninguna clase no es necesario la validación, se registra la clase directamente.
-        await crearClaseConDocente(data);
+        await claseCrearConDocente(data);
         response.message = "Se creó la clase.";
       }
     }
@@ -258,14 +260,14 @@ export async function modificarClase(clase: any) {
   clase.hora = `${clase.hora}:00 - ${Number(clase.hora) + 1}:00`;
   clase.cupoMax = Number(clase.cupoMax);
 
-  const claseActual = await getClase(clase.id);
+  const claseActual = await claseObtener(clase.id);
   let idDocenteActual;
   if (claseActual !== undefined && claseActual !== null) {
     idDocenteActual = claseActual?.idDocente;
   }
   console.log("idDocenteActual", idDocenteActual);
   // Validar si la clase ya existe
-  const clasesSucursal = await getClasesDeDeterminadaSucursal(clase.idSucursal);
+  const clasesSucursal = await obtenerClasesDeSucursal(clase.idSucursal);
 
   // Validar que no esté duplicado el nombre de la clase en la misma sucursal
   // pero permitir que se modifique la clase con el mismo nombre
@@ -278,7 +280,7 @@ export async function modificarClase(clase: any) {
   }
 
   // Validar que el docente seleccionado tenga disponibilidad en el horario de la clase
-  const clasesDocente = await getClasesDeDeterminadoDocente(clase.idDocente);
+  const clasesDocente = await claseObtenerPorDocente(clase.idDocente);
   // se recorren las clases del docente que no sean la clase a modificar
   clasesDocente
     .filter((claseDeDocente) => claseDeDocente.id !== clase.id)
@@ -297,7 +299,7 @@ export async function modificarClase(clase: any) {
   // una vez terminada la validación se le da formato a los dias de la clase
   clase.dias = toStringDiasClase(clase.dias);
   // Actualizar la clase y el docente por si es necesario cambiar su estado
-  const claseModificada = await modClase(clase);
+  const claseModificada = await claseEditar(clase);
   const docente = await getDocente(clase.idDocente);
   if (idDocenteActual !== undefined && idDocenteActual !== null)
     await verificarSinOffset(idDocenteActual);
@@ -314,8 +316,8 @@ export async function modificarClase(clase: any) {
  * Función que regresa clases con cupo disponible
  * @returns clases con cupo disponible
  */
-export async function fetchGetClasesConCupo() {
-  const clases = await getAllClases() //Se obtienen todas las clases
+export async function obtenerClasesConCupo() {
+  const clases = await claseObtenerTodas() //Se obtienen todas las clases
   const alumnoClases = await fetchGetAllAlumnoClases() //Se obtienen todos los registros alumno-clase
 
   //Se crea un arreglo para guardar las clases con cupo disponible

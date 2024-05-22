@@ -1,4 +1,5 @@
-import { crearPago, getPagosDeAlumno } from "@/persistence/PagosDao"
+
+import { pagoCrear, pagosObtenerDeAlumno } from "@/persistence/PagosDao"
 import { fetchGetAllAlumnos } from "./AlumnoDelegate"
 
 /**
@@ -7,7 +8,7 @@ import { fetchGetAllAlumnos } from "./AlumnoDelegate"
  * @param id id del alumno cuyos pagos se van a recuperar
  * @returns los pagos del alumno ordenados del mas reciente al mas antiguo
  */
-export async function fetchGetPagosDeAlumno(id:any){
+export async function obtenerPagosDeAlumno(id:any){
 
     //Se convierte la id a numero
     let idNum: number = parseInt(id)
@@ -18,7 +19,7 @@ export async function fetchGetPagosDeAlumno(id:any){
     const existe = alumnos.some(alumno=>alumno.id===idNum)
     if(existe){
         //Si existe se obtienen los pagos del alumno
-        const pagos = await getPagosDeAlumno(id)
+        const pagos = await pagosObtenerDeAlumno(id)
         //Se ordenan ls pagos del más reciente al más antiguo
         
         pagos.sort((pagoA,pagoB)=>{
@@ -53,11 +54,11 @@ const convertirAFecha = (str:string)=>{
  * @author Fong
  * @param data datos del pago a registrar
  */
-export async function fetchCrearPago(data:any){
+export async function registrarPago(data:any){
     let response = {
         message: ""
     }
-    const pago = await crearPago(data)
+    const pago = await pagoCrear(data)
     if(!pago){
         response.message="No se pudo registrar el pago."
     }else{
