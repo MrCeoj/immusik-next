@@ -1,13 +1,12 @@
-import { contrasenaMaestraObtener } from "@/persistence/MasterKeyDao";
+import { obtenerContrasenaMaestra } from "@/persistence/MasterKeyDao";
 
-
-export async function obtenerTodasContrasenasMaestra(){
+export async function fetchAllMasterKeys(){
     let response = {
         success: false,
         message: "",
     }
 
-    const masterKeys = await obtenerTodasContrasenasMaestra();
+    const masterKeys = await obtenerContrasenaMaestra();
     console.log(masterKeys)
     if(masterKeys === null){
         response.message="No existen contrasenas"
@@ -18,7 +17,7 @@ export async function obtenerTodasContrasenasMaestra(){
     return response
 }
 
-export async function obtenerContrasenaMaestra(){
-    const masterKeys = await contrasenaMaestraObtener();
+export async function getMasterKey(){
+    const masterKeys = await obtenerContrasenaMaestra();
     return masterKeys
 }

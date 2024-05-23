@@ -1,6 +1,7 @@
 import InscribirAlumno from "@/components/Alumno/InscribirAlumno";
 import {
   deleteAlumnoClase,
+  deleteAlumnoClaseFromClase,
   getAllAlumnoClase,
   getAlumnoClase,
   getAlumnosFromClase,
@@ -11,20 +12,17 @@ import {
   getClasesDisponibles,
   createAlumnoClase,
   desasignarMuchos,
-  alumnoClaseBorrarMuchos,
 } from "@/persistence/AlumnoClaseDao";
 import { actualizarEstadoDeAlumno, porCurp } from "@/persistence/AlumnoDao";
 import { Clase } from "@prisma/client";
 import { actualizarEstadoDeAlumnos } from "./AlumnoDelegate";
 
-/**
- * Función que le desasigna alumnos a clases.
- * @author Fong
- * @param id id de la clase de la cual se eliminarán los registros alumnoClase
- * @returns los registros eliminados
- */
-export async function desasignarAlumnosDeClase(id: any) {
-  return await alumnoClaseBorrarMuchos(id);
+/*
+ * Elimina registros AlumnoClase solo de cierta clase
+ * @param id: id de la clase de la cual se eliminarán los registros AlumnoClase
+ *  */
+export async function borrarAlumnoClaseConDeterminadaClase(id: any) {
+  return await deleteAlumnoClaseFromClase(id);
 }
 
 /**

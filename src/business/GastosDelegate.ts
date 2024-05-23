@@ -1,5 +1,5 @@
 import { convertirAFecha } from "@/lib/utils";
-import { crearGasto, gastoBorrarPorSucursal, gastosPorId, modGasto } from "@/persistence/GastosDao";
+import { crearGasto, gastosPorId, modGasto } from "@/persistence/GastosDao";
 
 /**
  * Función que obtiene todos los gastos de acuerdo a la id de una sucursal
@@ -102,14 +102,4 @@ export async function modificarGasto(data: any) {
   };
   
   return await modGasto(gasto);
-}
-
-/**
- * Función para eliminar los gastos de cierta sucursal.
- * @author Fong
- * @param id id de sucursal cuyos gastos serán eliminados.
- * @returns los gastos eliminados.
- */
-export async function eliminarGastosDeSucursal(id:number) {
-  return await gastoBorrarPorSucursal(id)
 }

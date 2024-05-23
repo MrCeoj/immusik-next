@@ -6,7 +6,7 @@ import { Clase } from '@/entities/edge'
  * @param id - id de la clase a buscar
  * @returns la clase encontrada
  */
-export async function claseObtener(id: number) {
+export async function getClase(id: number) {
 	return await prisma.clase.findUnique({
 		where: {
 			id: id
@@ -18,7 +18,7 @@ export async function claseObtener(id: number) {
  * Regresa todas las clases
  * @returns - todas las clases
  */
-export async function claseObtenerTodas() {
+export async function getAllClases() {
 	return await prisma.clase.findMany()
 }
 
@@ -27,7 +27,7 @@ export async function claseObtenerTodas() {
  * @param id: id de la clase a borrar
  * @return la clase eliminada
  */
-export async function claseEliminar(id: any) {
+export async function deleteClase(id: any) {
 	return await prisma.clase.delete({ where: { id } })
 }
 
@@ -35,11 +35,10 @@ export async function claseEliminar(id: any) {
 
 /**
  * Regresa todas las clases de cierta sucursal
- * @author Fong
  * @param id: id de la sucursal de la cual se buscaran sus clases
  * @return las clases de la sucursal
  */
-export async function claseBuscarPorSucursal(id: any) {
+export async function getClasesFromSucursal(id: any) {
 	let idNum: number = parseInt(id)
 	return await prisma.clase.findMany({
 		where: { 
@@ -50,15 +49,13 @@ export async function claseBuscarPorSucursal(id: any) {
 
 /**
  * Elimina clases de cierta sucursal
- * @author Fong
  * @param id: la id de la sucursal cuyas clases van a ser eliminadas
  * @return las clases eliminadas
  */
-export async function claseBorrarPorSucursal(id: any) {
-	const idNum:number = parseInt(id)
+export async function deleteClasesFromSucursal(id: any) {
 	return await prisma.clase.deleteMany({
 		where: {
-			idSucursal: idNum
+			idSucursal: id
 		}
 	})
 }
@@ -68,7 +65,7 @@ export async function claseBorrarPorSucursal(id: any) {
  * @param id id de la clase a la que se le va a quitar el docente
  * @return la clase con el docente eliminado
  */
-export async function claseDesasignarDocente(id: number) {
+export async function deleteDocenteFromClase(id: number) {
 	return await prisma.clase.updateMany({
 		where: {
 			idDocente: id
@@ -79,7 +76,7 @@ export async function claseDesasignarDocente(id: number) {
 	})
 }
 
-export async function claseDesasignarDocentePorIdDeClase(id: number) {
+export async function deleteSingelDocente(id: number) {
 	return await prisma.clase.update({
 		where: {
 			id: id
@@ -95,7 +92,7 @@ export async function claseDesasignarDocentePorIdDeClase(id: number) {
  * @param id id de docente del cual se recuperarán las clases que imparte
  * @returns las clases que imparte el docente
  */
-export async function claseObtenerPorDocente(id: any) {
+export async function getClasesDeDeterminadoDocente(id: any) {
 	let idNum: number = parseInt(id)
 	const clases = await prisma.clase.findMany({
 		where: { idDocente: idNum }
@@ -107,7 +104,7 @@ export async function claseObtenerPorDocente(id: any) {
  * Función que registra una clase sin docente
  * @param data datos de la clase a registrar
  */
-export async function claseCrearSinDocente(data: any) {
+export async function crearClaseSinDocente(data: any) {
 	//Se convierten a valores numéricos los datos necesarios
 	let cupoNum: number = parseInt(data.cupo)
 	let idSucursal: number = parseInt(data.sucursal)
@@ -128,7 +125,7 @@ export async function claseCrearSinDocente(data: any) {
  * Función para crear clase con docente.
  * @param data datos de la clase a registrar
  */
-export async function claseCrearConDocente(data: any) {
+export async function crearClaseConDocente(data: any) {
 	//Se convierten a valores numéricos los datos necesarios
 	let cupoNum: number = parseInt(data.cupo)
 	let idDocente: number = parseInt(data.docente)
@@ -152,7 +149,7 @@ export async function claseCrearConDocente(data: any) {
  * @param data - Los datos de la clase a modificar.
  * @returns Una promesa que se resuelve en el objeto que representa la clase modificada.
  */
-export async function claseEditar(data: Clase) {
+export async function modClase(data: Clase) {
 	return await prisma.clase.update({
 		where: {
 			id: data.id

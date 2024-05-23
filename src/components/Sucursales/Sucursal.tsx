@@ -54,7 +54,7 @@ const SucursalInfo = ({
         </div>
         <div className="flex justify-center items-center">
           <button
-            className="mx-1 bg-pink-focus text-white py-1 px-2 rounded-md hover:shadow-pink-accent transition-all duration-25 ease-out font-bold"
+            className="mx-1 bg-pink-focus text-white py-1 px-2 rounded-md hover:shadow-pink-accent font-bold transition-all duration-25 ease-out font-bold"
             onClick={handleEditar} //Si se presiona el botón se ejecuta la función handleEditar
           >
             Gestionar

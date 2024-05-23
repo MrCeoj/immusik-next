@@ -44,8 +44,7 @@ const ConfirmacionEliminar = ({
     }
 
     let id = sucursal.id;
-    console.log("ya vas a eliminar");
-    fetch("/api/Sucursal", {
+    fetch("api/Sucursal/", {
       //Se hace fetch a sucursal
       method: "DELETE", //metodo: DELETE
       headers: {

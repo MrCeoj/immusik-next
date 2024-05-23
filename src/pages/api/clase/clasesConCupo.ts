@@ -1,5 +1,4 @@
-import { obtenerClasesConCupo } from "@/business/ClaseDelegate"
-
+import { fetchGetClasesConCupo } from "@/business/ClaseDelegate"
 
 /**
  * función para manejar peticiones fetch
@@ -8,7 +7,7 @@ import { obtenerClasesConCupo } from "@/business/ClaseDelegate"
  */
 export default async function handler(req:any,res:any){
     if(req.method==="GET"){
-        const clases = await obtenerClasesConCupo()
+        const clases = await fetchGetClasesConCupo()
         res.status(200).json(clases)
     }
 }

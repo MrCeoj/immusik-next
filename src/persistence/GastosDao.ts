@@ -40,17 +40,3 @@ export async function modGasto(data: any) {
     },
   });
 }
-
-/**
- * Función para eliminar los gastos de cierta sucursal
- * @author Fong
- * @param id id de la sucursal cuyos gastos serán eliminados
- * @returns los gastos eliminados.
- */
-export async function gastoBorrarPorSucursal(id:number) {
-  return await prisma.gasto.deleteMany({
-    where: {
-      idSucursal:id
-    }
-  })
-}
