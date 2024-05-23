@@ -23,6 +23,8 @@ export default function ModalDocente({
   // useState para guardar si el formulario ha sido modificado
   const [isModified, setIsModified] = useState(false);
 
+  const [cambio, setCambio] = useState(false);
+
   // useState para guardar las propiedades del docente para manipular componentes
   const [docente, setDocente] = useState<Docente>(docenteArgs);
   const [clases, setClases] = useState<Clase[] | null>(null);
@@ -33,8 +35,6 @@ export default function ModalDocente({
 
   // useState para guardar el mensaje de error de las clases
   const [errorClases, setErrorClases] = useState(null);
-
-
 
   // useForm para manejar los inputs del formulario
   const {
@@ -51,12 +51,14 @@ export default function ModalDocente({
     estadoLogica(docente.estado, clases);
   }, [docente.id]);
 
-
   // Actualizar el estado del docente dependiendo de las clases que imparte
   useEffect(() => {
     estadoLogica(docente.estado, clases);
   }, [clases]);
 
+  useEffect(() => {
+    loadClases();
+  }, [cambio]);
 
   // Verificar si el formulario ha sido modificado
   useEffect(() => {
@@ -72,7 +74,6 @@ export default function ModalDocente({
     });
   }, [watch]);
 
-
   // Mensaje que se muestra en la tabla de clases
   const mensajeClase = () => {
     if (errorClases) {
@@ -86,7 +87,6 @@ export default function ModalDocente({
     }
     return null;
   };
-
 
   // Función para abrir el modal y cargar la información del docente
   const handleVerDetalles = async () => {
@@ -114,7 +114,7 @@ export default function ModalDocente({
 
   // Función para actualizar el estado del docente dependiendo del estado anterior y las clases que imparte
   const estadoLogica = (estado: string, clases: Clase[] | null) => {
-    if(estado === "VETADO") {
+    if (estado === "VETADO") {
       setEstado("VETADO");
       return;
     }
@@ -130,7 +130,7 @@ export default function ModalDocente({
   const handleEstadoChange = (newEstado: string) => {
     setEstado(newEstado);
     estadoLogica(newEstado, clases);
-  }
+  };
 
   // Función para enviar la información del formulario
   const onSubmit = handleSubmit(async (data) => {
@@ -185,7 +185,8 @@ export default function ModalDocente({
         className="relative bg-customGray p-9 w-full max-w-5xl min-h-min rounded"
       >
         <h1 className="font-bold text-4xl mb-3 text-center text-white">
-          Detalles de {toTitleCase(docente.nombre)} {toTitleCase(docente.aPaterno)}
+          Detalles de {toTitleCase(docente.nombre)}{" "}
+          {toTitleCase(docente.aPaterno)}
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <form

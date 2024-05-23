@@ -35,7 +35,8 @@ export async function sucursalEditar(id: any, data: any) {
  * @returns Una promesa que se resuelve en el objeto que representa la sucursal eliminada.
  */
 export async function sucursalEliminar(id: any) {
-	return await prisma.sucursal.delete({ where: { id } })
+	const idNum:number = parseInt(id)
+	return await prisma.sucursal.delete({ where: { id:idNum } })
 }
 
 /**
@@ -44,5 +45,6 @@ export async function sucursalEliminar(id: any) {
  * @returns Una promesa que se resuelve en el objeto que representa la sucursal obtenida.
  */
 export async function sucursalObtener(id: any) {
-	return await prisma.sucursal.findUnique({ where: { id } })
+	const idNum:number = parseInt(id)
+	return await prisma.sucursal.findUnique({ where: { id:idNum } })
 }

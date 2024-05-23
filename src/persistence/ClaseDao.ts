@@ -157,3 +157,22 @@ export async function claseModificar(data: Clase) {
 		data
 	})
 }
+
+/**
+ * Función para desasignar docente de varias clases
+ * @author Fong
+ * @param ids ids de las clases a las cuales se les desasignará el docente
+ * @returns las clases a las que se le desasignaron docente
+ */
+export async function claseDesasignarDocenteDeCiertas(ids:number[]){
+	return await prisma.clase.updateMany({
+		where: {
+			id: {
+				in: ids
+			}
+		},
+		data:{
+			idDocente: null
+		}
+	})
+}

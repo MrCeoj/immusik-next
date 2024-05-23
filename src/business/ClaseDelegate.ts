@@ -9,6 +9,7 @@ import {
   claseCrearSinDocente,
   claseCrearConDocente,
   claseModificar,
+  claseDesasignarDocenteDeCiertas,
 } from "@/persistence/ClaseDao";
 import { Clase } from "@/entities/edge";
 import { eliminarAlumnoClasePorClase, obtenerTodosAlumnoClase } from "./AlumnoClaseDelegate";
@@ -331,4 +332,24 @@ export async function obtenerClasesDisponibles() {
 
   //Se regresan las clases disponibles
   return clasesConCupo
+}
+
+/**
+ * Función para desasignar docente de ciertas clases
+ * @author Fong
+ * @param ids ids de las clases a las que se les va a desasignar el docente
+ * @returns las clases a las que se les desasignó el docente
+ */
+export async function desasignarDocenteDeCiertasClases(ids:number[]) {
+
+  let response = {
+    success: false,
+    message: ""
+  }
+
+  const data = await claseDesasignarDocenteDeCiertas(ids)
+  if(!data) response.message="Error al desasignar al docente."
+  actualizarEstadoDeDocentes()
+  response.message="Docente desasignado exitosamente."
+  return response
 }

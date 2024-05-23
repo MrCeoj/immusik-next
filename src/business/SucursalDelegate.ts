@@ -14,6 +14,9 @@ import { eliminarAlumnoClasePorClase } from './AlumnoClaseDelegate'
 import { contrasenaMaestraObtener } from '@/persistence/MasterKeyDao'
 import { actualizarEstadoDeAlumnos } from './AlumnoDelegate'
 import { actualizarEstadoDeDocentes } from './DocenteDelegate'
+import { obtenerContrasenaMaestra } from './MasterKeyDelegate'
+import { alumnoClaseEliminarPorClase } from '@/persistence/AlumnoClaseDao'
+import { eliminarGastosDeSucursal } from './GastosDelegate'
 
 /**
  * Obtiene todas las sucursales.
@@ -128,50 +131,36 @@ export async function modificarSucursal(data: any) {
  */
 export async function eliminarSucursal(data: any) {
 	let response = {
-		//1. Se declara un objeto response
 		success: false,
 		message: ''
 	}
 
-	//Se verifica la contraseña maestra
-	const contrasenaMaestra = await contrasenaMaestraObtener()
-
-	if(contrasenaMaestra?.value===data.contrasena){
-		//Se obtienen todas las sucursales
-		const sucursalesTemp = await sucursalObtenerTodas()
-
-		//Se verifica que la sucursal a borrar si exista
-		const existe = sucursalesTemp.some(
-			(sucursalTemp) => sucursalTemp.id === data.id
-		)
-
-		if (!existe) {
-			//Si no existe se declara un mensaje de error.
-			//console.log("No existe la sucursal")
-			response.message = 'No existe la sucursal a eliminar.'
-		} else {
-			//Si existe se realiza el siguiente proceso.
-			//console.log("Existe la sucursal")
-			const clasesAEliminar = await obtenerClasesPorSucursal(data.id) //Se consiguen las clases relacionadas a la sucursal.
-			//console.log(clasesAEliminar)
-			for (const clase of clasesAEliminar) {
-				//Por cada clase se elimina el registro alumno-clase de dicha clase
-				await eliminarAlumnoClasePorClase(clase.id)
-			}
-
-			await eliminarClasesPorSucursal(data.id) //Se borran las clases despues de borrar los registros alumno-clase
-			await sucursalEliminar(data.id) //Finalmente se borra la sucursal
-			
-			//Se actualizan estados de alumnos y docentes en caso de quedarse sin clases
-			await actualizarEstadoDeAlumnos() 
-			await actualizarEstadoDeDocentes()
-			response.message = 'Sucursal eliminada exitosamente.' //Mensaje de exito
-		}
+	const contrasenaMaestra = await obtenerContrasenaMaestra()
+	if(contrasenaMaestra?.value!==data.contrasena){
+		response.message="Contraseña maestra incorrecta."
 	}else{
-		response.message="¡Contraseña Maestra erronea!"
-	}
+		const sucursal = await obtenerSucursal(data.id)
+		if(!sucursal){
+			response.message="No se encontró la sucursal."
+		}else{
+			const idNum:number = parseInt(data.id)
+			await eliminarGastosDeSucursal(idNum)
 
-	
+			const clasesDeSucursal = await obtenerClasesPorSucursal(data.id)
+			if(clasesDeSucursal.length>0){
+				for(let i=0;i<clasesDeSucursal.length;i++){
+					const idTemp = clasesDeSucursal[i].id
+					await alumnoClaseEliminarPorClase(idTemp)
+				}
+				await eliminarClasesPorSucursal(idNum)
+				await sucursalEliminar(data.id)
+				response.message="Sucursal eliminada exitosamente."
+			}else{
+				await sucursalEliminar(data.id)
+				response.message="Sucursal eliminada exitosamente."
+			}
+		}
+	}
 
 	return response
 }

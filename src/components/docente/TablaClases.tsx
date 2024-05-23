@@ -1,92 +1,205 @@
 import { toast } from "react-toastify";
 import { toTitleCase } from "@/lib/utils";
+import Image from "next/image";
+import deleteIcon from "@/img/deleteIcon.png";
+import {
+  Button,
+  Checkbox,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+  useDisclosure,
+} from "@nextui-org/react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type Props = {
-    mensajeClase: () => string | null;
-    clases: any[] | null;
-    setClases: any;
-    docente: any;
-    actualizarDocente: any;
-}
+  mensajeClase: () => string | null;
+  clases: any[] | null;
+  setClases: any;
+  docente: any;
+  actualizarDocente: any;
+};
 
 /**
  * Tabla que muestra las clases asignadas a un docente.
  * @param props - Lo formateé de esta forma porque como son dinámicos y pueden recibir null, necesitaba que fueran opcionales.
  * @returns Un componente con la tabla de clases asignadas a un docente.
  */
-const TablaClases: React.FC<Props> =({
+const TablaClases: React.FC<Props> = ({
   mensajeClase,
   clases,
   setClases,
   docente,
-  actualizarDocente
-})=> {
-  //funcion para eleiminar al docente de la clase
-  const handleEliminarClase = async (idClase: number) => {
-    const res = await fetch("/api/clase/eliminarDocente", {
-      method: "DELETE",
+  actualizarDocente,
+}) => {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const router = useRouter();
+  const [ids, setIds] = useState<number[]>([]);
+  const [nombres, setNombres] = useState<string[]>([]);
+
+  const handleDesasignar = () => {
+    if (ids.length === 0) {
+      toast.error("Seleccione las clases a desasignar.");
+    } else {
+      onOpen();
+    }
+  };
+
+  const handleSelect = (id: number, nombre: string) => {
+    const index = ids.indexOf(id);
+
+    if (index !== -1) {
+      setIds(ids.filter((idTemp) => idTemp !== id));
+      setNombres(nombres.filter((nom) => nom !== nombre));
+    } else {
+      setIds([...ids, id]);
+      setNombres([...nombres, nombre]);
+    }
+  };
+
+  const handleSelectTodos = () => {
+    if (clases.length === ids.length) {
+      setIds([]);
+      setNombres([]);
+    } else {
+      setIds(clases?.map((clase) => clase.id));
+      setNombres(clases?.map((clase) => clase.nombre));
+    }
+  };
+
+  const desasignar = (onClose: any) => {
+    fetch("/api/docente/desasignarMultiples", {
+      method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        idClase,
-        idDocente: docente.id,
-      }),
+      body: JSON.stringify(ids),
+    }).then((response) => {
+      if (response.ok) {
+        return response.json().then((data) => {
+          if ((data.message = "Docente desasignado exitosamente.")) {
+            toast.success("Docente desasignado exitosamente.");
+            setCambio(!cambio);
+          } else {
+            toast.error(data.message);
+          }
+        });
+      } else {
+        toast.error("Error al desasignar al docente.");
+      }
     });
-
-    const data = await res.json();
-
-    if (data?.error) {
-      toast.error(data.error);
-    } else {
-      //Actualizar lista de clases
-      setClases(clases?.filter((clase) => clase.id !== idClase) || null);
-
-      // Se actualiza la información de la clase
-      actualizarDocente();
-      toast.success("Clase desasignada correctamente", {
-        autoClose: 2000,
-      });
-    }
+    onClose();
   };
+
   return (
     <div className="flex flex-col justify-between overflow-y-auto w-full h-3/5 text-white">
-      {mensajeClase() ? (
-        <p className="flex-grow grid place-items-center">{mensajeClase()}</p>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>
+                <div className="text-center">
+                  Va a desasignar a {docente.nombre} {docente.aPaterno} de las
+                  siguientes clases:
+                </div>
+              </ModalHeader>
+              <ModalBody>
+                <div className="flex flex-col ml-5">
+                  {nombres.map((n) => (
+                    <p>{n}</p>
+                  ))}
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <div className="flex flex-row gap-2">
+                  <Button onPress={onClose}>Cancelar</Button>
+                  <Button onPress={() => desasignar(onClose)} color="danger">
+                    Desasignar
+                  </Button>
+                </div>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+      {clases.length === 0 ? (
+        <Table aria-label="Clases" className="text-black">
+          <TableHeader>
+            <TableColumn>Clase</TableColumn>
+            <TableColumn>Horario</TableColumn>
+            <TableColumn>Días</TableColumn>
+            <TableColumn>
+              <Checkbox></Checkbox>
+            </TableColumn>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell>.</TableCell>
+              <TableCell>.</TableCell>
+              <TableCell>.</TableCell>
+              <TableCell>.</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       ) : (
-        <table className="w-full text-center text-white">
-          <caption className="font-bold text-xl sticky mb-3 top-0 z-10">
-            Clases
-          </caption>
-          <thead>
-            <tr className="bg-gray-contrast sticky rounded-lg top-0 z-10 font-normal">
-              <th className="py-1">Clase</th>
-              <th className="py-1">Horario</th>
-              <th className="py-1">Días</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {clases?.map((clase, index) => (
-              <tr key={index} className="border-b-2">
-                <td className="py-2">{toTitleCase(clase.nombre)}</td>
-                <td className="py-2">{toTitleCase(clase.hora)}</td>
-                <td className="py-2">{toTitleCase(clase.dias)}</td>
-                <td className="py-2">
-                  <button
-                    onClick={() => handleEliminarClase(clase.id)}
-                    className="bg-rose-600 text-white font-bold w-6 h-6 rounded"
-                  >
-                    ×
-                  </button>
-                </td>
-              </tr>
+        <Table aria-label="Clases" className="text-black">
+          <TableHeader>
+            <TableColumn>Clase</TableColumn>
+            <TableColumn>Horario</TableColumn>
+            <TableColumn>Días</TableColumn>
+            <TableColumn>
+              <Checkbox
+                isSelected={ids.length === clases.length}
+                onChange={handleSelectTodos}
+              ></Checkbox>
+            </TableColumn>
+          </TableHeader>
+          <TableBody>
+            {clases?.map((clase: any) => (
+              <TableRow>
+                <TableCell>{clase.nombre}</TableCell>
+                <TableCell>{clase.hora}</TableCell>
+                <TableCell>{clase.dias}</TableCell>
+                <TableCell>
+                  <Checkbox
+                    isSelected={ids.includes(clase.id)}
+                    onChange={() => handleSelect(clase.id, clase.nombre)}
+                  ></Checkbox>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       )}
+      <div className="flex items-center justify-center">
+        <Button
+          color="danger"
+          size="md"
+          onPress={handleDesasignar}
+          startContent={
+            <Image
+              className="w-5"
+              src={deleteIcon}
+              title={"Desasignar docente"}
+              alt={"Desasignar docente"}
+            />
+          }
+        >
+          Desasignar
+        </Button>
+      </div>
     </div>
   );
-}
+};
 
-export default TablaClases
+export default TablaClases;
