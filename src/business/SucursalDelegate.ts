@@ -1,19 +1,17 @@
-import { deleteClase, getAllClases } from '@/persistence/ClaseDao'
+import { claseEliminar, claseObtenerTodas } from '@/persistence/ClaseDao'
 import {
-	createSucursal,
-	deleteSucursal,
-	editSucursal,
-	getAllSucursals,
-	getSucursal
+	sucursalCrear,
+	sucursalEliminar,
+	sucursalEditar,
+	sucursalObtenerTodas,
+	sucursalObtener
 } from '../persistence/SucursalDao'
-import { getAllAlumnoClase } from '@/persistence/AlumnoClaseDao'
 import {
-	deleteClasesDeDeterminadaSucursal,
-	getClasesDeDeterminadaSucursal
+	eliminarClasesPorSucursal,
+	obtenerClasesPorSucursal
 } from './ClaseDelegate'
-import { borrarAlumnoClaseConDeterminadaClase } from './AlumnoClaseDelegate'
-import { obtenerContrasenaMaestra } from '@/persistence/MasterKeyDao'
-import { actualizarEstadoDeAlumno } from '@/persistence/AlumnoDao'
+import { eliminarAlumnoClasePorClase } from './AlumnoClaseDelegate'
+import { contrasenaMaestraObtener } from '@/persistence/MasterKeyDao'
 import { actualizarEstadoDeAlumnos } from './AlumnoDelegate'
 import { actualizarEstadoDeDocentes } from './DocenteDelegate'
 
@@ -24,8 +22,8 @@ import { actualizarEstadoDeDocentes } from './DocenteDelegate'
  * se encontraron registros.
  */
 
-export async function fetchAllSucursals() {
-	const sucursals = await getAllSucursals()
+export async function obtenerTodasSucursales() {
+	const sucursals = await sucursalObtenerTodas()
 
 	if (sucursals.length === 0) {
 		return { message: 'No records found' }
@@ -38,19 +36,19 @@ export async function fetchAllSucursals() {
  * @param data: recibe data, la cual tiene dentro el nombre y direccion
  * de la sucursal que se creará
  */
-export async function fetchCreateSucursal(data: any) {
+export async function registrarSucursal(data: any) {
 	let response = {
 		success: false,
 		message: ''
 	}
 
-	const contrasenaMaestra = await obtenerContrasenaMaestra()
+	const contrasenaMaestra = await contrasenaMaestraObtener()
 
 	//console.log("Contaseña proporcionada: "+data.contrasena+" | Contraseña maestra: "+contrasenaMaestra?.value)
 
 	if(contrasenaMaestra?.value===data.contrasena){
 		console.log("Contraseña maestra encontrada")
-		const sucursalesTemp = await getAllSucursals()
+		const sucursalesTemp = await sucursalObtenerTodas()
 
 		const existeSucursal = sucursalesTemp.some(
 			(sucursalTemp) =>
@@ -60,7 +58,7 @@ export async function fetchCreateSucursal(data: any) {
 		if (existeSucursal) {
 			response.message = 'Ya existe una sucursal con ese nombre.'
 		} else {
-			const sucursal = await createSucursal(data)
+			const sucursal = await sucursalCrear(data)
 			if (sucursal) {
 				response.message = 'Se registró la sucursal exitosamente.'
 				response.success = true
@@ -82,7 +80,7 @@ export async function fetchCreateSucursal(data: any) {
  *
  * @param data: información que se actualizará en la sucursal.
  */
-export async function fetchEditarSucursal(data: any) {
+export async function modificarSucursal(data: any) {
 	let response = {
 		//1. Se crea una response con un mensaje
 		success: false,
@@ -90,12 +88,12 @@ export async function fetchEditarSucursal(data: any) {
 	}
 
 	//2. Se ejecutan validaciones extra
-	const sucursalesTemp = await getAllSucursals()
+	const sucursalesTemp = await sucursalObtenerTodas()
 	let existeSucursal = false
 
 	//console.log("editando sucursal...")
 
-	const contrasenaMaestra = await obtenerContrasenaMaestra()
+	const contrasenaMaestra = await contrasenaMaestraObtener()
 
 	if(contrasenaMaestra?.value===data.contrasena){
 		sucursalesTemp.map(sucursalTemp=>{
@@ -110,7 +108,7 @@ export async function fetchEditarSucursal(data: any) {
 		if (existeSucursal) {
 			response.message = 'Ya existe una sucursal con ese nombre.' //3. Si hay error, se declara mensaje de error.
 		} else {
-			const sucursal = editSucursal(data.id,data) //3. Si no hay error se manda llamar el editar sucursal.
+			const sucursal = sucursalEditar(data.id,data) //3. Si no hay error se manda llamar el editar sucursal.
 			response.message = 'Se ha modificado la sucursal correctamente.' //3. Se declara mensaje de exito.
 		}
 	}else{
@@ -128,7 +126,7 @@ export async function fetchEditarSucursal(data: any) {
  * @param data data solo contiene la id de la sucursal a eliminar
  * @returns la respuesta con el mensaje indicado dependiendo de lo que ocurra en el flujo
  */
-export async function fetchEliminarSucursal(data: any) {
+export async function eliminarSucursal(data: any) {
 	let response = {
 		//1. Se declara un objeto response
 		success: false,
@@ -136,11 +134,11 @@ export async function fetchEliminarSucursal(data: any) {
 	}
 
 	//Se verifica la contraseña maestra
-	const contrasenaMaestra = await obtenerContrasenaMaestra()
+	const contrasenaMaestra = await contrasenaMaestraObtener()
 
 	if(contrasenaMaestra?.value===data.contrasena){
 		//Se obtienen todas las sucursales
-		const sucursalesTemp = await getAllSucursals()
+		const sucursalesTemp = await sucursalObtenerTodas()
 
 		//Se verifica que la sucursal a borrar si exista
 		const existe = sucursalesTemp.some(
@@ -154,15 +152,15 @@ export async function fetchEliminarSucursal(data: any) {
 		} else {
 			//Si existe se realiza el siguiente proceso.
 			//console.log("Existe la sucursal")
-			const clasesAEliminar = await getClasesDeDeterminadaSucursal(data.id) //Se consiguen las clases relacionadas a la sucursal.
+			const clasesAEliminar = await obtenerClasesPorSucursal(data.id) //Se consiguen las clases relacionadas a la sucursal.
 			//console.log(clasesAEliminar)
 			for (const clase of clasesAEliminar) {
 				//Por cada clase se elimina el registro alumno-clase de dicha clase
-				await borrarAlumnoClaseConDeterminadaClase(clase.id)
+				await eliminarAlumnoClasePorClase(clase.id)
 			}
 
-			await deleteClasesDeDeterminadaSucursal(data.id) //Se borran las clases despues de borrar los registros alumno-clase
-			await deleteSucursal(data.id) //Finalmente se borra la sucursal
+			await eliminarClasesPorSucursal(data.id) //Se borran las clases despues de borrar los registros alumno-clase
+			await sucursalEliminar(data.id) //Finalmente se borra la sucursal
 			
 			//Se actualizan estados de alumnos y docentes en caso de quedarse sin clases
 			await actualizarEstadoDeAlumnos() 
@@ -185,8 +183,8 @@ export async function fetchEliminarSucursal(data: any) {
  * @returns una promesa que se resuelve con la sucursal o un objeto con un mensaje si no se
  * encontraron registros.
  */
-export async function fetchSucursal(id: number) {
-	const sucursal = await getSucursal(id)
+export async function obtenerSucursal(id: number) {
+	const sucursal = await sucursalObtener(id)
 
 	if (sucursal) {
 		return sucursal

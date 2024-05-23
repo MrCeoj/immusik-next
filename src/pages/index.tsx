@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import BarraNavegacionAdmin from "@/components/barraNavegacionAdmin";
 import Tarjeta from "@/components/sucursal/Tarjeta";
-import { fetchSucursal } from "@/business/SucursalDelegate";
+import { obtenerSucursal } from "@/business/SucursalDelegate";
 import { Sucursal } from "@prisma/client";
 
 /**
@@ -24,7 +24,7 @@ export default function Inicio() {
     if (!sucursal) {
       router.push("/inicio");
     }
-  }, [sucursal, router])
+  }, [sucursal, router]);
 
   return (
     <>

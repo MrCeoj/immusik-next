@@ -1,7 +1,7 @@
 import {
-  fecthGetAllClases,
-  fetchCrearClase,
-  fetchEliminarClase,
+  obtenerTodasClases,
+  registrarClase,
+  eliminarClase,
 } from "@/business/ClaseDelegate";
 
 /**
@@ -11,12 +11,12 @@ import {
  */
 export default async function Handler(req: any, res: any) {
   if (req.method === "GET") {
-    const result = await fecthGetAllClases(); //Se buscan todas las clases
+    const result = await obtenerTodasClases(); //Se buscan todas las clases
     return res.status(200).json(result);
   }
   if (req.method === "DELETE") {
     const { id } = req.body;
-    const result = await fetchEliminarClase(id);
+    const result = await eliminarClase(id);
     return res.status(200).json(result);
   }
   if (req.method === "POST") {
@@ -29,7 +29,7 @@ export default async function Handler(req: any, res: any) {
       cupo: cupo,
       docente: docente,
     };
-    const result = await fetchCrearClase(data);
+    const result = await registrarClase(data);
     return res.status(200).json(result);
   }
   return res.status(405).send({ message: "Método no permitido" });

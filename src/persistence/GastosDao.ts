@@ -5,7 +5,7 @@ import prisma from "@/utils/Prisma";
  * @param idSucursal - id de la sucursal
  * @returns Arreglo de gastos
  */
-export async function gastosPorId(idSucursal: number) {
+export async function gastosObtenerPorSucursal(idSucursal: number) {
   return await prisma.gasto.findMany({
     where: {
       idSucursal: idSucursal,
@@ -18,7 +18,7 @@ export async function gastosPorId(idSucursal: number) {
  * @param data - Datos del gasto
  * @returns Gasto creado
  */
-export async function crearGasto(data: any) {
+export async function gastoCrear(data: any) {
   return await prisma.gasto.create({ data });
 }
 
@@ -27,7 +27,7 @@ export async function crearGasto(data: any) {
  * @param data - Datos del gasto
  * @returns Gasto modificado
  */
-export async function modGasto(data: any) {
+export async function gastoModificar(data: any) {
   return await prisma.gasto.update({
     where: {
       id: data.id,

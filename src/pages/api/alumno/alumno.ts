@@ -1,10 +1,10 @@
-import { fetchCrearAlumno,fetchGetAllAlumnos, fetchModificarAlumno } from "@/business/AlumnoDelegate";
+import { registrarAlumno,obtenerTodosAlumnos, modificarAlumno } from "@/business/AlumnoDelegate";
 
 
 export default async function handler(req:any,res:any){
     if(req.method==="GET"){
         try{
-            const result = await fetchGetAllAlumnos()
+            const result = await obtenerTodosAlumnos()
             if(result.length===0) return res.status(404).json({message:"No hay alumnos registrados."})
             
             return res.status(200).json(result)
@@ -15,13 +15,13 @@ export default async function handler(req:any,res:any){
 
     if (req.method==="POST"){
         const {data} = req.body
-        const result = await fetchCrearAlumno(data)
+        const result = await registrarAlumno(data)
         return res.status(200).json(result)
     }
 
     if (req.method==="PATCH"){
         const {data} = req.body
-        const result = await fetchModificarAlumno(data)
+        const result = await modificarAlumno(data)
         return res.status(200).json(result)
     }
 

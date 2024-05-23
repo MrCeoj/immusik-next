@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { fetchSucursal } from '@/business/SucursalDelegate'
+import { obtenerSucursal } from '@/business/SucursalDelegate'
 
 /**
  * Maneja la solicitud HTTP para obtener una sucursal por su ID.
@@ -20,7 +20,7 @@ export default async function handler(
 
 	try {
 		const idBuscar = Number(id)
-		const result = await fetchSucursal(idBuscar)
+		const result = await obtenerSucursal(idBuscar)
 		return res.status(200).json(result)
 	} catch (error) {
 		return res.status(500).json(error)

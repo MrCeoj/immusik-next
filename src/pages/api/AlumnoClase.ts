@@ -1,4 +1,4 @@
-import { fetchGetAllAlumnoClases } from "@/business/AlumnoClaseDelegate";
+import { obtenerTodosAlumnoClase } from "@/business/AlumnoClaseDelegate";
 
 /**
  * Función para tratar cualquier petición que haga el usuario al api.
@@ -7,7 +7,7 @@ import { fetchGetAllAlumnoClases } from "@/business/AlumnoClaseDelegate";
  */
 export default async function Handler(req: any, res:any){
     if(req.method==="GET"){
-        const registros = await fetchGetAllAlumnoClases()
+        const registros = await obtenerTodosAlumnoClase()
         res.status(200).json(registros)
     }
     res.status(405).send("Metodo no permitido")

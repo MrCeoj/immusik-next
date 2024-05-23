@@ -7,7 +7,7 @@ import { User } from '@/entities/index'
  * @returns Una promesa que se resuelve en el objeto que representa el usuario encontrado.
  */
 
-export async function obtenerUsuario(busqueda: string) {
+export async function usuarioObtener(busqueda: string) {
 	return await prisma.user.findFirst({
 		where: {
 			OR: [
@@ -28,6 +28,6 @@ export async function obtenerUsuario(busqueda: string) {
  * @returns Una promesa que se resuelve en el objeto que representa el usuario creado.
  */
 
-export async function crearUsuario(data: User) {
+export async function usuarioCrear(data: User) {
 	return await prisma.user.create({ data })
 }

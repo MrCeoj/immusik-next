@@ -3,7 +3,7 @@ import { toTitleCase } from "@/lib/utils";
 import { useRouter } from "next/router";
 import BarraNavegacionAdmin from "@/components/barraNavegacionAdmin";
 import Tarjeta from "@/components/sucursal/Tarjeta";
-import { fetchSucursal } from "@/business/SucursalDelegate";
+import { obtenerSucursal } from "@/business/SucursalDelegate";
 import { Sucursal } from "@prisma/client";
 
 /**
@@ -17,7 +17,7 @@ import { Sucursal } from "@prisma/client";
 
 export async function getServerSideProps(context: any) {
   const id = context.params.id;
-  const result = (await fetchSucursal(Number(id))) as Sucursal;
+  const result = (await obtenerSucursal(Number(id))) as Sucursal;
 
   if (!result) {
     return {

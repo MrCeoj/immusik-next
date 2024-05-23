@@ -1,13 +1,13 @@
-import { getAllAlumnos,actualizarEstadoDeAlumno, crearAlumno, modificarAlumno } from "@/persistence/AlumnoDao"
-import { fetchGetClasesDeCiertoAlumno } from "./AlumnoClaseDelegate"
+import { alumnoObtenerTodos,alumnoActualizarEstado, alumnoCrear, alumnoModificar } from "@/persistence/AlumnoDao"
+import { obtenerClasesPorAlumno } from "./AlumnoClaseDelegate"
 import { Alumno } from '@/entities' 
 
 /**
  * Función para obtener a todos los alumnos
  * @returns todos los alumnos en la base de datos
  */
-export async function fetchGetAllAlumnos(){
-    const alumnos = await getAllAlumnos();
+export async function obtenerTodosAlumnos(){
+    const alumnos = await alumnoObtenerTodos();
     
     alumnos.sort((a:Alumno,b:Alumno) => {
         if(a.nombre < b.nombre) return -1
@@ -30,14 +30,14 @@ export async function fetchGetAllAlumnos(){
  * o cada que se desasigna una clase a un alumno.
  */
 export async function actualizarEstadoDeAlumnos(){
-    const alumnos = await fetchGetAllAlumnos() //Se obtienen todos los alumnos
+    const alumnos = await obtenerTodosAlumnos() //Se obtienen todos los alumnos
     for(const alumno of alumnos){
         //Por cada alumno se obtienen sus registros AlumnoClase
-        const clasesDelAlumno = await fetchGetClasesDeCiertoAlumno(alumno.id)
+        const clasesDelAlumno = await obtenerClasesPorAlumno(alumno.id)
         if(clasesDelAlumno.length>0){ //Si tiene registros AlumnoClase se declara su estado activo = true
-            fetchActualizarEstadoDeAlumno(true,alumno.id)
+            actualizarEstadoDeAlumno(true,alumno.id)
         }else{ //Si no, activo = false
-            fetchActualizarEstadoDeAlumno(false,alumno.id)
+            actualizarEstadoDeAlumno(false,alumno.id)
         }
     }
 }
@@ -47,8 +47,8 @@ export async function actualizarEstadoDeAlumnos(){
  * @param estado el estado que se le asignará al alumno
  * @param id la id del alumno al que se le editará su estado
  */
-export async function fetchActualizarEstadoDeAlumno(estado:boolean,id:any){
-    await actualizarEstadoDeAlumno(estado,id)
+export async function actualizarEstadoDeAlumno(estado:boolean,id:any){
+    await alumnoActualizarEstado(estado,id)
 }
 
 /**
@@ -56,15 +56,15 @@ export async function fetchActualizarEstadoDeAlumno(estado:boolean,id:any){
  * @param data información del alumno a registrar
  * @returns respuesta que le dará al usuario para tratar errores.
  */
-export async function fetchCrearAlumno(data:any){
+export async function registrarAlumno(data:any){
     let response = {
         message:""
     }
-    const alumnos = await getAllAlumnos()
+    const alumnos = await alumnoObtenerTodos()
     if(alumnos.some((alumno)=>alumno.curp===data.curp)){
         response.message="Ya existe un alumno con esa CURP."
     }else{
-        await crearAlumno(data)
+        await alumnoCrear(data)
         response.message="Alumno registrado correctamente."
     }
 
@@ -76,7 +76,7 @@ export async function fetchCrearAlumno(data:any){
  * @param data datos del alumno que se va a modificar
  * @returns la respuesta de la petición
  */
-export async function fetchModificarAlumno(data:any){
+export async function modificarAlumno(data:any){
     let response = {
         message: ""
     }
@@ -84,7 +84,7 @@ export async function fetchModificarAlumno(data:any){
     //Se verifica si se repite la CURP
     let repetido = false
 
-    const alumnos = await fetchGetAllAlumnos()
+    const alumnos = await obtenerTodosAlumnos()
     alumnos.map(alumno=>{
         if(alumno.id!==data.id){
             if(alumno.curp===data.curp){
@@ -94,7 +94,7 @@ export async function fetchModificarAlumno(data:any){
     })
 
     if(!repetido){
-        await modificarAlumno(data)
+        await alumnoModificar(data)
         response.message="Se modificó la información del alumno exitosamente."
     }else{
         response.message="Ya existe un alumno con esa CURP."

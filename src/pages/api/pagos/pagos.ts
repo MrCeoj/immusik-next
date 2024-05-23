@@ -1,4 +1,4 @@
-import { fetchCrearPago, fetchGetPagosDeAlumno } from "@/business/PagosDelegate";
+import { registrarPago, obtenerPagosPorAlumno } from "@/business/PagosDelegate";
 
 /**
  * Handler para peticiones en cuanto a pagos.
@@ -9,11 +9,11 @@ import { fetchCrearPago, fetchGetPagosDeAlumno } from "@/business/PagosDelegate"
 export default async function handler(req: any, res:any){
     if(req.method==="GET"){
         const id: number = parseInt(req.query.id)
-        const pagos = await fetchGetPagosDeAlumno(id)
+        const pagos = await obtenerPagosPorAlumno(id)
         res.status(200).json(pagos)
     }else if(req.method==="POST"){
         const data = req.body
-        const response = await fetchCrearPago(data)
+        const response = await registrarPago(data)
         res.status(200).json(response)
     }
 }

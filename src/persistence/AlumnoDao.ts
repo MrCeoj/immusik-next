@@ -5,7 +5,7 @@ import { Alumno } from '@/entities'
  * Función para obtener todos los alumnos en la base de datos
  * @returns todos los alumnos de la base de datos
  */
-export async function getAllAlumnos(){
+export async function alumnoObtenerTodos(){
     const alumnos  = await prisma.alumno.findMany()
     return alumnos
 }
@@ -15,7 +15,7 @@ export async function getAllAlumnos(){
  * @param estado estado que se le asignará al alumno (true/false)
  * @param id id del alumno al que se le editará su estado de activo
  */
-export async function actualizarEstadoDeAlumno(estado:boolean,id:any){
+export async function alumnoActualizarEstado(estado:boolean,id:any){
     await prisma.alumno.update({
         where: {id},
         data: {activo:estado}
@@ -26,7 +26,7 @@ export async function actualizarEstadoDeAlumno(estado:boolean,id:any){
  * Función para registrar alumnos
  * @param data Datos del alumno a registrar
  */
-export async function crearAlumno(data:any){
+export async function alumnoCrear(data:any){
     await prisma.alumno.create({data:{
         nombre: data.nombre,
         aPaterno: data.aPaterno,
@@ -44,7 +44,7 @@ export async function crearAlumno(data:any){
  * Función para modificar la información de un alumno.
  * @param data datos del alumno que se modificarán
  */
-export async function modificarAlumno(data:any){
+export async function alumnoModificar(data:any){
     await prisma.alumno.update({
         where: {
             id:data.id
@@ -66,7 +66,7 @@ export async function modificarAlumno(data:any){
  * @param curp - Curp del alumno
  * @returns registro del alumno
  */
-export async function porCurp(curp: string){
+export async function alumnoObtenerPorCurp(curp: string){
     return await prisma.alumno.findUnique({
         where:{
             curp: curp

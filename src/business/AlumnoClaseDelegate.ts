@@ -1,28 +1,26 @@
-import InscribirAlumno from "@/components/Alumno/InscribirAlumno";
 import {
-  deleteAlumnoClase,
-  deleteAlumnoClaseFromClase,
-  getAllAlumnoClase,
-  getAlumnoClase,
-  getAlumnosFromClase,
-  getClasesDeCiertoAlumno,
-  getClaseByIdAl,
-  changeEstado,
-  desinscribirAlumno,
-  getClasesDisponibles,
-  createAlumnoClase,
+  alumnoClaseObtenerPorClase,
+  alumnoClaseObtenerPorAlumno,
+  claseObtenerPorAlumno,
+  alumnoCambiarEstado,
+  alumnoClaseEliminarPorAlumnoYClase,
+  claseObtenerDisponibles,
+  alumnoClaseCrear,
   desasignarMuchos,
+  alumnoClaseEliminarPorClase,
+  alumnoClaseObtenerPorClaseYAlumno,
+  alumnoClaseEliminar,
+  alumnoClaseObtenerTodos,
 } from "@/persistence/AlumnoClaseDao";
-import { actualizarEstadoDeAlumno, porCurp } from "@/persistence/AlumnoDao";
-import { Clase } from "@prisma/client";
+import { alumnoActualizarEstado, alumnoObtenerPorCurp } from "@/persistence/AlumnoDao";
 import { actualizarEstadoDeAlumnos } from "./AlumnoDelegate";
 
 /*
  * Elimina registros AlumnoClase solo de cierta clase
  * @param id: id de la clase de la cual se eliminarán los registros AlumnoClase
  *  */
-export async function borrarAlumnoClaseConDeterminadaClase(id: any) {
-  return await deleteAlumnoClaseFromClase(id);
+export async function eliminarAlumnoClasePorClase(id: any) {
+  return await alumnoClaseEliminarPorClase(id);
 }
 
 /**
@@ -33,7 +31,7 @@ export async function borrarAlumnoClaseConDeterminadaClase(id: any) {
  */
 export async function eliminarAlumnoDeClase(idClase: number, idAlumno: number) {
   // Obtener el registro AlumnoClase
-  const alumnoClase = await getAlumnoClase(idClase, idAlumno);
+  const alumnoClase = await alumnoClaseObtenerPorClaseYAlumno(idClase, idAlumno);
 
   // Si no se encontró el registro regresa un error
   if (!alumnoClase) {
@@ -41,22 +39,22 @@ export async function eliminarAlumnoDeClase(idClase: number, idAlumno: number) {
   }
 
   // Validar si el alumno está inscrito en solo una clase
-  const clases = await getClasesDeCiertoAlumno(idAlumno);
+  const clases = await alumnoClaseObtenerPorAlumno(idAlumno);
   // cambiar su estado a inactivo si solo está inscrito en una clase
   if (clases.length === 1) {
-    await actualizarEstadoDeAlumno(false, idAlumno);
+    await alumnoActualizarEstado(false, idAlumno);
   }
 
   // Eliminar el registro AlumnoClase
-  return await deleteAlumnoClase(alumnoClase.id);
+  return await alumnoClaseEliminar(alumnoClase.id);
 }
 
 /**
  * Función para obtener todos los registros AlumnoClase
  * @returns todos los registros Alumno-Clase
  */
-export async function fetchGetAllAlumnoClases() {
-  return await getAllAlumnoClase();
+export async function obtenerTodosAlumnoClase() {
+  return await alumnoClaseObtenerTodos();
 }
 
 /**
@@ -65,8 +63,8 @@ export async function fetchGetAllAlumnoClases() {
  * @param id id del alumno del cual se quieren encontrar sus registros AlumnoClase
  * @returns los registros AlumnoClase de cierto alumno
  */
-export async function fetchGetClasesDeCiertoAlumno(id: any) {
-  const clases = await getClasesDeCiertoAlumno(id);
+export async function obtenerClasesPorAlumno(id: any) {
+  const clases = await alumnoClaseObtenerPorAlumno(id);
   return clases;
 }
 
@@ -76,7 +74,7 @@ export async function fetchGetClasesDeCiertoAlumno(id: any) {
  * @returns Arreglo de alumnos que pertenecen a la clase
  */
 export async function obtenerAlumnosDeClase(id: number) {
-  const alumnos = await getAlumnosFromClase(id);
+  const alumnos = await alumnoClaseObtenerPorClase(id);
 
   // Si no se encontraron alumnos inscritos a la clase regresa un error
   if (alumnos.length === 0 || alumnos.includes(null)) {
@@ -101,7 +99,7 @@ export async function obtenerAlumnosDeClase(id: number) {
  * @returns Arreglo de objetos de clases con nombre de sucursal
  */
 export async function obtenerClasesDeAlumno(id: number) {
-  const clases = await getClaseByIdAl(id);
+  const clases = await claseObtenerPorAlumno(id);
   if (clases.length === 0) {
     return [];
   }
@@ -119,14 +117,14 @@ export async function obtenerClasesDeAlumno(id: number) {
  * @param idAlumno - Identificador del alumno
  * @returns Mensaje de éxito o error
  */
-export async function checkEstado(idAlumno: number) {
+export async function revisarEstado(idAlumno: number) {
   try {
     const clases = await obtenerClasesDeAlumno(idAlumno);
     if (clases.length === 0) {
-      await changeEstado(false, idAlumno);
+      await alumnoCambiarEstado(false, idAlumno);
     }
     if (clases.length > 0) {
-      await changeEstado(true, idAlumno);
+      await alumnoCambiarEstado(true, idAlumno);
     }
     return "Estado actualizado";
   } catch (error: any) {
@@ -148,7 +146,7 @@ export async function anularInscripcion(idClase: number, idAlumno: number) {
     if (idAlumno === null || idAlumno === undefined) {
       throw Error("Error al desinscribir: Alumno no proporcionado");
     }
-    const mensaje = await desinscribirAlumno(idAlumno, idClase);
+    const mensaje = await alumnoClaseEliminarPorAlumnoYClase(idAlumno, idClase);
     return mensaje;
   } catch (error: any) {
     return error.message;
@@ -163,10 +161,10 @@ export async function anularInscripcion(idClase: number, idAlumno: number) {
  */
 export async function clasesSinTraslape(idAlumno: number) {
   // Clases con cupo disponible
-  const clases = await getClasesDisponibles();
+  const clases = await claseObtenerDisponibles();
 
   // CLases en las que el alumno ya está inscrito.
-  const inscritas = await getClaseByIdAl(idAlumno);
+  const inscritas = await claseObtenerPorAlumno(idAlumno);
 
   // Arreglo de clases donde los horarios no traslapen
   const sinTraslape: any[] = [];
@@ -239,8 +237,8 @@ export async function inscribirAlumno(idAlumno: number, idClase: number) {
     if (idClase === undefined || idClase === null)
       throw new Error("Id de la clase no proporcionado");
 
-	  const mensaje = await createAlumnoClase(idAlumno, idClase);
-	  checkEstado(idAlumno)
+	  const mensaje = await alumnoClaseCrear(idAlumno, idClase);
+	  revisarEstado(idAlumno)
 	
 	  return mensaje
   } catch (error: any) {
@@ -261,7 +259,7 @@ export async function inscribirPorCurp(curp: string, idClase: number){
     if (idClase === undefined || idClase === null)
       throw new Error("Id de la clase no proporcionado");
 
-    const al = await porCurp(curp)
+    const al = await alumnoObtenerPorCurp(curp)
 
     if(!al)
       throw new Error("registro de alumno no encontrado")
@@ -280,7 +278,7 @@ export async function inscribirPorCurp(curp: string, idClase: number){
  * @param claseId id de las clases que se van a desasignar
  * @returns la respuesta del método desasignarMuchos
  */
-export async function fetchDesasignarMuchos(alumnoId:number,claseId:number[]){
+export async function desasignarMuchosAlumnos(alumnoId:number,claseId:number[]){
   try{
     //Se manda llamar la función a la capa de persistencia
     const respuesta = await desasignarMuchos(alumnoId,claseId)

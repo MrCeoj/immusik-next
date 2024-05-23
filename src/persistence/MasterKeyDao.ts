@@ -4,6 +4,6 @@ import prisma from "@/utils/Prisma";
  * @returns Una promesa que se resuelve en la contraseña maestra.
  */
 
-export async function obtenerContrasenaMaestra() {
+export async function contrasenaMaestraObtener() {
   return await prisma.masterKey.findFirst();
 }

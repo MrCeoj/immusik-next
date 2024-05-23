@@ -1,6 +1,6 @@
 import { User } from '@prisma/client'
-import { crearUsuario, obtenerUsuario } from '@/persistence/UsuarioDao'
-import { obtenerContrasenaMaestra } from '@/persistence/MasterKeyDao'
+import { usuarioCrear, usuarioObtener } from '@/persistence/UsuarioDao'
+import { contrasenaMaestraObtener } from '@/persistence/MasterKeyDao'
 import bcrypt from 'bcrypt'
 
 /**
@@ -19,7 +19,7 @@ export async function registrarUsuario(
 	contrasenaMaestra: string
 ) {
 	// Código para validar la contraseña maestra
-	const contrasenaMaestraGuardada = await obtenerContrasenaMaestra()
+	const contrasenaMaestraGuardada = await contrasenaMaestraObtener()
 
 	if (contrasenaMaestra !== contrasenaMaestraGuardada?.value) {
 		throw { error: 'La contraseña maestra es incorrecta.' }
@@ -34,21 +34,21 @@ export async function registrarUsuario(
 	} as User
 
 	// Código para verificar si el usuario ya existe
-	const usuarioEncontrado = await obtenerUsuario(usuarioFormateado.nombre)
+	const usuarioEncontrado = await usuarioObtener(usuarioFormateado.nombre)
 
 	if (usuarioEncontrado) {
 		throw { error: 'El nombre de usuario ya existe.' }
 	}
 
 	// Código para verificar si el correo ya está registrado
-	const correoEncontrado = await obtenerUsuario(usuarioFormateado.correo)
+	const correoEncontrado = await usuarioObtener(usuarioFormateado.correo)
 
 	if (correoEncontrado) {
 		throw { error: 'El correo ya está registrado.' }
 	}
 
 	// Código para crear un usuario en la base de datos y retornarlo como respuesta
-	return await crearUsuario(usuarioFormateado)
+	return await usuarioCrear(usuarioFormateado)
 }
 
 /**
@@ -65,7 +65,7 @@ export async function autenticarUsuario(usuarioIngresado: {
 	contrasena: string
 }) {
 	// Buscar el usuario en la base de datos
-	const usuario = await obtenerUsuario(usuarioIngresado.nombre.toUpperCase())
+	const usuario = await usuarioObtener(usuarioIngresado.nombre.toUpperCase())
 
 	// Si no se encuentra el usuario, se retorna null
 	if (!usuario) throw new Error('Usuario no encontrado')

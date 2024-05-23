@@ -6,7 +6,7 @@ import { Docente } from "@/entities/index";
  * @param data - Los datos del docente a crear.
  * @returns Una promesa que se resuelve en el objeto que representa el docente creado.
  */
-export async function createDocente(data: Docente) {
+export async function docenteCrear(data: Docente) {
   return await prisma.docente.create({ data });
 }
 
@@ -14,7 +14,7 @@ export async function createDocente(data: Docente) {
  * Obtiene todos los docentes registrados en la base de datos.
  * @returns Una promesa que se resuelve en un arreglo con todos los docentes registrados.
  */
-export async function getAllDocentes() {
+export async function docenteObtenerTodos() {
   return await prisma.docente.findMany();
 }
 
@@ -23,7 +23,7 @@ export async function getAllDocentes() {
  * @param id El ID que va a obtener desde business
  * @returns regresa un registro de Docente que habrá encontrado en la base de datos.
  */
-export async function getDocente(id: number) {
+export async function docenteObtener(id: number) {
   return await prisma.docente.findUnique({
     where: {
       id: id,
@@ -36,7 +36,7 @@ export async function getDocente(id: number) {
  * @param data - Los datos del docente a modificar.
  * @returns Una promesa que se resuelve en el objeto que representa el docente modificado.
  */
-export async function modDocente(data: Docente) {
+export async function docenteModificar(data: Docente) {
   return await prisma.docente.update({
     where: {
       id: data.id,
@@ -56,7 +56,7 @@ export async function modDocente(data: Docente) {
  * @param id - El ID del docente a cambiar de estado.
  * @returns Una promesa que se resuelve en el objeto de docente si se actualiza correctamente.
  */
-export async function setEstado(estado: string,id: number) {
+export async function docenteEditarEstado(estado: string,id: number) {
   return await prisma.docente.update({
     where: {
       id: id,
@@ -72,7 +72,7 @@ export async function setEstado(estado: string,id: number) {
  * @param id - El ID del docente a buscar.
  * @returns Una promesa que se resuelve en un arreglo con todas las clases que el docente está impartiendo.
  */
-export async function getClases(id: number) {
+export async function clasesObtenerPorDocente(id: number) {
   return await prisma.clase.findMany({
     where: {
       idDocente: id,
@@ -88,7 +88,7 @@ export async function getClases(id: number) {
  * @param curp - La CURP del docente a buscar.
  * @returns Una promesa que se resuelve en el objeto que representa el docente encontrado.
  */
-export async function getByCurp(curp: string) {
+export async function docenteObtenerPorCurp(curp: string) {
   return await prisma.docente.findUnique({
     where: {
       curp: curp,
@@ -96,7 +96,7 @@ export async function getByCurp(curp: string) {
   });
 }
 
-export async function getDocentesNoVetados(){
+export async function docenteObtenerNoVetados(){
   const docentes = prisma.docente.findMany({
     where: {
       estado: {

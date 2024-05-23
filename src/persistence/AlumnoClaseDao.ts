@@ -11,7 +11,7 @@ import prisma from "@/utils/Prisma";
  *  */
 
 //Regresa todos los registros AlumnoClase
-export async function getAllAlumnoClase() {
+export async function alumnoClaseObtenerTodos() {
   return await prisma.alumnoClase.findMany();
 }
 
@@ -21,7 +21,7 @@ export async function getAllAlumnoClase() {
  * @param idClase id de la clase
  * @returns registro AlumnoClase
  */
-export async function getAlumnoClase(idClase: number, idAlumno: number) {
+export async function alumnoClaseObtenerPorClaseYAlumno(idClase: number, idAlumno: number) {
   return await prisma.alumnoClase.findFirst({
     where: {
       alumnoId: idAlumno,
@@ -34,7 +34,7 @@ export async function getAlumnoClase(idClase: number, idAlumno: number) {
  * Borra un registro AlumnoClase
  * @param id: id del registro AlumnoClase que se eliminará
  *  */
-export async function deleteAlumnoClase(id: any) {
+export async function alumnoClaseEliminar(id: any) {
   return await prisma.alumnoClase.delete({ where: { id } });
 }
 
@@ -42,7 +42,7 @@ export async function deleteAlumnoClase(id: any) {
  * Borra registro AlumnoClase solo de una clase específica.
  * @param id: id de la clase de la cual se eliminarán los registros AlumnoClase
  *  */
-export async function deleteAlumnoClaseFromClase(id: any) {
+export async function alumnoClaseEliminarPorClase(id: any) {
   return await prisma.alumnoClase.deleteMany({
     where: {
       claseId: id,
@@ -55,7 +55,7 @@ export async function deleteAlumnoClaseFromClase(id: any) {
  * @param id id del alumno del cual se regresarán los registros AlumnoClase
  * @returns los registros AlumnoClase relacionadas al alumno
  */
-export async function getClasesDeCiertoAlumno(id: any) {
+export async function alumnoClaseObtenerPorAlumno(id: any) {
   const clases = await prisma.alumnoClase.findMany({
     where: { alumnoId: id },
   });
@@ -67,7 +67,7 @@ export async function getClasesDeCiertoAlumno(id: any) {
  * @param id Identificador de la clase
  * @returns Arreglo de alumnos que pertenecen a la clase
  */
-export async function getAlumnosFromClase(id: number) {
+export async function alumnoClaseObtenerPorClase(id: number) {
   const alumnosClase = await prisma.alumnoClase.findMany({
     where: {
       claseId: id,
@@ -91,7 +91,7 @@ export async function getAlumnosFromClase(id: number) {
  * @param id - Id del alumno
  * @returns Arreglo de objetos de clases con nombre de sucursal
  */
-export async function getClaseByIdAl(id: number) {
+export async function claseObtenerPorAlumno(id: number) {
   const clases = await prisma.alumnoClase.findMany({
     where: {
       alumnoId: id,
@@ -126,7 +126,7 @@ export async function getClaseByIdAl(id: number) {
  * @param idAlumno - Id del alumno al que se actualizará el estado
  * @returns Registro actualizado
  */
-export async function changeEstado(estado: boolean, idAlumno: number) {
+export async function alumnoCambiarEstado(estado: boolean, idAlumno: number) {
   try {
     const transaction = await prisma.$transaction([
       prisma.alumno.update({
@@ -151,9 +151,9 @@ export async function changeEstado(estado: boolean, idAlumno: number) {
  * @param idClase - Id de la clase de la cual desinscribir.
  * @returns Mensaje de éxito o error.
  */
-export async function desinscribirAlumno(idAlumno: number, idClase: number) {
+export async function alumnoClaseEliminarPorAlumnoYClase(idAlumno: number, idClase: number) {
   try {
-    const idAlumnoClase = await getAlumnoClase(idClase, idAlumno);
+    const idAlumnoClase = await alumnoClaseObtenerPorClaseYAlumno(idClase, idAlumno);
 
     if (idAlumnoClase === null || idAlumnoClase === undefined) {
       throw Error("No se encontró el registro de alumno en la clase");
@@ -177,7 +177,7 @@ export async function desinscribirAlumno(idAlumno: number, idClase: number) {
  * La lógica de traslape de usuarios se realiza en business
  * @returns Lista de clases disponibles
  */
-export async function getClasesDisponibles() {
+export async function claseObtenerDisponibles() {
   const clasesLlenas: any[] = [];
 
   const allClases = await prisma.clase.findMany({
@@ -217,7 +217,7 @@ export async function getClasesDisponibles() {
  * @params IdAlumno - identificador del alumno
  * @params IdClase - Identificador de la clase.
  */
-export async function createAlumnoClase(idAlumno: number, idClase: number) {
+export async function alumnoClaseCrear(idAlumno: number, idClase: number) {
   try {
     const transaction = await prisma.$transaction([
       prisma.alumnoClase.create({

@@ -1,4 +1,4 @@
-import { getMasterKey } from "@/business/MasterKeyDelegate";
+import { obtenerContrasenaMaestra } from "@/business/MasterKeyDelegate";
 import { establecerEstado } from "@/business/DocenteDelegate";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -16,7 +16,7 @@ export default async function handler(
   if (req.method === "POST") {
     const password = req.body.masterKey;
     console.log(password);
-    const fromDB = await getMasterKey();
+    const fromDB = await obtenerContrasenaMaestra();
     if (fromDB === null) {
       return res.status(200).json({ verified: false });
     }

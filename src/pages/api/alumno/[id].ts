@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { obtenerClasesDeAlumno, checkEstado,anularInscripcion } from "@/business/AlumnoClaseDelegate";
+import { obtenerClasesDeAlumno, revisarEstado,anularInscripcion } from "@/business/AlumnoClaseDelegate";
 
 /**
  * Función que llama al backend para obtener arreglo de clases con nombre de sucursal a las que pertenece un alumno
@@ -23,7 +23,7 @@ export default async function handler(
   if(req.method === 'PATCH'){
     try{
       const id = Number(req.query.id)
-      checkEstado(id)
+      revisarEstado(id)
       res.status(200).json({message: 'Estado actualizado'})
     }catch(error: any){
       res.status(500).json({message: error.message})

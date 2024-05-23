@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { fetchGastos } from "@/business/GastosDelegate";
+import { obtenerGastosDeSucursal } from "@/business/GastosDelegate";
 
 /**
  * Función que maneja la petición para obtener todos los gastos de una sucursal por su id
@@ -13,7 +13,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
       if(idSucursal === null || idSucursal === undefined || isNaN(idSucursal))
         throw new Error("Error al obtener los gastos, id de sucursal inválida");
 
-      const response = await fetchGastos(idSucursal);
+      const response = await obtenerGastosDeSucursal(idSucursal);
       console.log(response)
       res.status(response.status).json(response.gastos);
     } catch (error: any) {

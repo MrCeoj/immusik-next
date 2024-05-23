@@ -1,16 +1,16 @@
 import { Docente, Clase } from "@/entities/index";
-import { deleteDocenteFromClase } from "@/persistence/ClaseDao";
 import {
-  createDocente,
-  getAllDocentes,
-  getDocente,
-  modDocente,
-  setEstado,
-  getClases,
-  getByCurp,
-  getDocentesNoVetados,
+  docenteCrear,
+  docenteObtenerTodos,
+  docenteObtener,
+  docenteModificar,
+  docenteEditarEstado,
+  clasesObtenerPorDocente,
+  docenteObtenerPorCurp,
+  docenteObtenerNoVetados,
 } from "@/persistence/DocenteDao";
-import { fetchGetClasesDeDeterminadoDocente } from "./ClaseDelegate";
+import { obtenerClasesPorDocente } from "./ClaseDelegate";
+import { claseDesasignarDocenteDeVarias } from "@/persistence/ClaseDao";
 
 /**
  * Registra un docente en la base de datos.
@@ -29,7 +29,7 @@ export async function registrarDocente(data: any): Promise<Docente | Error> {
     } as Docente;
 
     // Validaciones correspondientes
-    const docenteExistente = await getByCurp(docenteFormat.curp);
+    const docenteExistente = await docenteObtenerPorCurp(docenteFormat.curp);
     if (docenteExistente) {
       if (docenteExistente.estado === "VETADO") {
         throw new Error(
@@ -64,7 +64,7 @@ export async function registrarDocente(data: any): Promise<Docente | Error> {
       throw new Error("El CURP del docente debe tener 18 caracteres.");
     }
 
-    const docenteCreado = await createDocente(docenteFormat);
+    const docenteCreado = await docenteCrear(docenteFormat);
     return docenteCreado;
   } catch (error) {
     if (error instanceof Error) {
@@ -81,7 +81,7 @@ export async function registrarDocente(data: any): Promise<Docente | Error> {
  */
 export async function obtenerDocentes() {
   try {
-    const docentes = await getAllDocentes();
+    const docentes = await docenteObtenerTodos();
     return docentes;
   } catch (error) {
     return new Error(
@@ -97,7 +97,7 @@ export async function obtenerDocentes() {
  */
 export async function obtenerDocente(id: number) {
   try {
-    const docente = await getDocente(id);
+    const docente = await docenteObtener(id);
     return docente;
   } catch (error) {
     return new Error("Error al obtener el docente, intente de nuevo más tarde");
@@ -122,7 +122,7 @@ export async function modificarDocente(data: any) {
     } as Docente;
     //Validaciones correspondientes
 
-    const docenteExistente = await getByCurp(docenteFormat.curp);
+    const docenteExistente = await docenteObtenerPorCurp(docenteFormat.curp);
 
     if (docenteExistente && docenteExistente.id !== docenteFormat.id) {
       throw new Error("Éste CURP ya fue registrado.");
@@ -153,7 +153,7 @@ export async function modificarDocente(data: any) {
     }
 
     // Modificar al docente.
-    const docenteModificado = await modDocente(docenteFormat);
+    const docenteModificado = await docenteModificar(docenteFormat);
     return docenteModificado;
   } catch (error) {
     return error;
@@ -174,12 +174,12 @@ export async function establecerEstado(estado: string, id: number) {
       throw new Error("El estado del docente no es válido.");
     }
     // Si el docente está inactivo o vetado, se elimina de todas las clases
-    const clases = await getClases(id);
+    const clases = await clasesObtenerPorDocente(id);
     if (estado !== "ACTIVO" && clases.length > 0) {
-      deleteDocenteFromClase(id);
+      claseDesasignarDocenteDeVarias(id);
     }
 
-    const docenteModificado = await setEstado(estado, id);
+    const docenteModificado = await docenteEditarEstado(estado, id);
     return docenteModificado;
   } catch (error) {
     return error;
@@ -193,7 +193,7 @@ export async function establecerEstado(estado: string, id: number) {
  */
 export async function obtenerClases(id: number) {
   try {
-    const clases = await getClases(id);
+    const clases = await clasesObtenerPorDocente(id);
     return clases;
   } catch (error) {
     return new Error(
@@ -207,18 +207,18 @@ export async function obtenerClases(id: number) {
  */
 export async function actualizarEstadoDeDocentes() {
   //Se obtienen todos los docentes
-  const docentes = await getAllDocentes();
+  const docentes = await docenteObtenerTodos();
   for (const docente of docentes) {
     //Se obtienen todas las clases de determinado docente
-    const clasesDelDocente = await fetchGetClasesDeDeterminadoDocente(
+    const clasesDelDocente = await obtenerClasesPorDocente(
       docente.id
     );
     //Si tiene clases asignadas, se determina como activo y si no, como inactivo
     if (docente.estado !== "VETADO") {
       if (Array.isArray(clasesDelDocente) && clasesDelDocente.length > 0) {
-        setEstado("ACTIVO", docente.id);
+        docenteEditarEstado("ACTIVO", docente.id);
       } else {
-        setEstado("INACTIVO", docente.id);
+        docenteEditarEstado("INACTIVO", docente.id);
       }
     }
   }
@@ -231,9 +231,9 @@ export async function actualizarEstadoDeDocentes() {
  */
 export async function verificarEstado(idDocente: number) {
   try {
-    const clases = await getClases(idDocente);
+    const clases = await clasesObtenerPorDocente(idDocente);
     if (clases.length <= 1) {
-      const docenteModificado = await setEstado("INACTIVO", idDocente);
+      const docenteModificado = await docenteEditarEstado("INACTIVO", idDocente);
       return docenteModificado;
     }
     return null;
@@ -250,10 +250,10 @@ export async function verificarEstado(idDocente: number) {
 export async function verificarSinOffset(idDocente: number) {
   try {
     console.log(idDocente)
-    const clases = await getClases(idDocente);
+    const clases = await clasesObtenerPorDocente(idDocente);
     if (clases.length === 0) {
       console.log(idDocente, "inactivo")
-      const docenteModificado = await setEstado("INACTIVO", idDocente);
+      const docenteModificado = await docenteEditarEstado("INACTIVO", idDocente);
       return docenteModificado;
     }
   } catch (error) {
@@ -265,7 +265,7 @@ export async function verificarSinOffset(idDocente: number) {
  * Obtiene los docentes que no están vetados.
  * @returns - Una promesa que se resuelve en un arreglo con los docentes no vetados.
  */
-export async function fetchGetDocentesNoVetados() {
-  const docentes = getDocentesNoVetados();
+export async function obtenerDocentesNoVetados() {
+  const docentes = docenteObtenerNoVetados();
   return docentes;
 }

@@ -4,7 +4,7 @@ import prisma from '@/utils/Prisma'
  * Obtiene todas las sucursales.
  * @returns Una promesa que se resuelve en un array de objetos que representan las sucursales.
  */
-export async function getAllSucursals() {
+export async function sucursalObtenerTodas() {
 	return await prisma.sucursal.findMany()
 }
 
@@ -13,7 +13,7 @@ export async function getAllSucursals() {
  * @param data - Los datos de la sucursal a crear.
  * @returns Una promesa que se resuelve en el objeto que representa la sucursal creada.
  */
-export async function createSucursal(data: any) {
+export async function sucursalCrear(data: any) {
 	return await prisma.sucursal.create({data: {nombre:data.nombre,direccion:data.direccion}})
 }
 
@@ -21,7 +21,7 @@ export async function createSucursal(data: any) {
  * @param id: id de la sucursal a editar
  * @param data: información a actualizar
  *  */
-export async function editSucursal(id: any, data: any) {
+export async function sucursalEditar(id: any, data: any) {
 	return await prisma.sucursal.update({
 		//Se manda llamar el metodo de prisma para actualizar registro.
 		where: { id },
@@ -34,7 +34,7 @@ export async function editSucursal(id: any, data: any) {
  * @param id - El ID de la sucursal a eliminar.
  * @returns Una promesa que se resuelve en el objeto que representa la sucursal eliminada.
  */
-export async function deleteSucursal(id: any) {
+export async function sucursalEliminar(id: any) {
 	return await prisma.sucursal.delete({ where: { id } })
 }
 
@@ -43,6 +43,6 @@ export async function deleteSucursal(id: any) {
  * @param id - El ID de la sucursal a obtener.
  * @returns Una promesa que se resuelve en el objeto que representa la sucursal obtenida.
  */
-export async function getSucursal(id: any) {
+export async function sucursalObtener(id: any) {
 	return await prisma.sucursal.findUnique({ where: { id } })
 }

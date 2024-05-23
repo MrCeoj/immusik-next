@@ -1,4 +1,4 @@
-import { fetchGetDocentesNoVetados } from '@/business/DocenteDelegate'
+import { obtenerDocentesNoVetados } from '@/business/DocenteDelegate'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 /**
@@ -20,7 +20,7 @@ export default async function handler(
 
 	try {
 		// Llamar al delegate para obtener todos los docentes no vetados
-		const docentes = await fetchGetDocentesNoVetados()
+		const docentes = await obtenerDocentesNoVetados()
 
 		return res.status(200).json(docentes)
 	} catch (error) {

@@ -1,17 +1,17 @@
 import { convertirAFecha } from "@/lib/utils";
-import { crearGasto, gastosPorId, modGasto } from "@/persistence/GastosDao";
+import { gastoCrear, gastosObtenerPorSucursal, gastoModificar } from "@/persistence/GastosDao";
 
 /**
  * Función que obtiene todos los gastos de acuerdo a la id de una sucursal
  * @param idSucursal - id de la sucursal
  * @returns Arreglo de gastos o mensaje de error
  */
-export async function fetchGastos(idSucursal: number) {
+export async function obtenerGastosDeSucursal(idSucursal: number) {
   try {
     if (idSucursal === null || idSucursal === undefined)
       throw new Error("Error al obtener los gastos, id de sucursal inválida");
 
-    const gastos = await gastosPorId(idSucursal);
+    const gastos = await gastosObtenerPorSucursal(idSucursal);
     return {status: 200, gastos}
   } catch (error: any) {
     console.log(error.message);
@@ -59,7 +59,7 @@ export async function registrarGasto(data: any) {
     fecha: fechaFormateada,
   };
 
-  return await crearGasto(nuevoGasto);
+  return await gastoCrear(nuevoGasto);
 }
 
 /**
@@ -101,5 +101,5 @@ export async function modificarGasto(data: any) {
     fecha: fechaFormateada,
   };
   
-  return await modGasto(gasto);
+  return await gastoModificar(gasto);
 }

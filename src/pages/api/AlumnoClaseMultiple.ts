@@ -1,4 +1,4 @@
-import { fetchDesasignarMuchos } from "@/business/AlumnoClaseDelegate";
+import { desasignarMuchosAlumnos } from "@/business/AlumnoClaseDelegate";
 import { NextResponse } from "next/server";
 
 
@@ -18,7 +18,7 @@ export default async function handler(req:any,res:any){
             const claseId = data.claseId
     
             //Se manda llamar la función de desasignar varios alumnos simultaneamente
-            const respuesta = await fetchDesasignarMuchos(alumnoId,claseId)
+            const respuesta = await desasignarMuchosAlumnos(alumnoId,claseId)
     
             //Se regresa una respuesta fallida o correcta
             if(!respuesta) return res.json({message:"Error al desasignar las clases"},{status:500})
