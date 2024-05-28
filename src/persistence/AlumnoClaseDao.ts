@@ -254,3 +254,21 @@ export async function desasignarMuchos(alumnoId:number,claseId:number[]){
     return null
   }
 }
+
+/**
+ * Función que elimina varios registros alumnoClase por id de clase e id de varios alumnos
+ * @author Fong
+ * @param idClase id de la clase de la cual se desasignarán los alumnos
+ * @param idAlumno id de los alumnos a desasignar de la clase
+ * @returns los registros eliminados
+ */
+export async function alumnoClaseEliminarMuchosPorClaseYAlumno(idClase:number,idAlumno:number[]){
+  return await prisma.alumnoClase.deleteMany({
+    where: {
+      claseId: idClase,
+      alumnoId: {
+        in: idAlumno
+      }
+    }
+  })
+}

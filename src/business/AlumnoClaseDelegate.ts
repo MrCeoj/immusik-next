@@ -11,6 +11,7 @@ import {
   alumnoClaseObtenerPorClaseYAlumno,
   alumnoClaseEliminar,
   alumnoClaseObtenerTodos,
+  alumnoClaseEliminarMuchosPorClaseYAlumno,
 } from "@/persistence/AlumnoClaseDao";
 import { alumnoActualizarEstado, alumnoObtenerPorCurp } from "@/persistence/AlumnoDao";
 import { actualizarEstadoDeAlumnos } from "./AlumnoDelegate";
@@ -78,7 +79,7 @@ export async function obtenerAlumnosDeClase(id: number) {
 
   // Si no se encontraron alumnos inscritos a la clase regresa un error
   if (alumnos.length === 0 || alumnos.includes(null)) {
-    throw { message: "No se encontraron alumnos inscritos a la clase" };
+    throw { message: "No se encontraron alumnos inscritos a la clase." };
   }
 
   // Ordena los alumnos por nombre
@@ -289,4 +290,29 @@ export async function desasignarMuchosAlumnos(alumnoId:number,claseId:number[]){
     console.log("AlumnoClaseDelegate: "+e.message)
     return null
   }
+}
+
+/**
+ * Función que elimina varios registros alumnoClase por id de clase e id de varios alumnos
+ * @author Fong
+ * @param idClase id de la clase de la cual se desasignarán los alumnos
+ * @param idAlumno id de los alumnos a desasignar de la clase
+ * @returns los registros eliminados
+ */
+export async function desasignarMuchosAlumnosDeUnaClase(idClase:number,idAlumno:number[]){
+  const response = {
+    message: ""
+  }
+
+  const respuesta = await alumnoClaseEliminarMuchosPorClaseYAlumno(idClase,idAlumno)
+
+  if(!respuesta){
+    response.message="Error al desasignar a los alumnos."
+  }else{
+    response.message="Alumnos desasignados exitosamente."
+  }
+
+  actualizarEstadoDeAlumnos()  
+  
+  return response
 }

@@ -10,6 +10,7 @@ import Label from "../form/Label";
 import "react-toastify/dist/ReactToastify.css";
 import Input from "../form/Input";
 import ConfirmacionEliminarClase from "./ConfirmacionEliminarClase";
+import AlumnosInscritosTabla from "./AlumnosInscritosTabla";
 
 export default function ModalClase({
   claseArgs,
@@ -30,6 +31,8 @@ export default function ModalClase({
   // se obtiene la sucursal de la clase
   const [sucursal] = useSucursal(clase.idSucursal.toString());
   const [diasClase, setDiasClase] = useState<string[]>([]);
+
+  const [cambio, setCambio] = useState(false);
 
   const {
     register,
@@ -69,8 +72,7 @@ export default function ModalClase({
       return "No hay alumnos inscritos";
     }
 
-    if(!alumnos)
-      return "Cargando...";
+    if (!alumnos) return "Cargando...";
 
     return null;
   };
@@ -93,33 +95,6 @@ export default function ModalClase({
       const data = await res.json();
 
       data.error ? setErrorAlumnos(data.error) : setAlumnos(data);
-    }
-  };
-
-  const handleEliminarAlumno = async (idAlumno: number) => {
-    const res = await fetch("/api/clase/eliminarAlumno", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        idClase: clase.id,
-        idAlumno,
-      }),
-    });
-
-    const data = await res.json();
-
-    if (data?.error) {
-      toast.error(data.error);
-    } else {
-      // Se actualiza la lista de alumnos
-      alumnos && setAlumnos(alumnos.filter((alumno) => alumno.id !== idAlumno));
-      // Se actualiza la información de la clase
-      actualizarClases();
-      toast.success("Alumno eliminado correctamente", {
-        autoClose: 2000,
-      });
     }
   };
 
@@ -304,7 +279,7 @@ export default function ModalClase({
                   },
                   validate: (cupoMax) => {
                     if (cupoMax < alumnos.length) {
-                      return "El cupo máximo debe ser mayor o igual al número de alumnos inscritos"
+                      return "El cupo máximo debe ser mayor o igual al número de alumnos inscritos";
                     }
                   },
                   min: {
@@ -360,42 +335,7 @@ export default function ModalClase({
             </button>
           </form>
           <div className="flex flex-col justify-between">
-            {mensajeAlumnos() ? (
-              <p className="flex-grow grid place-items-center">
-                {mensajeAlumnos()}
-              </p>
-            ) : (
-              <table className="w-full text-center overflow-hidden">
-                <caption className="font-bold text-xl mb-3">
-                  Alumnos inscritos
-                </caption>
-                <thead>
-                  <tr className="bg-gray-contrast rounded-lg font-normal">
-                    <th className="py-1">Nombre</th>
-                    <th className="py-1">Ap. Paterno</th>
-                    <th className="py-1">Ap. Materno</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {alumnos?.map((alumno, index) => (
-                    <tr key={index} className="border-b-2">
-                      <td className="py-2">{toTitleCase(alumno.nombre)}</td>
-                      <td className="py-2">{toTitleCase(alumno.aPaterno)}</td>
-                      <td className="py-2">{toTitleCase(alumno.aMaterno)}</td>
-                      <td className="py-2">
-                        <button
-                          onClick={() => handleEliminarAlumno(alumno.id)}
-                          className="bg-rose-600 text-white font-bold w-6 h-6 rounded"
-                        >
-                          ×
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+            <AlumnosInscritosTabla alumnos={alumnos} clase={clase} />
             <ConfirmacionEliminarClase
               clase={clase}
               actualizarClases={actualizarClases}
