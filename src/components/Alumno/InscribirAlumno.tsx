@@ -32,10 +32,12 @@ function InscribirAlumno({ idAlumno }: { idAlumno: number }) {
   };
 
   return (
-    <>
-      <h1>Inscribir en clase</h1>
+    <div className="p-5">
+      <h1 className="text-center">Inscribir en clase</h1>
       <Select
         label="Seleccionar clase"
+        className="mt-4"
+        size="sm"
         onChange={(e) => setSeleccion(parseInt(e.target.value))}
       >
         {disponibles.map((clase) => {
@@ -46,18 +48,21 @@ function InscribirAlumno({ idAlumno }: { idAlumno: number }) {
           );
         })}
       </Select>
-      <button
-        onClick={handleClick}
-        disabled={disabled}
-        className={
-          disabled
-            ? "text-md bg-disabled p-2 rounded-md"
-            : "text-md bg-pink-accent p-2 rounded-md hover:cursor-pointer"
-        }
-      >
-        Inscribir
-      </button>
-    </>
+      <div className="flex justify-center m-2">
+        <button
+          onClick={handleClick}
+          disabled={disabled}
+          className={
+            disabled
+              ? "text-md bg-disabled p-2 rounded-md"
+              : "text-md bg-pink-accent p-2 rounded-md hover:cursor-pointer hover:bg-pink-600"
+          }
+        >
+          Inscribir
+        </button>
+      </div>
+      
+    </div>
   );
 }
 

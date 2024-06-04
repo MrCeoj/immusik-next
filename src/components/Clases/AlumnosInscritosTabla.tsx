@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
   useDisclosure,
+  cn
 } from "@nextui-org/react";
 import { Alumno } from "@prisma/client";
 import React, { useEffect, useState } from "react";
@@ -166,7 +167,12 @@ function AlumnosInscritosTabla({
         </ModalContent>
       </Modal>
       {alumnosTemp.length > 0 ? (
-        <Table>
+        <Table removeWrapper className={cn("bg-transparent text-white")} 
+        classNames={{
+          table: "bg-secciones",
+          th: "bg-gray-contrast bg-opacity-40 text-lg text-white ",
+          td: "bg-transparent border-b border-white"
+        }}>
           <TableHeader>
             <TableColumn>Nombre</TableColumn>
             <TableColumn>Apellido Paterno</TableColumn>
@@ -197,7 +203,12 @@ function AlumnosInscritosTabla({
           </TableBody>
         </Table>
       ) : (
-        <Table>
+        <Table removeWrapper className={cn("bg-transparent text-white")} 
+        classNames={{
+          table: "bg-secciones",
+          th: "bg-gray-contrast bg-opacity-40 text-lg text-white ",
+          td: "bg-transparent border-b border-white"
+        }}>
           <TableHeader>
             <TableColumn>Nombre</TableColumn>
             <TableColumn>Apellido Paterno</TableColumn>
@@ -218,9 +229,9 @@ function AlumnosInscritosTabla({
       )}
       <button
         onClick={handleDesasignar}
-        className="bg-red-500 py-2 px-3 mt-3 rounded-md text-white hover:bg-red-700 self-center"
+        className="my-4 bg-red-500 py-1 px-2 rounded-md text-white font-normal text-base hover:bg-red-600 active:bg-red-700"
       >
-        Desasignar
+        Desasignar Alumno(s)
       </button>
     </div>
   );

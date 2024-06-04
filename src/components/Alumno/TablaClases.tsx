@@ -91,7 +91,7 @@ function TablaClases({ idAlumno, alumno }: { idAlumno: number; alumno: any }) {
   }, [cambio]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center p-5 ">
       {confirmar && (
         <ConfirmarDesasignarClase
           setConfirmar={setConfirmar}
@@ -102,13 +102,18 @@ function TablaClases({ idAlumno, alumno }: { idAlumno: number; alumno: any }) {
           setCambio={setCambio}
         />
       )}
-      <Table aria-label="Clases" className="text-black">
+      <Table aria-label="Clases" color={"secondary"} className={cn("bg-transparent text-white")} removeWrapper
+        classNames={{
+          table: "bg-secciones",
+          th: "bg-gray-contrast bg-opacity-40 text-lg text-white ",
+          td: "bg-transparent border-b border-white"
+        }}>
         <TableHeader>
-          <TableColumn>Clase</TableColumn>
-          <TableColumn>Dias</TableColumn>
-          <TableColumn>Hora</TableColumn>
-          <TableColumn>Sucursal</TableColumn>
-          <TableColumn>
+          <TableColumn >Clase</TableColumn>
+          <TableColumn >Dias</TableColumn>
+          <TableColumn >Hora</TableColumn>
+          <TableColumn >Sucursal</TableColumn>
+          <TableColumn >
             <Checkbox
               isSelected={idsAEliminar.length === clases.length}
               onChange={selectAll}
@@ -144,9 +149,9 @@ function TablaClases({ idAlumno, alumno }: { idAlumno: number; alumno: any }) {
       </Table>
       <button
         onClick={handleEliminar}
-        className="my-2 bg-red-500 py-1 px-2 rounded-md text-white font-normal text-base hover:bg-red-600 active:bg-red-700"
+        className="my-4 bg-red-500 py-1 px-2 rounded-md text-white font-normal text-base hover:bg-red-600 active:bg-red-700"
       >
-        Desasignar clases
+        Desasignar clase(s)
       </button>
     </div>
   );

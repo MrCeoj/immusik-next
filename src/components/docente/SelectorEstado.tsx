@@ -144,7 +144,7 @@ const SelectorEstado: React.FC<Props> = ({
   return (
     <>
       <div className="pb-6 flex flex-col items-center gap-3">
-        <label className="text-white font-semibold text-xl">Estado</label>
+        <label className="text-white font-semibold text-xl">Estado del Docente</label>
         <select
           value={actualState}
           className={custom}

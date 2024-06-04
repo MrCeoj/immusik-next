@@ -84,7 +84,7 @@ function GestionarAlumno({
         />
       )}
       <div className="absolute z-10 top-0 left-0 h-screen w-screen flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm">
-        <div className="bg-secciones opacity-95 rounded-lg shadow-lg p-10 flex flex-col items-center w-4/5 h-5/6 relative overflow-y-auto">
+        <div className="bg-secciones opacity-95 rounded-lg shadow-lg p-10 flex flex-col items-center w-4/5 h-4/5 relative overflow-y-auto">
           <button
             onClick={handleCancelar}
             className="right-4 top-4 absolute text-xl text-white hover:bg-black/10 w-8 h-8 flex items-center justify-center"
@@ -114,14 +114,14 @@ function GestionarAlumno({
                   <EditarInformacion alumno={alumno} />
                 </div>
                 <div className="w-1/2">
-                  <h1>Clases</h1>
+                  <h1 className="text-center">Clases</h1>
                   <TablaClases idAlumno={alumno.id} alumno={alumno} />
                   <InscribirAlumno idAlumno={alumno.id} />
                 </div>
               </div>
             </Tab>
             <Tab className="w-full text-xl py-1" title="Pagos del alumno">
-              <Card className="bg-secciones mt-3">
+              <Card className="bg-secciones mt-3 shadow-none">
                 <CardBody>
                   <div className="flex flex-row">
                     <div className="w-1/2 mr-4">

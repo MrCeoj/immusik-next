@@ -16,6 +16,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  cn,
   useDisclosure,
 } from "@nextui-org/react";
 import { useState } from "react";
@@ -102,7 +103,7 @@ const TablaClases: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex flex-col justify-between overflow-y-auto w-full h-3/5 text-white">
+    <div className="flex flex-col justify-between overflow-y-auto w-full text-white ">
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -132,8 +133,14 @@ const TablaClases: React.FC<Props> = ({
           )}
         </ModalContent>
       </Modal>
+      <h1 className="text-center font-bold text-xl">Clases</h1>
       {clases.length === 0 ? (
-        <Table aria-label="Clases" className="text-black">
+        <Table aria-label="Clases" removeWrapper className={cn("bg-transparent text-white")} 
+        classNames={{
+          table: "bg-secciones",
+          th: "bg-gray-contrast bg-opacity-40 text-lg text-white ",
+          td: "bg-transparent border-b border-white"
+        }}>
           <TableHeader>
             <TableColumn>Clase</TableColumn>
             <TableColumn>Horario</TableColumn>
@@ -152,7 +159,12 @@ const TablaClases: React.FC<Props> = ({
           </TableBody>
         </Table>
       ) : (
-        <Table aria-label="Clases" className="text-black">
+        <Table aria-label="Clases" removeWrapper className={cn("bg-transparent text-white")} 
+        classNames={{
+          table: "bg-secciones",
+          th: "bg-gray-contrast bg-opacity-40 text-lg text-white ",
+          td: "bg-transparent border-b border-white"
+        }}>
           <TableHeader>
             <TableColumn>Clase</TableColumn>
             <TableColumn>Horario</TableColumn>
@@ -182,21 +194,12 @@ const TablaClases: React.FC<Props> = ({
         </Table>
       )}
       <div className="flex items-center justify-center">
-        <Button
-          color="danger"
-          size="md"
-          onPress={handleDesasignar}
-          startContent={
-            <Image
-              className="w-5"
-              src={deleteIcon}
-              title={"Desasignar docente"}
-              alt={"Desasignar docente"}
-            />
-          }
+        <button
+          onClick={handleDesasignar}
+          className="my-4 bg-red-500 py-1 px-2 rounded-md text-white font-normal text-base hover:bg-red-600 active:bg-red-700"
         >
-          Desasignar
-        </Button>
+          Desasignar clase(s)
+        </button>
       </div>
     </div>
   );

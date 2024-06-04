@@ -160,11 +160,11 @@ export default function ModalClase({
         <h1 className="font-bold text-4xl mb-3 text-center">
           Detalles de la clase - {toTitleCase(clase.nombre)}
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 m-5">
           <form onSubmit={onSubmit} className="flex flex-col gap-1">
             <p>
               Sucursal:{" "}
-              <span className="font-bold">
+              <span className="font-bold text-xl">
                 {sucursal && toTitleCase(sucursal.nombre.toString())}
               </span>
             </p>
