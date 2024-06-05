@@ -68,8 +68,8 @@ export async function autenticarUsuario(usuarioIngresado: {
 	const usuario = await usuarioObtener(usuarioIngresado.nombre.toUpperCase())
 
 	// Si no se encuentra el usuario, se retorna null
-	if (!usuario) throw new Error('Usuario no encontrado')
-
+	if (!usuario) throw new Error('Usuario o contraseña incorrecta')
+  
 	// Compara la contraseña ingresada con la contraseña almacenada en la base de datos
 	const contrasenaValida = await bcrypt.compare(
 		usuarioIngresado.contrasena,
@@ -77,7 +77,7 @@ export async function autenticarUsuario(usuarioIngresado: {
 	)
 
 	// Si la contraseña no es válida, se retorna null
-	if (!contrasenaValida) throw new Error('Contraseña incorrecta')
+	if (!contrasenaValida) throw new Error('Usuario o contraseña incorrecta')
 
 	return {
 		id: usuario.id.toString(),
