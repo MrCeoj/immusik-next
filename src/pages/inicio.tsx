@@ -18,6 +18,11 @@ export default function Inicio() {
   const recienMontado = useRef(true);
 
   useEffect(() => {
+    if ([sucursales].length === 0) {
+      router.push("/sucursales/modificar");
+      return;
+    }
+
     if (recienMontado.current) {
       recienMontado.current = false;
       setContext(null);
@@ -62,7 +67,9 @@ export default function Inicio() {
         {sucursales?.map((sucursal) => (
           <div
             key={sucursal.id}
-            onClick={() => { setContext(sucursal) }}
+            onClick={() => {
+              setContext(sucursal);
+            }}
             className="gradient-border bg-gradient-to-r from-primary/60 to-primary/20 text-white text-2xl text-center font-bold py-5 rounded-xl shadow-xl backdrop-blur-md hover:cursor-pointer"
           >
             {toTitleCase(sucursal.nombre)}
