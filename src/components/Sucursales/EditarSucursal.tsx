@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import ConfirmacionEliminar from "./ConfirmacionEliminar";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,6 +29,7 @@ const EditarSucursal = ({
   const [nombre, setNombre] = useState(nombreFor);
   const [direccion, setDireccion] = useState(direccionFor);
   const [contrasena, setContrasena] = useState("");
+  const [change, setChange] = useState(false);
 
   //useState para mostrar o no la pantalla de error
   const [eliminar, setEliminar] = useState(false);
@@ -52,6 +53,23 @@ const EditarSucursal = ({
     setEliminar(true);
   };
 
+  
+
+  useEffect(() => {
+    console.log()
+    if (
+      (nombre !== nombreFor ||
+      direccion !== direccionFor) &&
+      contrasena !== ""
+    ) {
+      setChange(true);
+      console.log("change to: ", change);
+      return;
+    }
+    setChange(false);
+    console.log("change to: ", change);
+  }, [nombre, direccion, contrasena, change, nombreFor, direccionFor])
+
   //Al presionar editar se ejecuta la función
   const handleEditar = () => {
     let id = sucursal.id; //Obtención de id
@@ -74,7 +92,7 @@ const EditarSucursal = ({
 
     //Continua el flujo
     //Petición fetch tipo PATCH para actualizar datos.
-    fetch("api/Sucursal/", {
+    fetch("/api/Sucursal/", {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -98,6 +116,18 @@ const EditarSucursal = ({
         toast.error("Hubo un problema al modificar la sucursal.");
       }
     });
+  };
+
+  const handleNombreChange = (e: any) => {
+    setNombre(e.target.value);
+  };
+
+  const handleDireccionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDireccion(e.target.value);
+  };
+  
+  const handleContrasenaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContrasena(e.target.value);
   };
 
   /*CONTENIDO: Form donde se tiene como placeholder la información actual de la sucursal, donde se le
@@ -126,7 +156,7 @@ const EditarSucursal = ({
                   placeholder="Nombre"
                   className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                   value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
+                  onChange={handleNombreChange}
                 ></input>
               </div>
               <div className="mt-5 flex flex-col w-[800px] relative">
@@ -135,7 +165,7 @@ const EditarSucursal = ({
                   placeholder="Dirección"
                   className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                   value={direccion}
-                  onChange={(e) => setDireccion(e.target.value)}
+                  onChange={handleDireccionChange}
                 />
               </div>
               <div className="mt-5 flex flex-col w-[800px] relative">
@@ -147,7 +177,7 @@ const EditarSucursal = ({
                   placeholder="Contraseña Maestra"
                   className="text-2xl bg-gray-100 py-1 px-2 rounded-lg font-medium"
                   value={contrasena}
-                  onChange={(e) => setContrasena(e.target.value)}
+                  onChange={handleContrasenaChange}
                 />
               </div>
             </form>
@@ -162,7 +192,12 @@ const EditarSucursal = ({
             <div>
               <button
                 onClick={handleEditar}
-                className="bg-pink-focus text-white py-1 px-10 rounded-lg text-lg mr-4 shadow-md transition-all duration-300 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)]"
+                className={
+                  !change
+                    ? "bg-disabled text-white py-1 px-10 rounded-lg text-lg mr-4 transition-all"
+                    : "bg-pink-focus text-white py-1 px-10 rounded-lg text-lg mr-4 shadow-md transition-all duration-300 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)] cursor-pointer"
+                }
+                disabled={!change}
               >
                 Editar
               </button>
