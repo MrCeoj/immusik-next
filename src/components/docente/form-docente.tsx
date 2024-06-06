@@ -60,6 +60,11 @@ function FormDocente({
     }
   });
 
+  //Función para cerrar el modal
+  const handleCancelar = () => {
+    setModalOpen(false);
+  };
+
   return (
     <>
       <form
@@ -83,6 +88,10 @@ function FormDocente({
                 value: true,
                 message: "El nombre del docente es requerido.",
               },
+                pattern:{
+                  value: /^[A-Za-z\s]+$/i,
+                  message: "El nombre no debe contener números.",
+                },
             })}
           />
         </div>
@@ -103,6 +112,10 @@ function FormDocente({
                 value: true,
                 message: "El apellido paterno es requerido.",
               },
+                pattern:{
+                  value: /^[A-Za-z\s]+$/i,
+                  message: "El apellido no debe contener números.",
+                },
             })}
           />
         </div>
@@ -123,6 +136,10 @@ function FormDocente({
                 value: true,
                 message: "El apellido materno es requerido.",
               },
+                pattern:{
+                  value: /^[A-Za-z\s]+$/i,
+                  message: "El apellido no debe contener números.",
+                },
             })}
           />
         </div>
@@ -183,12 +200,18 @@ function FormDocente({
           />
         </div>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center mt-3 gap-x-3">
           <button
-            className="rounded-md bg-primary w-2/5 px-4 py-2 mt-4 font-bold text-white shadow-md transition-all duration-300 hover:shadow-[0px_0px_20px_10px_rgba(251,_3,_143,_0.25)]"
+            className="bg-gray-500 py-1 px-3 rounded-md text-lg shadow-md mr-2 hover:bg-gray-600"
+            onClick={handleCancelar}
+          >
+            Cancelar
+          </button>
+          <button
+            className="bg-pink-500 py-1 px-3 rounded-md text-lg shadow-md hover:bg-pink-600"
             type="submit"
           >
-            Dar de alta
+            Aceptar
           </button>
         </div>
       </form>
