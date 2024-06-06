@@ -1,80 +1,159 @@
-import React from "react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { sucursalContext } from "@/hooks/sucursalContext";
-import { useGastos } from "@/hooks/gastos/useGastos";
-import RegistrarGasto from "@/components/gastos/RegistrarGasto";
-import { ToastContainer } from "react-toastify";
-import ModalGasto from "@/components/gastos/ModalGasto";
-import Navbar from "@/components/Navbar";
-import BarraNavegacion from "@/components/barraNavegacion";
-import { Tab, Tabs } from "@nextui-org/tabs";
 import { cn } from "@nextui-org/react";
-import Paginador from "@/components/Paginador";
+import { Gasto } from "@/entities";
+import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { Tab, Tabs } from "@nextui-org/tabs";
+import { ToastContainer } from "react-toastify";
+import { useGastos } from "@/hooks/gastos/useGastos";
+import ModalGasto from "@/components/gastos/ModalGasto";
+import { sucursalContext } from "@/hooks/sucursalContext";
+import BarraNavegacion from "@/components/barraNavegacion";
+import RegistrarGasto from "@/components/gastos/RegistrarGasto";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 
 const Index = () => {
   const router = useRouter();
   const context = sucursalContext((state: any) => state.context);
+  const recienMontado = useRef(true);
+
   const { gastos, fetchGastos } = useGastos();
   const [cargando, setCargando] = useState(true);
   const [cambio, setCambio] = useState(false);
 
-  const [gastosFiltrados, setGastosFiltrados] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [pageNumbers, setPageNumbers] = useState<number[]>([]);
+  const [uniqueDates, setUniqueDates] = useState<string[]>([]);
+  const [gastosFiltrados, setGastosFiltrados] = useState<Gasto[]>([]);
+  const [currentDate, setCurrentDate] = useState({ month: 0, year: 0 });
+  const [currentDateIndex, setCurrentDateIndex] = useState(0);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = gastosFiltrados.slice(indexOfFirstItem, indexOfLastItem);
-
+  // Verificar si hay una sucursal seleccionada
   useEffect(() => {
     if (!context) {
       router.push("/inicio");
     }
   }, [context, router]);
 
+  // Obtener los gastos de la sucursal seleccionada
   useEffect(() => {
-    obtenerGastos();
-  }, [context, fetchGastos, cambio]);
+    if (context) {
+      fetchGastos(context.id)
+      setCargando(false);
+    }
+  }, [context]);
 
-  const obtenerGastos = async () => {
-    if (context) fetchGastos(context.id);
-    setCargando(false);
-    contarPaginas(gastos);
+  // Este useEffect se ejecuta cuando se obtienen los gastos
+  useEffect(() => {
+    if (gastos.length > 0) {
+      const parseDate = (dateString: string) => {
+        let [day, month, year] = dateString.split("/");
+        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      };
+
+      // Ordenar los gastos por fecha
+      const sortedGastos = gastos
+        .filter((gasto) => gasto !== undefined)
+        .sort((b, a) => {
+          return parseDate(a.fecha).getTime() - parseDate(b.fecha).getTime();
+        });
+
+      // Obtener las fechas únicas de los gastos para el paginador
+      const uniqueDatesArray = Array.from(
+        new Set(
+          sortedGastos.map((gasto: Gasto) => {
+            const date = parseDate(gasto.fecha);
+            return `${date.getMonth()}-${date.getFullYear()}`;
+          })
+        )
+      ).sort((a, b) => {
+        const [monthA, yearA] = a.split("-").map(Number);
+        const [monthB, yearB] = b.split("-").map(Number);
+        return (
+          new Date(yearB, monthB).getTime() - new Date(yearA, monthA).getTime()
+        );
+      });
+
+      setUniqueDates(uniqueDatesArray);
+
+      // Si es la primera vez que se monta el componente, se obtiene el mes y año del gasto más reciente
+      if (recienMontado.current) {
+        recienMontado.current = false;
+
+        const mostRecentGasto = sortedGastos[0];
+        const mostRecentDate = parseDate(mostRecentGasto.fecha);
+        const mostRecentMonthYear = `${mostRecentDate.getMonth()}-${mostRecentDate.getFullYear()}`;
+        const currentIndex = uniqueDatesArray.findIndex(
+          (date) => date === mostRecentMonthYear
+        );
+
+        setCurrentDateIndex(currentIndex !== -1 ? currentIndex : 0);
+        filterGastos({
+          month: mostRecentDate.getMonth(),
+          year: mostRecentDate.getFullYear(),
+        });
+      }
+    }
+  }, [gastos]);
+
+  // Este useEffect garantiza que en cada cambio de gastos se actualice la lista de gastos filtrados
+  useEffect(() => {
+    if (uniqueDates.length > 0) {
+      const [month, year] = uniqueDates[currentDateIndex]
+        .split("-")
+        .map(Number);
+      filterGastos({ month, year });
+    }
+  }, [currentDateIndex, uniqueDates]);
+
+  // Funciones para cambiar de mes en el paginador
+  const handleLeftClick = () => {
+    if (currentDateIndex > 0) {
+      setCurrentDateIndex(currentDateIndex - 1);
+      const [month, year] = uniqueDates[currentDateIndex - 1]
+        .split("-")
+        .map(Number);
+      filterGastos({ month, year });
+    }
   };
 
+  const handleRightClick = () => {
+    if (currentDateIndex < uniqueDates.length - 1) {
+      setCurrentDateIndex(currentDateIndex + 1);
+      const [month, year] = uniqueDates[currentDateIndex + 1]
+        .split("-")
+        .map(Number);
+      filterGastos({ month, year });
+    }
+  };
+
+  // Función para filtrar los gastos por mes y año
+  const filterGastos = ({ month, year }: { month: any; year: any }) => {
+    setCurrentDate({ month, year });
+    const parseDate = (dateString: string) => {
+      let [day, month, year] = dateString.split("/");
+      return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    };
+    
+    let monthlyGastos = gastos.filter((gasto) => {
+      const date = parseDate(gasto.fecha);
+      return date.getMonth() === month && date.getFullYear() === year;
+    });
+
+    monthlyGastos = monthlyGastos.sort((a, b) => {
+      return parseDate(b.fecha).getTime() - parseDate(a.fecha).getTime();
+    });
+
+    setGastosFiltrados(monthlyGastos);
+  };
+
+  // Función para actualizar la lista de gastos
   const handleCambio = () => {
     setCambio(!cambio);
-  };
-
-  const [activeTab, setActiveTab] = useState(0); // Estado para controlar la pestaña activa
-
-  const handleTabChange = (index: React.SetStateAction<number>) => {
-    setActiveTab(index); // Actualizar el estado de la pestaña activa
-  };
-
-  // Método para contar las páginas
-  const contarPaginas = (data: any) => {
-    const newPageNumbers = [];
-    for (let i = 1; i <= Math.ceil(data.length / itemsPerPage); i++) {
-      newPageNumbers.push(i);
-    }
-    setPageNumbers(newPageNumbers);
-  };
-
-  // Método para cambiar la cantidad de elementos por página
-  const handleItemsPags = (e: any) => {
-    const pag = e.target.value;
-    setItemsPerPage(pag);
-    setCurrentPage(1);
   };
 
   return (
     <>
       <BarraNavegacion titulo="Gastos" />
       <ToastContainer />
-      <div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pt-10 text-white bg-cover">
+      <div className="h-screen bg-fondo w-screen flex justify-start items-center flex-col px-20 pt-20 text-white bg-cover">
         <h1 className="text-5xl font-semibold pb-5">
           {context && `Gastos Sucursal ${context.nombre}`}
         </h1>
@@ -103,7 +182,7 @@ const Index = () => {
                 {cargando ? (
                   <p>Cargando</p>
                 ) : gastosFiltrados.length >= 0 ? (
-                  gastos.map((gasto) => (
+                  gastosFiltrados.map((gasto) => (
                     <div
                       key={gasto.id}
                       className="px-4 py-2 grid grid-cols-10 my-4 text-lg bg-gray-100 bg-opacity-50 rounded-lg font-bold items-center"
@@ -124,19 +203,75 @@ const Index = () => {
                 )}
               </div>
               <Paginador
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                pageNumbers={pageNumbers}
-                handleItemsPags={handleItemsPags}
+                handleLeftClick={handleLeftClick}
+                uniqueDates={uniqueDates}
+                currentDateIndex={currentDateIndex}
+                setCurrentDateIndex={setCurrentDateIndex}
+                setCurrentDate={setCurrentDate}
+                handleRightClick={handleRightClick}
+                filterGastos={filterGastos}
               />
             </Tab>
-            <Tab className="w-full text-xl py-1 flex justify-center" title="Registrar">
+            <Tab
+              className="w-full text-xl py-1 flex justify-center"
+              title="Registrar"
+            >
               <RegistrarGasto actualizarGastos={handleCambio} />
             </Tab>
           </Tabs>
         </div>
       </div>
     </>
+  );
+};
+
+// Componente para el paginador de gastos
+const Paginador = ({
+  handleLeftClick,
+  uniqueDates,
+  setCurrentDateIndex,
+  setCurrentDate,
+  handleRightClick,
+  currentDateIndex,
+  filterGastos,
+}: {
+  handleLeftClick: any;
+  uniqueDates: any;
+  setCurrentDateIndex: any;
+  setCurrentDate: any;
+  handleRightClick: any;
+  currentDateIndex: number;
+  filterGastos: any;
+}) => {
+  return (
+    <div className="absolute bottom-8 flex justify-start w-[90%]">
+      <button onClick={handleLeftClick} className="w-10">
+        <ChevronLeftIcon />
+      </button>
+      {uniqueDates.map((date: any, index: number) => {
+        const [month, year] = date.split("-").map(Number);
+        return (
+          <button
+            key={index}
+            onClick={() => {
+              setCurrentDateIndex(index);
+              setCurrentDate({ month, year });
+              filterGastos({ month, year });
+            }}
+            className={
+              index === currentDateIndex
+                ? "bg-white text-back-dark px-2 py-1 rounded-sm hover:cursor-pointer"
+                : "px-2 py-1 rounded-sm hover:cursor-pointer"
+            }
+          >
+            {`${month + 1}/${year}`}
+          </button>
+        );
+      })}
+      <button onClick={handleRightClick} className="w-10">
+        <ChevronRightIcon />
+      </button>
+    </div>
   );
 };
 

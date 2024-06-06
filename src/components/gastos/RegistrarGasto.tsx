@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState, useEffect } from "react"
 import Modal from "react-modal"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -16,6 +16,13 @@ function RegistrarClase({ actualizarGastos }: { actualizarGastos: any }) {
 	const context = sucursalContext((state: any) => state.context)
 	const [monto, setMonto] = useState("")
 	const [formData, setFormData] = useState<any>(null)
+	const [minDate, setMinDate] = useState(convertirAStringFecha(new Date(), "fr-CA"))
+
+	useEffect(() => {
+		let date = new Date()
+		date.setDate(date.getDate()-31)
+		setMinDate(date.toISOString().split("T")[0])
+	}, [])
 
 	const {
 		register,
@@ -68,10 +75,13 @@ function RegistrarClase({ actualizarGastos }: { actualizarGastos: any }) {
 	})
 
 	const handleRegistrar = handleSubmit((data) => {
-		setFormData(data)  // Save form data in state
+		setFormData(data)
+		if(!data.monto){
+			toast.error("Ingresar un monto válido.")
+			return
+		}
 		setModalOpen(true)
 	})
-
 	return (
 		<>
 			<div className="flex flex-col w-3/4">
@@ -86,6 +96,7 @@ function RegistrarClase({ actualizarGastos }: { actualizarGastos: any }) {
 							error={Boolean(errors.monto?.type === "required")}
 							className="block"
 						/>
+						
 						<Input
 							type="text"
 							id="monto"
@@ -122,6 +133,7 @@ function RegistrarClase({ actualizarGastos }: { actualizarGastos: any }) {
 							error={errors.fecha}
 							className="w-full border text-black border-gray-300 font-bold px-2 rounded-md"
 							max={convertirAStringFecha(new Date(), "fr-CA")}
+							min={minDate}
 							register={register("fecha", {
 								required: {
 									value: true,

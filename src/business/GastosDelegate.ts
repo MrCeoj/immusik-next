@@ -35,11 +35,14 @@ export async function registrarGasto(data: any) {
   const diff = fechaActual - fechaIngresada.getTime();
   const diffDias = diff/(1000*60*60*24);
 
-  if (diffDias > 30) {
+  if (diffDias > 31) {
     throw { message: "La diferencia de días debe ser menor a 30" };
   } else if (diffDias < 0) {
     throw { message: "La fecha capturada debe ser menor o igual a la fecha actual" };
   }
+
+  if(data.monto <= 0)
+    throw { message: "El monto debe ser mayor a 0" };
 
   const fechaFormateada = Intl.DateTimeFormat("es-MX", {
     year: "numeric",

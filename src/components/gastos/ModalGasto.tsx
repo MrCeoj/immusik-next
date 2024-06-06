@@ -4,7 +4,7 @@ import {
   toSentenceCase,
 } from "@/lib/utils";
 import { Gasto } from "@/entities";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -28,6 +28,7 @@ export default function ModalGasto({
   // useState para guardar la visibilidad del modal
   const [modalOpen, setModalOpen] = useState(false);
   const [monto, setMonto] = useState(gasto.monto.toString());
+  const [editable, setEditable] = useState(true);
 
   const {
     register,
@@ -36,6 +37,22 @@ export default function ModalGasto({
     setValue,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    let date = new Date();
+    date.setDate(date.getDate() - 31);
+
+    // Convert "dd/mm/yyyy" string to Date
+    const parseDate = (dateString: string) => {
+      let [day, month, year] = dateString.split("/");
+      return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    };
+
+    let gastoDate = parseDate(gasto.fecha);
+
+    // Compare dates
+    setEditable(gastoDate > date);
+  }, [gasto.fecha]);
 
   // Función que se ejecuta al hacer click en el botón Editar
   // Muestra un modal con la información del gasto
@@ -52,6 +69,10 @@ export default function ModalGasto({
   };
 
   const onSubmit = handleSubmit(async (data) => {
+    if(!data.monto || data.monto === ""){
+      toast.error("Ingresar monto válido");
+      return;
+    }
     // Se hace una petición a la API para modificar el gasto
     const res = await fetch("/api/gastos/modificar", {
       method: "PUT",
@@ -86,12 +107,16 @@ export default function ModalGasto({
 
   return (
     <>
-      <button
-        onClick={handleEditar}
-        className="col-span-1 underline hover:text-pink-500 cursor-pointer"
-      >
-        <Image alt="editar" src={imgEditar} width={50} height={50} />
-      </button>
+      {editable && (
+        <button
+          onClick={handleEditar}
+          disabled={!editable}
+          className="col-span-1 underline hover:text-pink-500 cursor-pointer"
+        >
+          <Image alt="editar" src={imgEditar} width={50} height={50} />
+        </button>
+      )}
+
       <Modal
         isOpen={modalOpen}
         ariaHideApp={false}
