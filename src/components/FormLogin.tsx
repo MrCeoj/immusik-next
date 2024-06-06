@@ -107,10 +107,6 @@ export default function LoginUsuario() {
 								value: true,
 								message: 'El nombre de usuario es requerido.'
 							},
-							minLength: {
-								value: 6,
-								message: 'Nombre de usuario debe tener mínimo 6 caracteres.'
-							},
 							disabled: intentoBloqueado
 						})}
 					/>
@@ -131,15 +127,6 @@ export default function LoginUsuario() {
 							required: {
 								value: true,
 								message: 'La contraseña es requerida.'
-							},
-							minLength: {
-								value: 8,
-								message: 'Contraseña debe tener mínimo 8 caracteres.'
-							},
-							pattern: {
-								value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-								message:
-									'La contraseña debe tener al menos una mayúscula, una minúscula y un número.'
 							},
 							disabled: intentoBloqueado
 						})}
