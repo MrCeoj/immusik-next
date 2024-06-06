@@ -31,3 +31,12 @@ export async function usuarioObtener(busqueda: string) {
 export async function usuarioCrear(data: User) {
 	return await prisma.user.create({ data })
 }
+
+/**
+ * Función para obtener todos los usuarios.
+ * @author Fong
+ * @returns todos los usuarios en el sistema.
+ */
+export async function usuarioObtenerTodos() {
+	return await prisma.user.findMany()
+}

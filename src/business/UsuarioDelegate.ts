@@ -1,5 +1,5 @@
 import { User } from '@prisma/client'
-import { usuarioCrear, usuarioObtener } from '@/persistence/UsuarioDao'
+import { usuarioCrear, usuarioObtener, usuarioObtenerTodos } from '@/persistence/UsuarioDao'
 import { contrasenaMaestraObtener } from '@/persistence/MasterKeyDao'
 import bcrypt from 'bcrypt'
 
@@ -84,4 +84,8 @@ export async function autenticarUsuario(usuarioIngresado: {
 		name: usuario.nombre,
 		email: usuario.correo
 	}
+}
+
+export async function obtenerTodosUsuarios(){
+	return await usuarioObtenerTodos()
 }

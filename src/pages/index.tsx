@@ -6,6 +6,8 @@ import BarraNavegacionAdmin from "@/components/barraNavegacionAdmin";
 import Tarjeta from "@/components/sucursal/Tarjeta";
 import { obtenerSucursal } from "@/business/SucursalDelegate";
 import { Sucursal } from "@prisma/client";
+import Image from "next/image";
+import userIcon from "@/img/userIcon.png";
 
 /**
  * Función que ayuda a establecer el título de la página con el nombre de la sucursal.
@@ -26,6 +28,10 @@ export default function Inicio() {
     }
   }, [sucursal, router]);
 
+  const handleGestionarUsuarios = () => {
+    router.push("/usuarios");
+  };
+
   return (
     <>
       <BarraNavegacionAdmin />
@@ -43,6 +49,20 @@ export default function Inicio() {
             <Tarjeta sucursal={sucursal} />
           </div>
         )}
+        <div className="min-w-screen flex items-center justify-center mt-4">
+          <button
+            onClick={handleGestionarUsuarios}
+            className="text-white font-bold text-xl flex flex-row items-center justify-center gap-2 transform transition-transform duration-200 hover:scale-105"
+          >
+            Gestionar Usuarios{" "}
+            <Image
+              className="w-5"
+              src={userIcon}
+              alt="Gestionar Usuarios"
+              title="Gestionar Usuarios"
+            />
+          </button>
+        </div>
       </div>
     </>
   );
