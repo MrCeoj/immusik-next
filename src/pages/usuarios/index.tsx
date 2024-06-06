@@ -3,21 +3,53 @@ import React, { useEffect, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { ToastContainer, toast } from "react-toastify";
 import Navbar from "@/components/Navbar";
-import { Input } from "@nextui-org/react";
+import { Input, useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import editIcon from "@/img/settingIcon.png";
+import deleteIcon from "@/img/deleteIcon.png";
+import EliminarModal from "@/components/Usuario/eliminarModal";
+import EditarModal from "@/components/Usuario/editarModal";
 
 function Usuarios() {
+  //Router para redirigir
   const router = useRouter();
 
+  //Validado verifica que la contraseña maestra sea correcta, esto para mostrarle la informacion al user.
   const [validado, setValidado] = useState(false);
+
+  //Aqui se guarda la contraseña maestra
   const [contrasena, setContrasena] = useState("");
+
+  //Estado de cargando mientras se obtienen los usuarios
   const [cargando, setCargando] = useState(true);
+
+  //Usuarios
   const [usuarios, setUsuarios] = useState([]);
 
+  //Usuario especifico del que se va a consultar, eliminar o editar
+  const [usuario, setUsuario] = useState();
+
+  //Estados para modal de eliminación
+  const {
+    isOpen: isEliminarOpen,
+    onOpen: onEliminarOpen,
+    onOpenChange: onEliminarOpenChange,
+  } = useDisclosure();
+
+  //Estados para modal de edición
+  const {
+    isOpen: isEditarOpen,
+    onOpen: onEditarOpen,
+    onOpenChange: onEditarOpenChange,
+  } = useDisclosure();
+
+  //Regresa a inicio
   const handleCancelar = () => {
     router.push("/inicio");
   };
 
+  //Función que consigue todos los usuarios de la base de datos
   const fetchUsuarios = () => {
     fetch("/api/usuario/obtener").then((response) => {
       if (response.ok) {
@@ -31,16 +63,25 @@ function Usuarios() {
     });
   };
 
+  //manda a la pagina de registro para registrar un nuevo usuario
+  const handleRegistrar = () => {
+    router.push("/registro");
+  };
+
+  //Al presionar aceptar se verifica la contraseña maestra
   const handleAceptar = () => {
     if (contrasena === "") {
+      //Se indica error si no hay contraseña maestra
       toast.error("Ingrese la contraseña maestra");
       return;
     }
 
+    //Se consigue la contraseña maestra
     fetch("/api/masterKey/route").then((response) => {
       if (response.ok) {
         return response.json().then((data) => {
           const masterKey = data;
+          //Si la contraseña maestra es correcta se consiguen los usuarios y se cambia el estado de validado a true
           if (contrasena === masterKey.value) {
             fetchUsuarios();
             setValidado(true);
@@ -54,10 +95,38 @@ function Usuarios() {
     });
   };
 
+  //Eliminar toma el usuario seleccionado y activa el modal de eliminar
+  const handleEliminar = (us: any) => {
+    setUsuario(us);
+    onEliminarOpen();
+  };
+
+  //Editar toma el usuario seleccionado y activa el modal de editar
+  const handleEditar = (us: any) => {
+    setUsuario(us);
+    onEditarOpen();
+  };
+
   return (
     <>
       <Navbar />
       <ToastContainer />
+      {usuario && (
+        <EliminarModal
+          isOpen={isEliminarOpen}
+          onOpenChange={onEliminarOpenChange}
+          usuario={usuario}
+          fetchUsuarios={fetchUsuarios}
+        />
+      )}
+      {usuario && (
+        <EditarModal
+          isOpen={isEditarOpen}
+          onOpenChange={onEditarOpenChange}
+          usuario={usuario}
+          fetchUsuarios={fetchUsuarios}
+        />
+      )}
       <div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pt-10 text-white">
         {validado ? (
           <>
@@ -65,20 +134,15 @@ function Usuarios() {
               <h1 className="text-5xl font-semibold mr-20">Usuarios</h1>
 
               <div className="flex h-3/4 items-center">
-                <form className="h-full relative flex items-center mr-5">
-                  <input
-                    className="h-4/5 bg-disabled bg-opacity-50 rounded-sm shadow-md pl-10 text-md text-white"
-                    placeholder=""
-                  ></input>
-                  <MagnifyingGlassIcon
-                    className="absolute top-1/2 left-3 transform -translate-y-1/2 text-white"
-                    width={20}
-                    height={20}
-                  />
-                </form>
+                <button
+                  className="bg-pink-focus px-4 h-full text-md rounded-md font-semibold hover:shadow-md hover:shadow-pink-accent hover:-translate-y-1 transition-all duration-25 ease-out"
+                  onClick={handleRegistrar}
+                >
+                  <span>Registrar Usuario</span>
+                </button>
               </div>
             </div>
-            <div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-5 mt-3 gap-5 px-5">
+            <div className="w-full bg-neutral-400 py-2 rounded-lg bg-opacity-40 grid grid-cols-5 mt-3 gap-5 pl-4">
               <div className="text-2xl font-bold col-span-2 text-left ">
                 Nombre de usuario
               </div>
@@ -94,10 +158,39 @@ function Usuarios() {
                 Cargando...
               </div>
             ) : (
-              <div className="overflow-y-auto w-full h-[55%]">
+              <div className="overflow-y-auto w-full h-[55%] flex flex-col">
                 {usuarios.map((us: any) => (
-                  <div>
-                    {us.nombre} {us.correo}
+                  <div className="grid grid-cols-5 mt-4 text-lg bg-gray-100 bg-opacity-50 py-2 rounded-lg font-bold pl-4 gap-5 items-center">
+                    <div className="text-xl font-bold col-span-2 text-left ">
+                      {us.nombre}
+                    </div>
+                    <div className="text-xl font-bold col-span-2 text-left">
+                      {us.correo}
+                    </div>
+                    <div className="text-xl font-bold col-span-1 text-left flex flex-row gap-3">
+                      <button
+                        onClick={() => handleEditar(us)}
+                        className="bg-zinc-500 p-1 rounded-md flex items-center justify-center hover:bg-zinc-600"
+                      >
+                        <Image
+                          className="w-8"
+                          src={editIcon}
+                          alt="Gestionar"
+                          title="Gestionar"
+                        />
+                      </button>
+                      <button
+                        onClick={() => handleEliminar(us)}
+                        className="bg-red-500 p-1 rounded-md flex items-center justify-center hover:bg-red-600"
+                      >
+                        <Image
+                          className="w-8"
+                          src={deleteIcon}
+                          alt="Eliminar"
+                          title="Eliminar"
+                        />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

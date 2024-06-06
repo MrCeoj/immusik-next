@@ -1,7 +1,8 @@
 import { User } from '@prisma/client'
-import { usuarioCrear, usuarioObtener, usuarioObtenerTodos } from '@/persistence/UsuarioDao'
+import { usuarioCrear, usuarioEditarConClave, usuarioEditarSinClave, usuarioEliminar, usuarioObtener, usuarioObtenerTodos } from '@/persistence/UsuarioDao'
 import { contrasenaMaestraObtener } from '@/persistence/MasterKeyDao'
 import bcrypt from 'bcrypt'
+import prisma from '@/utils/Prisma'
 
 /**
  * Registra un usuario nuevo en la base de datos.
@@ -86,6 +87,45 @@ export async function autenticarUsuario(usuarioIngresado: {
 	}
 }
 
+/**
+ * Función para obtener todos los usuarios
+ * @author Fong
+ * @returns todos los usuarios
+ */
 export async function obtenerTodosUsuarios(){
 	return await usuarioObtenerTodos()
+}
+
+/**
+ * Función para eliminar un usuario
+ * @author Fong
+ * @param id id del usuario a eliminar
+ * @returns usuario eliminado
+ */
+export async function eliminarUsuario(id:number){
+	return await usuarioEliminar(id)
+}
+
+/**
+ * Función para modificar la información de un usuario
+ * @author Fong
+ * @param data información nueva
+ * @returns usuario modificado
+ */
+export async function modificarUsuario(data:any){
+	const usuario = await prisma.user.findFirst({
+		where: {
+			nombre: data.nombre
+		}
+	})
+	if(usuario && usuario.id!==data.id){
+		
+		return "username_invalido"
+	}else{
+		if(data.contrasena===""){
+			return usuarioEditarSinClave(data)
+		}else{
+			return usuarioEditarConClave(data)
+		}
+	}
 }

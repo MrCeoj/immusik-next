@@ -1,5 +1,6 @@
 import prisma from "@/utils/Prisma";
 import { User } from '@/entities/index'
+import bcrypt from "bcrypt"
 
 /**
  * Obtiene un usuario por su nombre.
@@ -39,4 +40,57 @@ export async function usuarioCrear(data: User) {
  */
 export async function usuarioObtenerTodos() {
 	return await prisma.user.findMany()
+}
+
+/**
+ * Función para eliminar un usuario
+ * @author Fong
+ * @param id id del usuario a eliminar
+ * @returns usuario eliminado
+ */
+export async function usuarioEliminar(id:number){
+	return await prisma.user.delete({
+		where: {
+			id:id
+		}
+	})
+}
+
+/**
+ * Función para modificar un usuario
+ * @author Fong
+ * @param data información nueva
+ * @returns el usuario modificado
+ */
+export async function usuarioEditarSinClave(data:any){
+	return await prisma.user.update({
+		where: {
+			id: data.id
+		},
+		data: {
+			nombre:data.nombre,
+			correo:data.correo
+		}
+	})
+}
+
+/**
+ * Modificación de usuario
+ * @author Fong
+ * @param data información nueva
+ * @returns el usuario modificado
+ */
+export async function usuarioEditarConClave(data:any){
+	const hashed = await bcrypt.hash(data.contrasena,10)
+
+	return await prisma.user.update({
+		where:{
+			id: data.id
+		},
+		data:{
+			nombre:data.nombre,
+			correo:data.correo,
+			contrasena:hashed
+		}
+	})
 }
