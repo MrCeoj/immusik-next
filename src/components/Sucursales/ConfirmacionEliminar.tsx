@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { sucursalContext } from "@/hooks/sucursalContext";
 
 import "react-toastify/dist/ReactToastify.css";
 
-/*
+/**
  * Componente para validar la eliminación de la sucursal
  * @param sucursal: la sucursal a eliminar
  * @param setEliminar: permite cambiar el estado de eliminar a false o true
@@ -11,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
  * los registros de las sucursales
  * @param setCambio: modifica el valor de cambio de true a false o viceversa
  * @param setEditar: cambia el valor de editar a false o true.
- *  */
+ */
 const ConfirmacionEliminar = ({
   sucursal,
   setEliminar,
@@ -25,8 +27,24 @@ const ConfirmacionEliminar = ({
   setCambio: any;
   setEditar: any;
 }) => {
+  const router = useRouter();
+  const context = sucursalContext((state: any) => state.context);
+  const setContext = sucursalContext((state: any) => state.setContext);
+  const [contextPrevent, setContextPrevent] = useState(true);
   //useState para la contraseña Maestra
   const [contrasena, setContrasena] = useState("");
+
+  useEffect(() => {
+    if (!context && contextPrevent) {
+      console.log("bye");
+      router.push("/inicio");
+    }
+  }, [context, router, contextPrevent]);
+
+  useEffect(() => {
+    if(!contextPrevent)
+      setContext(null)
+  }, [contextPrevent, setContext])
 
   const toggleCambio = () => {
     if (cambio) {
@@ -44,7 +62,7 @@ const ConfirmacionEliminar = ({
     }
 
     let id = sucursal.id;
-    fetch("api/Sucursal/", {
+    fetch("/api/Sucursal/", {
       //Se hace fetch a sucursal
       method: "DELETE", //metodo: DELETE
       headers: {
@@ -59,7 +77,16 @@ const ConfirmacionEliminar = ({
       if (response.ok) {
         return response.json().then((data) => {
           if (data.message === "Sucursal eliminada exitosamente.") {
-            toast.success("Sucursal eliminada exitosamente.");
+            // Si la sucursal de contexto es igual a la que se eliminó se redirige a inicio
+            if (context.id === id) {
+              setContextPrevent(false);
+              console.log("switch to:", contextPrevent)
+              toast.success("Sucursal eliminada exitosamente.", {
+                onClose: () => router.push("/inicio"),
+                autoClose: 1500,
+              });
+            } else toast.success("Sucursal eliminada exitosamente.");
+
             setEliminar(false);
             setEditar(false);
             if (cambio) {

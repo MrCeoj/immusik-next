@@ -37,7 +37,7 @@ const AgregarSucursal = ({
 
     /*Si no hay errores se sigue con el flujo haciendo petición fecth POST
     para crear una nueva sucursal, enviando nombre y dirección*/
-    fetch("api/Sucursal", {
+    fetch("/api/Sucursal", {
       method: "POST", //Metodo: POST porque vamos a hacer un nuevo registro
       headers: {
         "Content-Type": "application/json",
