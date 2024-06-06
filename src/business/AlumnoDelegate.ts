@@ -73,6 +73,7 @@ export async function registrarAlumno(data:any){
 
 /**
  * Función para modificar la información de un alumno
+ * @author Fong
  * @param data datos del alumno que se va a modificar
  * @returns la respuesta de la petición
  */

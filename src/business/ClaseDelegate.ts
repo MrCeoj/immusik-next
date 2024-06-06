@@ -2,7 +2,7 @@ import {
   claseObtener,
   claseEliminar,
   claseEliminarPorSucursal,
-  getClasesFromSucursal,
+  clasesObtenerPorSucursalId,
   claseDesasignarDeUna,
   claseObtenerTodas,
   claseObtenerPorDocete,
@@ -41,7 +41,7 @@ export async function obtenerClase(id: number) {
  *
  */
 export async function obtenerClasesPorSucursal(id: any) {
-  return await getClasesFromSucursal(id);
+  return await clasesObtenerPorSucursalId(id);
 }
 
 /**

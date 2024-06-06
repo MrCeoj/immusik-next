@@ -36,6 +36,8 @@ export async function obtenerTodasSucursales() {
 }
 
 /**
+ * Función para registrar una sucursal
+ * @author Fong
  * @param data: recibe data, la cual tiene dentro el nombre y direccion
  * de la sucursal que se creará
  */
@@ -161,7 +163,8 @@ export async function eliminarSucursal(data: any) {
 			}
 		}
 	}
-
+	actualizarEstadoDeDocentes()
+	actualizarEstadoDeAlumnos()
 	return response
 }
 

@@ -45,7 +45,7 @@ export default function FormRegistroUsuario() {
       <ToastContainer />
       <form
         onSubmit={onSubmit}
-        className="flex flex-col gap-4 bg-white p-8 rounded-md text-black"
+        className="flex flex-col gap-4 bg-secciones p-8 rounded-md text-white"
       >
         <div className="flex flex-col max-w-82 min-w-72 relative">
           <Label
@@ -144,9 +144,12 @@ export default function FormRegistroUsuario() {
             })}
           />
         </div>
-        <button className="rounded-md bg-primary px-4 py-2 mt-4 font-bold text-white shadow-md transition-all duration-300 hover:shadow-lg hover:bg-pink-300">
-          Aceptar
-        </button>
+        <div className="flex justify-center">
+          <button className="ml-1 text-lg bg-pink-600 py-1 px-5 rounded-md text-white hover:bg-pink-700 active:bg-pink-800">
+            Aceptar
+          </button>
+        </div>
+        
       </form>
     </>
   );

@@ -38,7 +38,7 @@ export async function claseEliminar(id: any) {
  * @param id: id de la sucursal de la cual se buscaran sus clases
  * @return las clases de la sucursal
  */
-export async function getClasesFromSucursal(id: any) {
+export async function clasesObtenerPorSucursalId(id: any) {
 	let idNum: number = parseInt(id)
 	return await prisma.clase.findMany({
 		where: { 
