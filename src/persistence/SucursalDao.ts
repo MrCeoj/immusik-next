@@ -10,6 +10,7 @@ export async function sucursalObtenerTodas() {
 
 /**
  * Crea una nueva sucursal.
+ * @author Fong
  * @param data - Los datos de la sucursal a crear.
  * @returns Una promesa que se resuelve en el objeto que representa la sucursal creada.
  */
