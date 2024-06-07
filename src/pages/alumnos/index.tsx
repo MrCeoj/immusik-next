@@ -1,7 +1,7 @@
 import Alumnos from "@/components/Alumno/Alumno";
 import RegistrarAlumno from "@/components/Alumno/RegistrarAlumno";
 import React, { useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Navbar from "@/components/Navbar";
 import Paginador from "@/components/Paginador";
@@ -50,6 +50,18 @@ function Index() {
     const data = await response.json();
     setAlumnos(data);
     contarPaginas(alumnos); // Se manda llamar el método contarPaginas para contar cuantas páginas habrá dependiendo de la cantidad de alumnos
+  };
+
+  const fetchAlumnos = () => {
+    fetch("/api/alumno/alumno").then((response) => {
+      if (response.ok) {
+        return response.json().then((data) => {
+          setAlumnos(data);
+        });
+      } else {
+        toast.error("Error al conseguir a los alumnos.");
+      }
+    });
   };
 
   // Método para contar las páginas
@@ -117,12 +129,20 @@ function Index() {
         <div className="overflow-y-auto w-full h-[55%]">
           {alumnosFiltrados.length >= 0
             ? currentItems.map((alumno, index) => (
-                <Alumnos key={index} alumno={alumno} />
+                <Alumnos
+                  key={index}
+                  alumno={alumno}
+                  fetchAlumnos={fetchAlumnos}
+                />
               ))
             : alumnos
                 .slice(indexOfFirstItem, indexOfLastItem)
                 .map((alumno, index) => (
-                  <Alumnos key={index} alumno={alumno} />
+                  <Alumnos
+                    key={index}
+                    alumno={alumno}
+                    fetchAlumnos={fetchAlumnos}
+                  />
                 ))}
         </div>
         <Paginador

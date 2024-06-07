@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import GestionarAlumno from "./GestionarAlumno";
 import { Alumno } from "@/entities/edge";
 
-function Alumnos({ alumno }: { alumno: Alumno }) {
+function Alumnos({
+  alumno,
+  fetchAlumnos,
+}: {
+  alumno: Alumno;
+  fetchAlumnos: () => void;
+}) {
   const [gestionar, setGestionar] = useState(false);
 
   const handleGestionar = () => {
@@ -13,7 +19,11 @@ function Alumnos({ alumno }: { alumno: Alumno }) {
     <div>
       <div className="px-4 py-2 grid grid-cols-10 my-4 text-lg bg-gray-100 bg-opacity-50 rounded-lg font-bold items-center">
         {gestionar && (
-          <GestionarAlumno setGestionar={setGestionar} alumno={alumno} />
+          <GestionarAlumno
+            setGestionar={setGestionar}
+            alumno={alumno}
+            fetchAlumnos={fetchAlumnos}
+          />
         )}
         <div className="col-span-3">
           {alumno.nombre} {alumno.aPaterno} {alumno.aMaterno}

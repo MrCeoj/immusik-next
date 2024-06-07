@@ -2,15 +2,34 @@ import { toTitleCase } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 
 import "react-toastify/dist/ReactToastify.css";
-import ConfirmacionEditar from "./ConfirmacionEditar";
-import { cn } from "@nextui-org/react";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  cn,
+  useDisclosure,
+} from "@nextui-org/react";
 import Label from "../form/Label";
 import Input from "../form/Input";
 import { useForm } from "react-hook-form";
 import { Alumno } from "@/entities";
+import { toast } from "react-toastify";
+import { Router } from "next/router";
+import { useRouter } from "next/navigation";
 
-function EditarInformacion({ alumno }: { alumno: Alumno }) {
+function EditarInformacion({
+  alumno,
+  fetchAlumnos,
+}: {
+  alumno: Alumno;
+  fetchAlumnos: () => void;
+}) {
   // useForm para manejar los inputs del formulario
+
+  const [informacion, setInformacion] = useState();
+
   const {
     register,
     handleSubmit,
@@ -19,6 +38,8 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
   } = useForm();
 
   const fechaActual = new Date();
+
+  const router = useRouter();
 
   // useState para guardar si el formulario ha sido modificado
   const [isModified, setIsModified] = useState(false);
@@ -36,6 +57,8 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
 
   //useState para los datos que se enviarán
   const [data, setData] = useState({});
+
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   //Función para saber si tiene Números
   const tieneNum = (str: string) => {
@@ -60,24 +83,112 @@ function EditarInformacion({ alumno }: { alumno: Alumno }) {
     });
   }, [watch]);
 
+  const editarConfirmar = (onClose: any) => {
+    const info = {
+      id: alumno.id,
+      nombre: data.nombre,
+      aPaterno: data.aPaterno,
+      aMaterno: data.aMaterno,
+      tutor: data.tutor,
+      contacto: data.contacto,
+      fechaNac: data.fechaNac,
+      curp: data.curp,
+    };
+
+    console.log(info);
+
+    fetch("api/alumno/alumno", {
+      method: "PATCH", //Metodo: POST porque vamos a hacer un nuevo registro
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(info),
+    }).then((response) => {
+      //Se obtiene la respuesta
+      if (response.ok) {
+        return response.json().then((data) => {
+          if (
+            data.message ===
+            "Se modificó la información del alumno exitosamente."
+          ) {
+            toast.success(data.message);
+            fetchAlumnos();
+            onClose();
+            setEditar(false);
+          } else {
+            toast.error(data.message);
+            onClose();
+            setEditar(false);
+          }
+        });
+      } else {
+        toast.error("Hubo un problema al modificar la información del alumno.");
+      }
+    });
+  };
+
   //Se ejecuta cuando se presiona editar
   const handleEditar = handleSubmit((data) => {
     //se asigna a data los datos
     setData(data);
-
-    //Se abre el modal de confirmación de editar
-    setEditar(true);
+    onOpen();
+    //Se realiza la petición fetch de tipo PATCH
   });
 
   return (
     <>
-      {editar && ( //Se envía la data, el setEditar y el nomDisplay al modal para confirmar edición
-        <ConfirmacionEditar
-          data={data}
-          setEditar={setEditar}
-          nomDisplay={nomDisplay}
-        />
-      )}
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>
+                ¿Está seguro que desea modificar la información de{" "}
+                {alumno.nombre} {alumno.aPaterno}?
+              </ModalHeader>
+              <ModalBody>
+                <div className="flex flex-col">
+                  <p>
+                    <span className="font-bold">Nombre: </span>
+                    {data.nombre} {data.aPaterno} {data.aMaterno}
+                  </p>
+                  <p>
+                    <span className="font-bold">Tutor: </span>
+                    {data.tutor}
+                  </p>
+                  <p>
+                    <span className="font-bold">Contacto: </span>
+                    {data.contacto}
+                  </p>
+                  <p>
+                    <span className="font-bold">Fecha de nacimiento: </span>
+                    {data.fechaNac}
+                  </p>
+                  <p>
+                    <span className="font-bold">CURP: </span>
+                    {data.curp}
+                  </p>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <div className="flex flex-row gap-1">
+                  <button
+                    onClick={onClose}
+                    className="bg-zinc-500 text-white py-1 px-3 rounded-md hover:bg-zinc-600"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={() => editarConfirmar(onClose)}
+                    className="bg-primary text-white py-1 px-3 rounded-md hover:bg-pink-800"
+                  >
+                    Aceptar
+                  </button>
+                </div>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
       <form
         onSubmit={handleEditar}
         className="flex flex-col bg-secciones text-black"

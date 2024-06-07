@@ -1,6 +1,7 @@
-import { alumnoObtenerTodos,alumnoActualizarEstado, alumnoCrear, alumnoModificar } from "@/persistence/AlumnoDao"
+import { alumnoObtenerTodos,alumnoActualizarEstado, alumnoCrear, alumnoModificar, alumnoObtenerPorCurp } from "@/persistence/AlumnoDao"
 import { obtenerClasesPorAlumno } from "./AlumnoClaseDelegate"
 import { Alumno } from '@/entities' 
+import prisma from "@/utils/Prisma";
 
 /**
  * Función para obtener a todos los alumnos
@@ -82,24 +83,24 @@ export async function modificarAlumno(data:any){
         message: ""
     }
 
-    //Se verifica si se repite la CURP
-    let repetido = false
+    const alumno = await obtenerAlumnoPorCurp(data.curp)
 
-    const alumnos = await obtenerTodosAlumnos()
-    alumnos.map(alumno=>{
-        if(alumno.id!==data.id){
-            if(alumno.curp===data.curp){
-                repetido = true
-            }
-        }
-    })
-
-    if(!repetido){
+    if(alumno && alumno.id !== data.id){
+        response.message="Ya existe un alumno con esa CURP."
+    }else{
         await alumnoModificar(data)
         response.message="Se modificó la información del alumno exitosamente."
-    }else{
-        response.message="Ya existe un alumno con esa CURP."
     }
 
     return response
+}
+
+/**
+ * Función para obtener alumno por curp
+ * @author Fong
+ * @param curp curp
+ * @returns alumno
+ */
+export async function obtenerAlumnoPorCurp(curp:string){
+    return await alumnoObtenerPorCurp(curp)
 }
