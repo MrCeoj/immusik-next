@@ -17,10 +17,12 @@ export default function ModalClase({
   claseArgs,
   actualizarClases,
   docentes,
+  actualizarCupo,
 }: {
   claseArgs: Clase;
   actualizarClases: any;
   docentes: Docente[] | null;
+  actualizarCupo: () => void;
 }) {
   const [clase, setClase] = useState<Clase>(claseArgs);
   // useState para guardar la visibilidad del modal
@@ -234,7 +236,7 @@ export default function ModalClase({
                   "16:00 - 17:00",
                   "17:00 - 18:00",
                   "18:00 - 19:00",
-                  "19:00 - 20:00"
+                  "19:00 - 20:00",
                 ]}
                 emptyValue="Seleccione un horario"
                 error={errors.hora}
@@ -323,7 +325,11 @@ export default function ModalClase({
             </button>
           </form>
           <div className="flex flex-col justify-between">
-            <AlumnosInscritosTabla alumnos={alumnos} clase={clase} />
+            <AlumnosInscritosTabla
+              alumnos={alumnos}
+              clase={clase}
+              actualizarCupo={actualizarCupo}
+            />
             <ConfirmacionEliminarClase
               clase={clase}
               actualizarClases={actualizarClases}

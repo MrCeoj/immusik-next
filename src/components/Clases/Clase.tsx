@@ -52,6 +52,27 @@ export default function Clase({
     cupo = "0/" + clase.cupoMax; //Si no hay registros de plano se declaran los alumnos inscritos como 0
   }
 
+  //Actualizar cupo se ejecuta cuando se desasignan alumnos de esta clase
+  const actualizarCupo = () => {
+    /*Se obtienen todos los registros AlumnoClase */
+    fetch("api/AlumnoClase").then((response) => {
+      if (response.ok) {
+        return response.json().then((data) => setAlumnoClases(data)); //Los registros se guardan en alumnoClases
+      } else {
+        toast.error("Error al cargar los registros Alumno-Clase.");
+      }
+    });
+
+    if (alumnoClases.length > 0) {
+      const inscritos = alumnoClases.filter(
+        (registro: any) => registro.claseId === clase.id
+      );
+      cupo = inscritos.length + "/" + clase.cupoMax;
+    } else {
+      cupo = "0/" + clase.cupoMax;
+    }
+  };
+
   /*CONTENIDO DE LA PAGINA 
   Se muestran solo el nombre, dias, hora y el cupo con formato, también la imagen de advertencia 
   en caso de que no tenga docente.
@@ -89,6 +110,7 @@ export default function Clase({
           claseArgs={clase}
           actualizarClases={actualizarClases}
           docentes={docentes}
+          actualizarCupo={actualizarCupo}
         />
       </div>
     </>

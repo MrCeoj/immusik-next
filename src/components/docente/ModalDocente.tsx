@@ -334,6 +334,7 @@ export default function ModalDocente({
               setClases={setClases}
               docente={docente}
               obtenerDocentes={obtenerDocentes}
+              loadClases={loadClases}
             />
             <SelectorEstado
               estado={estado}

@@ -28,6 +28,7 @@ type Props = {
   setClases: any;
   docente: any;
   obtenerDocentes: () => void;
+  loadClases: () => void;
 };
 
 /**
@@ -41,6 +42,7 @@ const TablaClases: React.FC<Props> = ({
   setClases,
   docente,
   obtenerDocentes,
+  loadClases,
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -90,6 +92,7 @@ const TablaClases: React.FC<Props> = ({
         return response.json().then((data) => {
           if ((data.message = "Docente desasignado exitosamente.")) {
             toast.success("Docente desasignado exitosamente.");
+            loadClases();
             obtenerDocentes();
           } else {
             toast.error(data.message);
