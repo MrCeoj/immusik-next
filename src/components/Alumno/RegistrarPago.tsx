@@ -48,6 +48,20 @@ function RegistrarPago({
     setFecha("");
   }, [cambio2]);
 
+  // Función para verificar si la fecha es válida
+  function esFechaValida(fecha: string) {
+    const partes = fecha.split("-");
+    const ano = parseInt(partes[0]);
+    const mes = parseInt(partes[1]) - 1; // El mes en el objeto Date comienza desde 0
+    const dia = parseInt(partes[2]);
+    const fechaObjeto = new Date(ano, mes, dia);
+    return (
+      fechaObjeto.getFullYear() === ano &&
+      fechaObjeto.getMonth() === mes &&
+      fechaObjeto.getDate() === dia
+    );
+  }
+
   //Cuando se presiona aceptar se ejecuta este función.
   function handleAceptar() {
     try {
@@ -55,15 +69,15 @@ function RegistrarPago({
       let conceptoForm = concepto.trim().toUpperCase();
       let metodoForm = metodo.toUpperCase();
 
-      //Validación para campos vacios.
-      if (
-        fecha === null ||
-        fecha === "" ||
-        monto === "" ||
-        conceptoForm === "" ||
-        metodoForm === ""
-      ) {
-        toast.error("No deje campos vacios.");
+      // Validación para campos vacíos.
+      if (!fecha || !monto || !conceptoForm || !metodoForm) {
+        toast.error("No deje campos vacíos.");
+        return;
+      }
+
+      // Validación de la fecha
+      if (!esFechaValida(fecha)) {
+        toast.error("Fecha no valida");
         return;
       }
 
@@ -74,6 +88,7 @@ function RegistrarPago({
         return;
       }
 
+    
       //Validación de la fecha
 
       //Se crea la variable fechaConFormato
