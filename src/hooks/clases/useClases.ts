@@ -1,8 +1,5 @@
-
-
 import { create } from "zustand";
 import { Clase } from "@/entities"
-import { actualizarEstadoDeAlumnos } from "@/business/AlumnoDelegate";
 
 /**
  * Interfaz que define la estructura de una clase con el nombre de la sucursal
@@ -88,8 +85,8 @@ export const useClases = create<State>((set, get) => ({
       }else{
         throw new Error('Error al actualizar el estado')
       }
+      await fetch('/api/alumno/actualizarEstado')
     }catch(error){}
-    actualizarEstadoDeAlumnos()
   },
 
   /**
