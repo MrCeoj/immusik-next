@@ -154,6 +154,7 @@ function RegistrarClase({ actualizarGastos }: { actualizarGastos: any }) {
 							error={errors.categoria}
 							className="w-full border text-black border-gray-300 font-bold px-2 rounded-md"
 							items={categoriasGasto}
+              emptyValue="Seleccionar una categoría"
 							register={register("categoria", {
 								required: {
 									value: true,

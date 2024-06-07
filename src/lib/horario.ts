@@ -5,8 +5,3 @@ export const diasHabiles = [
 	'jueves',
 	'sábado'
 ]
-
-export const horasHabiles = {
-	apertura: 15,
-	cierre: 20
-}

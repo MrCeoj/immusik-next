@@ -12,6 +12,7 @@ interface SelectProps extends ComponentPropsWithoutRef<"select"> {
 	error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined
 	register: UseFormRegisterReturn<string>
 	items: string[]
+  emptyValue?: string
 	className?: string
 }
 
@@ -19,6 +20,7 @@ const Select = ({
 	error,
 	register,
 	items,
+  emptyValue,
 	className,
 	...rest
 }: SelectProps) => {
@@ -47,7 +49,7 @@ const Select = ({
 			{...register}
 			{...rest}
 		>
-			<option value="">Selecciona una categoría</option>
+			{emptyValue && <option disabled value="">{emptyValue}</option>}
 			{items.map((item, index) => (
 				<option key={index} value={item.toUpperCase()}>
 					{item}

@@ -255,7 +255,6 @@ export async function registrarClase(data: any) {
 export async function modificarClase(clase: any) {
   // Dar formato a los campos de la clase
   clase.nombre = clase.nombre.trim().toUpperCase();
-  clase.hora = `${clase.hora}:00 - ${Number(clase.hora) + 1}:00`;
   clase.cupoMax = Number(clase.cupoMax);
 
   const claseActual = await claseObtener(clase.id);

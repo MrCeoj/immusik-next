@@ -3,14 +3,15 @@ import { toArrayDiasClase, toStringDiasClase, toTitleCase } from "@/lib/utils";
 import { Alumno, Clase, Docente } from "@prisma/client";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { diasHabiles, horasHabiles } from "../../lib/horario";
-import { set, useForm } from "react-hook-form";
+import { diasHabiles } from "../../lib/horario";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Label from "../form/Label";
 import "react-toastify/dist/ReactToastify.css";
 import Input from "../form/Input";
 import ConfirmacionEliminarClase from "./ConfirmacionEliminarClase";
 import AlumnosInscritosTabla from "./AlumnosInscritosTabla";
+import Select from "../form/Select";
 
 export default function ModalClase({
   claseArgs,
@@ -226,31 +227,20 @@ export default function ModalClase({
                 error={Boolean(errors.hora?.type === "required")}
                 className="block"
               />
-              <Input
-                type="number"
+              <Select
                 id="hora"
+                items={[
+                  "15:00 - 16:00",
+                  "16:00 - 17:00",
+                  "17:00 - 18:00",
+                  "18:00 - 19:00",
+                  "19:00 - 20:00"
+                ]}
+                emptyValue="Seleccione un horario"
                 error={errors.hora}
                 className="w-full text-black border-gray-300 font-bold px-2 py-1"
                 register={register("hora", {
-                  required: {
-                    value: true,
-                    message: "La hora es requerida",
-                  },
-                  validate: (hora) => {
-                    if (hora === horasHabiles.cierre) {
-                      return `Tome en cuenta que la clase dura una hora y la sucursal cierra a las ${horasHabiles.cierre}:00 horas`;
-                    }
-                  },
-                  // Se obtiene el horario mínimo y máximo de la sucursal
-                  min: {
-                    value: horasHabiles.apertura,
-                    message: `La hora debe estar dentro del horario de la sucursal (${horasHabiles.apertura}:00 - ${horasHabiles.cierre}:00 horas)`,
-                  },
-                  max: {
-                    value: horasHabiles.cierre - 1,
-                    message: `La hora debe estar dentro del horario de la sucursal (${horasHabiles.apertura}:00 - ${horasHabiles.cierre}:00 horas)`,
-                  },
-                  value: Number(clase.hora.split(":")[0]),
+                  value: clase.hora,
                 })}
               />
             </div>
