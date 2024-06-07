@@ -43,7 +43,7 @@ function Alumnos({
         </div>
         <div className="col-span-1">
           <button onClick={handleGestionar}>
-            <u>Detalles</u>
+            <u>Ver detalles</u>
           </button>
         </div>
       </div>
