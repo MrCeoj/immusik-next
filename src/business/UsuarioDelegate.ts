@@ -29,8 +29,8 @@ export async function registrarUsuario(
 	// Código para formatear los datos del usuario
 	const hashedPassword = await bcrypt.hash(usuario.contrasena, 10)
 	const usuarioFormateado = {
-		nombre: usuario.nombre.toUpperCase(),
-		correo: usuario.correo.toUpperCase(),
+		nombre: usuario.nombre,
+		correo: usuario.correo,
 		contrasena: hashedPassword
 	} as User
 
@@ -66,7 +66,7 @@ export async function autenticarUsuario(usuarioIngresado: {
 	contrasena: string
 }) {
 	// Buscar el usuario en la base de datos
-	const usuario = await usuarioObtener(usuarioIngresado.nombre.toUpperCase())
+	const usuario = await usuarioObtener(usuarioIngresado.nombre)
 
 	// Si no se encuentra el usuario, se retorna null
 	if (!usuario) throw new Error('Usuario o contraseña incorrecta')
