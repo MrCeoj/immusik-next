@@ -20,9 +20,11 @@ import InscribirAlumno from "./InscribirAlumno";
 function GestionarAlumno({
   setGestionar,
   alumno,
+  fetchAlumnos,
 }: {
   setGestionar: any;
   alumno: any;
+  fetchAlumnos: () => void;
 }) {
   //useStates para almacenar los pagos, todos los pagos, si son más de 6 pagos y la id del alumno
   const [pagos, setPagos] = useState([]);
@@ -111,7 +113,10 @@ function GestionarAlumno({
             <Tab className="w-full text-xl py-1" title="Información del alumno">
               <div className="flex flex-row gap-8">
                 <div className="w-1/2 ">
-                  <EditarInformacion alumno={alumno} />
+                  <EditarInformacion
+                    alumno={alumno}
+                    fetchAlumnos={fetchAlumnos}
+                  />
                 </div>
                 <div className="w-1/2">
                   <h1 className="text-center">Clases</h1>

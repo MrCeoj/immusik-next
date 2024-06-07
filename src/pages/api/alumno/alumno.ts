@@ -20,7 +20,7 @@ export default async function handler(req:any,res:any){
     }
 
     if (req.method==="PATCH"){
-        const {data} = req.body
+        const data = req.body
         const result = await modificarAlumno(data)
         return res.status(200).json(result)
     }
