@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Select, SelectItem } from "@nextui-org/react";
 import { toast } from "react-toastify";
 
-function InscribirAlumno({ idAlumno }: { idAlumno: number }) {
+function InscribirAlumno({ idAlumno, cambio, setCambio }: { idAlumno: number; cambio: any; setCambio: any; }) {
   const { disponibles, fetchDisponibles, clases, inscribirAlumno } = useClases((state) => state);
   const [seleccion, setSeleccion] = useState<number | null>(null);
   const [disabled, setDisabled] = useState(true);
@@ -27,6 +27,8 @@ function InscribirAlumno({ idAlumno }: { idAlumno: number }) {
     }
     if(result.status === 200){
       toast.success(result.message)
+      // Actualizar el estado cambio después de una inscripción exitosa
+      setCambio(!cambio);
     }
   };
 

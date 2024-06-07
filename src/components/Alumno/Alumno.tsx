@@ -5,9 +5,13 @@ import { Alumno } from "@/entities/edge";
 function Alumnos({
   alumno,
   fetchAlumnos,
+  cambio,
+  setCambio
 }: {
   alumno: Alumno;
   fetchAlumnos: () => void;
+  cambio: any;
+  setCambio: any;
 }) {
   const [gestionar, setGestionar] = useState(false);
 
@@ -23,6 +27,8 @@ function Alumnos({
             setGestionar={setGestionar}
             alumno={alumno}
             fetchAlumnos={fetchAlumnos}
+            cambio={cambio}
+            setCambio={setCambio}
           />
         )}
         <div className="col-span-3">

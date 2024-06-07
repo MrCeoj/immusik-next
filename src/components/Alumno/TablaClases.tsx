@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ConfirmarDesasignarClase from "./ConfirmarDesasignarClase";
 
-function TablaClases({ idAlumno, alumno }: { idAlumno: number; alumno: any }) {
+function TablaClases({ idAlumno, alumno, cambio, setCambio }: { idAlumno: number; alumno: any; cambio: any; setCambio: any;}) {
   // Este objeto es manejado por zustand, revisar directirio de hooks useClases.ts
   const { clases, fetchClases, fetchEstado, fetchDesiniscribir } = useClases(
     (state) => state
@@ -29,8 +29,8 @@ function TablaClases({ idAlumno, alumno }: { idAlumno: number; alumno: any }) {
   //useState que maneja el componente de confirmación de eliminación
   const [confirmar, setConfirmar] = useState(false);
 
-  //useState que detecta cualquier cambio
-  const [cambio, setCambio] = useState(false);
+  // //useState que detecta cualquier cambio
+  // const [cambio, setCambio] = useState(false);
 
   //Función para eliminar, se ejecuta cuando se presiona el botón de desasignar clases.
   const handleEliminar = () => {

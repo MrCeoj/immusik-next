@@ -21,10 +21,14 @@ function GestionarAlumno({
   setGestionar,
   alumno,
   fetchAlumnos,
+  cambio,
+  setCambio
 }: {
   setGestionar: any;
   alumno: any;
   fetchAlumnos: () => void;
+  cambio: any;
+  setCambio: any;
 }) {
   //useStates para almacenar los pagos, todos los pagos, si son más de 6 pagos y la id del alumno
   const [pagos, setPagos] = useState([]);
@@ -38,13 +42,12 @@ function GestionarAlumno({
   const [activeTab, setActiveTab] = useState(0); // Estado para controlar la pestaña activa
 
   //useState para detectar si se hizo algun cambio.
-  const [cambio, setCambio] = useState(false);
+  // const [cambio, setCambio] = useState(false);
 
   const handleTabChange = (index: React.SetStateAction<number>) => {
     setActiveTab(index); // Actualizar el estado de la pestaña activa
   };
 
-  //Sale de este componente
   const handleCancelar = () => {
     setGestionar(false);
   };
@@ -120,8 +123,8 @@ function GestionarAlumno({
                 </div>
                 <div className="w-1/2">
                   <h1 className="text-center">Clases</h1>
-                  <TablaClases idAlumno={alumno.id} alumno={alumno} />
-                  <InscribirAlumno idAlumno={alumno.id} />
+                  <TablaClases idAlumno={alumno.id} alumno={alumno} cambio={cambio} setCambio={setCambio}/>
+                  <InscribirAlumno idAlumno={alumno.id} cambio={cambio} setCambio={setCambio}/>
                 </div>
               </div>
             </Tab>

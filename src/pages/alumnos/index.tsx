@@ -114,6 +114,8 @@ function Index() {
               <RegistrarAlumno
                 setRegistrar={setRegistrar}
                 fetchAlumnos={fetchAlumnos}
+                setCambio={setCambio} 
+                cambio={cambio} 
               />
             )}
             <button
@@ -138,6 +140,8 @@ function Index() {
                   key={index}
                   alumno={alumno}
                   fetchAlumnos={fetchAlumnos}
+                  cambio={cambio}
+                  setCambio={setCambio}
                 />
               ))
             : alumnos
@@ -147,6 +151,8 @@ function Index() {
                     key={index}
                     alumno={alumno}
                     fetchAlumnos={fetchAlumnos}
+                    cambio={cambio}
+                    setCambio={setCambio}
                   />
                 ))}
         </div>

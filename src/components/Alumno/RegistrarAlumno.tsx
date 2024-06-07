@@ -14,8 +14,12 @@ import {
 function RegistrarAlumno({
   setRegistrar,
   fetchAlumnos,
+  setCambio,
+  cambio
 }: {
   setRegistrar: any;
+  setCambio: any;
+  cambio: any;
   fetchAlumnos: () => void;
 }) {
   //useState para capturar la información del alumno
@@ -82,6 +86,7 @@ function RegistrarAlumno({
         if (response.ok) {
           return response.json().then((data) => {
             setClases(data);
+            setCambio(!cambio);
           });
         } else {
           toast.error("Error al encontrar las clases con cupo disponible.");
@@ -280,7 +285,13 @@ function RegistrarAlumno({
         </ModalContent>
       </Modal>
       <div className="absolute z-10 top-0 left-0 bg-black bg-opacity-50 h-screen w-screen flex items-center justify-center">
-        <div className="bg-zinc-900 bg-opacity-80 text-white rounded-lg shadow-lg py-5 px-12 flex flex-col items-center w-9/12">
+        <div className="bg-secciones opacity-95 text-white rounded-lg shadow-lg py-5 px-12 flex flex-col items-center w-9/12 relative">
+        <button
+          onClick={handleCancelar}
+          className="absolute top-2 right-2 font-bold rounded hover:bg-black/10 w-8 h-8 flex items-center justify-center"
+        >
+          X
+        </button>
           <h1 className="font-bold text-3xl mb-5">Registrar Alumno</h1>
           <form className="flex flex-col w-full">
             <div className="grid grid-cols-3 mb-2 gap-5">
@@ -422,7 +433,7 @@ function RegistrarAlumno({
               ))}
             </select>
           </form>
-          <div className="mt-5">
+          <div className="flex justify-center items-center mt-3 gap-x-3">
             <button
               onClick={handleCancelar}
               className="mr-1 text-lg bg-zinc-500 py-1 px-5 rounded-md text-white hover:bg-zinc-600 active:bg-zinc-700"
