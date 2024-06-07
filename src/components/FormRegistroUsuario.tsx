@@ -149,7 +149,6 @@ export default function FormRegistroUsuario() {
             Aceptar
           </button>
         </div>
-        
       </form>
     </>
   );
