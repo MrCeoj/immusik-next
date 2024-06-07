@@ -144,10 +144,7 @@ export default function ModalClase({
 
   return (
     <>
-      <button
-        onClick={handleVerDetalles}
-        className="col-span-1 underline hover:text-slate-900"
-      >
+      <button onClick={handleVerDetalles} className="col-span-1 underline">
         Ver detalles
       </button>
       <Modal
