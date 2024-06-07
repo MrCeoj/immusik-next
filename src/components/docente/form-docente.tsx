@@ -197,6 +197,7 @@ function FormDocente({
                 message: "El teléfono debe tener 10 dígitos.",
               },
             })}
+            onlyNumeric
           />
         </div>
 

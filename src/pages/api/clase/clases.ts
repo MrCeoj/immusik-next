@@ -20,15 +20,9 @@ export default async function Handler(req: any, res: any) {
     return res.status(200).json(result);
   }
   if (req.method === "POST") {
-    const { nombreFor, diasDisplay, horario, sucursal, cupo, docente } = req.body;
-    const data = {
-      nombre: nombreFor,
-      dias: diasDisplay,
-      horario: horario,
-      sucursal: sucursal,
-      cupo: cupo,
-      docente: docente,
-    };
+    const data = req.body
+    console.log("Desde api")
+    console.log(data)
     const result = await registrarClase(data);
     return res.status(200).json(result);
   }

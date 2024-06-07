@@ -3,6 +3,8 @@ import { Docente, Sucursal } from "@/entities/edge";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDisclosure } from "@nextui-org/react";
+import ConfirmacionRegistrarClase from "./ConfirmacionRegistrarClase";
 
 function RegistrarClase({
   setCambio,
@@ -24,6 +26,9 @@ function RegistrarClase({
   const [horario, setHorario] = useState("");
   const [sucursal, setSucursal] = useState("");
 
+  let nombreFor: string = "";
+  let diasDisplay: string = "";
+
   //useStates para capturar los días que se impartirá la clase
   const [lunes, setLunes] = useState(false);
   const [martes, setMartes] = useState(false);
@@ -31,8 +36,13 @@ function RegistrarClase({
   const [jueves, setJueves] = useState(false);
   const [sabado, setSabado] = useState(false);
 
+  const [data, setData] = useState();
+
   //useState para manejar el abrir y cerrar el modal
   const [modalOpen, setModalOpen] = useState(false);
+
+  //Funciones para manejar modal de confirmación
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   //Cada que se cargue este componente se obtendran los profesores y sucursales.
   useEffect(() => {
@@ -120,7 +130,7 @@ function RegistrarClase({
   //Funcion para registrar la sucursal en la base de datos
   const handleAceptar = () => {
     //se formatea el nombre de la clase
-    let nombreFor = nombre.trim().toUpperCase();
+    nombreFor = nombre.trim().toUpperCase();
 
     /*Se maneja los días creando un arreglo "dias", al cual se le insertarán los días como String
     dependiendo si están marcados como true*/
@@ -133,7 +143,7 @@ function RegistrarClase({
 
     //El arrelgo de días se convierte en string y se formatea correctamente.
     const temp: string = dias.toString();
-    const diasDisplay: string = temp.substring(1);
+    diasDisplay = temp.substring(1);
 
     //Se verifica si exsite algun campo incompleto o vacío
     if (
@@ -158,52 +168,17 @@ function RegistrarClase({
       return;
     }
 
-    //Si no hay ningun error se hace fetch con método POST
-    fetch("api/clase/clases", {
-      method: "POST", //Metodo: POST porque vamos a hacer un nuevo registro
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        //Se envía nombre, dias, horario, sucursal, cupo y docente
-        nombreFor,
-        diasDisplay,
-        horario,
-        sucursal,
-        cupo,
-        docente,
-      }),
-    }).then((response) => {
-      if (response.ok) {
-        return response.json().then((data) => {
-          if (data.message === "Se creó la clase.") {
-            //Si es un registro exitoso se le informa al usuario y se cierra el componente
-            toast.success("Se creó la clase.", {
-              autoClose: 2000,
-              onClose: () => {
-                setModalOpen(false);
-              },
-            });
-            //Se indica que hay un cambio en las clases.
-            if (cambio) {
-              setCambio(false);
-            } else {
-              setCambio(true);
-            }
-          } else {
-            //Si hay un error se le indica al usuario.
-            toast.error(data.message, {
-              autoClose: 2000,
-              onClose: () => {
-                setModalOpen(false);
-              },
-            });
-          }
-        });
-      } else {
-        toast.error("Error al registrar la nueva clase.");
-      }
-    });
+    const dataTemp = {
+      nombre: nombreFor,
+      idSucursal: sucursal,
+      idDocente: docente,
+      cupoMax: cupo,
+      dias: diasDisplay,
+      hora: horario,
+    };
+    setData(dataTemp);
+
+    onOpen();
   };
 
   //Función para abrir el modal
@@ -214,6 +189,15 @@ function RegistrarClase({
   /*CONTENIDO DE LA PÁGINA*/
   return (
     <>
+      <ConfirmacionRegistrarClase
+        onOpen={onOpen}
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        data={data}
+        cambio={cambio}
+        setCambio={setCambio}
+        setModalOpen={setModalOpen}
+      />
       <button
         className="bg-pink-focus px-4 h-full text-md rounded-md font-semibold hover:shadow-md hover:shadow-pink-accent hover:-translate-y-1 transition-all duration-25 ease-out"
         onClick={handleRegistrar}

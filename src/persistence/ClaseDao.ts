@@ -106,17 +106,17 @@ export async function claseObtenerPorDocete(id: any) {
  */
 export async function claseCrearSinDocente(data: any) {
 	//Se convierten a valores numéricos los datos necesarios
-	let cupoNum: number = parseInt(data.cupo)
-	let idSucursal: number = parseInt(data.sucursal)
+	let cupoNum: number = parseInt(data.cupoMax)
+	let idSucursalNum: number = parseInt(data.idSucursal)
 
 	//Se crea la clase
 	await prisma.clase.create({
 		data: {
 			nombre: data.nombre,
-			idSucursal: idSucursal,
+			idSucursal: idSucursalNum,
 			cupoMax: cupoNum,
 			dias: data.dias,
-			hora: data.horario
+			hora: data.hora
 		}
 	})
 }
@@ -127,19 +127,19 @@ export async function claseCrearSinDocente(data: any) {
  */
 export async function claseCrearConDocente(data: any) {
 	//Se convierten a valores numéricos los datos necesarios
-	let cupoNum: number = parseInt(data.cupo)
-	let idDocente: number = parseInt(data.docente)
-	let idSucursal: number = parseInt(data.sucursal)
+	let cupoNum: number = parseInt(data.cupoMax)
+	let idDocenteNum: number = parseInt(data.idDocente)
+	let idSucursalNum: number = parseInt(data.idSucursal)
 
 	//Se crea la clase
 	await prisma.clase.create({
 		data: {
 			nombre: data.nombre,
-			idSucursal: idSucursal,
+			idSucursal: idSucursalNum,
 			cupoMax: cupoNum,
 			dias: data.dias,
-			hora: data.horario,
-			idDocente: idDocente
+			hora: data.hora,
+			idDocente: idDocenteNum
 		}
 	})
 }

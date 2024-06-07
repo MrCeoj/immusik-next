@@ -9,8 +9,7 @@ function InscribirAlumno({ idAlumno }: { idAlumno: number }) {
   const [disabled, setDisabled] = useState(true);
 
   useEffect(() => {
-    fetchDisponibles(idAlumno);
-    console.log(disponibles);
+    fetchDisponibles(idAlumno); 
   }, [idAlumno, clases]);
 
   useEffect(() => {
