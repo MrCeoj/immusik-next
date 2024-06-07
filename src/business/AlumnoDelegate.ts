@@ -1,7 +1,6 @@
 import { alumnoObtenerTodos,alumnoActualizarEstado, alumnoCrear, alumnoModificar, alumnoObtenerPorCurp } from "@/persistence/AlumnoDao"
 import { obtenerClasesPorAlumno } from "./AlumnoClaseDelegate"
-import { Alumno } from '@/entities' 
-import prisma from "@/utils/Prisma";
+import { Alumno } from '@/entities'
 
 /**
  * Función para obtener a todos los alumnos
