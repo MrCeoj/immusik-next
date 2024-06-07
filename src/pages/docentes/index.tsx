@@ -147,7 +147,7 @@ const Index = () => {
                 <Docente
                   key={index}
                   docente={docente}
-                  actualizarDocente={handleCambio}
+                  obtenerDocentes={obtenerDocentes}
                 />
               ))
             : docentes
@@ -156,7 +156,7 @@ const Index = () => {
                   <Docente
                     key={index}
                     docente={docente}
-                    actualizarDocente={handleCambio}
+                    obtenerDocentes={obtenerDocentes}
                   />
                 ))}
         </div>

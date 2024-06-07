@@ -27,7 +27,7 @@ type Props = {
   clases: any[] | null;
   setClases: any;
   docente: any;
-  actualizarDocente: any;
+  obtenerDocentes: () => void;
 };
 
 /**
@@ -40,7 +40,7 @@ const TablaClases: React.FC<Props> = ({
   clases,
   setClases,
   docente,
-  actualizarDocente,
+  obtenerDocentes,
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -90,7 +90,7 @@ const TablaClases: React.FC<Props> = ({
         return response.json().then((data) => {
           if ((data.message = "Docente desasignado exitosamente.")) {
             toast.success("Docente desasignado exitosamente.");
-            setCambio(!cambio);
+            obtenerDocentes();
           } else {
             toast.error(data.message);
           }
@@ -135,12 +135,16 @@ const TablaClases: React.FC<Props> = ({
       </Modal>
       <h1 className="text-center font-bold text-xl">Clases</h1>
       {clases.length === 0 ? (
-        <Table aria-label="Clases" removeWrapper className={cn("bg-transparent text-white")} 
-        classNames={{
-          table: "bg-secciones",
-          th: "bg-gray-contrast bg-opacity-40 text-lg text-white ",
-          td: "bg-transparent border-b border-white"
-        }}>
+        <Table
+          aria-label="Clases"
+          removeWrapper
+          className={cn("bg-transparent text-white")}
+          classNames={{
+            table: "bg-secciones",
+            th: "bg-gray-contrast bg-opacity-40 text-lg text-white ",
+            td: "bg-transparent border-b border-white",
+          }}
+        >
           <TableHeader>
             <TableColumn>Clase</TableColumn>
             <TableColumn>Horario</TableColumn>
@@ -159,12 +163,16 @@ const TablaClases: React.FC<Props> = ({
           </TableBody>
         </Table>
       ) : (
-        <Table aria-label="Clases" removeWrapper className={cn("bg-transparent text-white")} 
-        classNames={{
-          table: "bg-secciones",
-          th: "bg-gray-contrast bg-opacity-40 text-lg text-white ",
-          td: "bg-transparent border-b border-white"
-        }}>
+        <Table
+          aria-label="Clases"
+          removeWrapper
+          className={cn("bg-transparent text-white")}
+          classNames={{
+            table: "bg-secciones",
+            th: "bg-gray-contrast bg-opacity-40 text-lg text-white ",
+            td: "bg-transparent border-b border-white",
+          }}
+        >
           <TableHeader>
             <TableColumn>Clase</TableColumn>
             <TableColumn>Horario</TableColumn>

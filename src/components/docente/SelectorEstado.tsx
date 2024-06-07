@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 type Props = {
   estado: string;
   id: number;
-  actualizarDocente: any; // Este método se encuentra en el index, actualiza los atributos de los doncentes en la lista principal
+  obtenerDocentes: () => void; // Este método se encuentra en el index, actualiza los atributos de los doncentes en la lista principal
   setClases: any;
   handleEstadoChange: any;
 };
@@ -15,7 +15,7 @@ type Props = {
 const SelectorEstado: React.FC<Props> = ({
   estado,
   id,
-  actualizarDocente,
+  obtenerDocentes,
   setClases,
   handleEstadoChange,
 }) => {
@@ -84,7 +84,7 @@ const SelectorEstado: React.FC<Props> = ({
       return;
     }
 
-    actualizarDocente();
+    obtenerDocentes();
     setClases([]);
     toast.info("Estado cambiado a Inactivo");
   };
@@ -132,7 +132,7 @@ const SelectorEstado: React.FC<Props> = ({
     handleVetado();
     setClases([]);
     handleEstadoChange("VETADO");
-    actualizarDocente();
+    obtenerDocentes();
     toast.info("El docente ha sido vetado");
   };
 
@@ -144,7 +144,9 @@ const SelectorEstado: React.FC<Props> = ({
   return (
     <>
       <div className="pb-6 flex flex-col items-center gap-3">
-        <label className="text-white font-semibold text-xl">Estado del Docente</label>
+        <label className="text-white font-semibold text-xl">
+          Estado del Docente
+        </label>
         <select
           value={actualState}
           className={custom}

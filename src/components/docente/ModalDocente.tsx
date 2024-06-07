@@ -12,10 +12,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function ModalDocente({
   docenteArgs,
-  actualizarDocente,
+  obtenerDocentes,
 }: {
   docenteArgs: Docente;
-  actualizarDocente: any;
+  obtenerDocentes: () => void;
 }) {
   // useState para guardar la visibilidad del modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -166,7 +166,7 @@ export default function ModalDocente({
     // Si la clase se modificó correctamente, se muestra un toast con un mensaje de éxito
     else {
       // Actualiza la información de la clase
-      actualizarDocente();
+      obtenerDocentes();
       setIsModified(false);
       toast.success("Docente actualizado correctamente");
     }
@@ -332,12 +332,12 @@ export default function ModalDocente({
               clases={clases}
               setClases={setClases}
               docente={docente}
-              actualizarDocente={actualizarDocente}
+              obtenerDocentes={obtenerDocentes}
             />
             <SelectorEstado
               estado={estado}
               id={docente.id}
-              actualizarDocente={actualizarDocente}
+              obtenerDocentes={obtenerDocentes}
               setClases={setClases}
               handleEstadoChange={handleEstadoChange}
             />
