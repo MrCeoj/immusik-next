@@ -316,6 +316,7 @@ function EditarInformacion({
           <Input
             type="text"
             id="contacto"
+            onlyNumeric
             error={errors.contacto}
             className="w-full border border-gray-300 font-bold px-2"
             register={register("contacto", {

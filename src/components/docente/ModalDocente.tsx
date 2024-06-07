@@ -282,6 +282,7 @@ export default function ModalDocente({
                 type="text"
                 id="telefono"
                 error={errors.telefono}
+                onlyNumeric
                 className="w-full border border-gray-300 font-bold px-2"
                 register={register("telefono", {
                   required: {

@@ -285,6 +285,16 @@ function RegistrarClase({
             type="number"
             value={cupo}
             placeholder="1 a 10"
+            onKeyDown={(e) => {
+              if (
+                e.key === "." ||
+                e.key === "e" ||
+                e.key === "E" ||
+                e.key === "-"
+              ) {
+                e.preventDefault();
+              }
+            }}
             onChange={(e) => setCupo(e.target.value)}
           />
           <label className="my-1 font-bold">Docente</label>

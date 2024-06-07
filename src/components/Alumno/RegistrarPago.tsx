@@ -186,6 +186,19 @@ function RegistrarPago({
               type="number"
               placeholder="$"
               value={monto}
+              onKeyDown={(e) => {
+                if (
+                  !/[0-9]/.test(e.key) &&
+                  e.key !== "Backspace" &&
+                  e.key !== "Delete" &&
+                  e.key !== "ArrowLeft" &&
+                  e.key !== "ArrowRight" &&
+                  e.key !== "Tab" &&
+                  e.key !== "."
+                ) {
+                  e.preventDefault();
+                }
+              }}
               onChange={(e) => setMonto(e.target.value)}
               className="rounded-lg p-1 text-black"
             ></input>

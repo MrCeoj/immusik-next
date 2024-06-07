@@ -25,7 +25,12 @@ const Input = ({
   const toastId = useRef(null as Id | null);
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (onlyNumeric && !/[0-9]/.test(event.key)) {
+    const isControlKey =
+      event.ctrlKey ||
+      event.key === "Tab" ||
+      event.key === "Shift" ||
+      event.key === "Backspace";
+    if (onlyNumeric && !isControlKey && !/[0-9]/.test(event.key)) {
       event.preventDefault();
     }
   };

@@ -332,7 +332,12 @@ function RegistrarAlumno({
               value={contacto}
               onChange={(e) => setContacto(e.target.value)}
               className="text-black text-lg p-1 rounded-md mb-3"
-              type="text"
+              type="number"
+              onKeyDown={(e) => {
+                if (e.key === "e" || e.key === "+" || e.key === "-" || e.key === "." || e.key === "," || e.key === "E") {
+                  e.preventDefault();
+                }
+              }}
               placeholder="Contacto"
             />
 

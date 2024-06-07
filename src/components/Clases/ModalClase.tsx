@@ -258,6 +258,7 @@ export default function ModalClase({
                 min={1}
                 max={10}
                 placeholder="1 a 10"
+                onlyNumeric
                 className="w-full border text-black border-gray-300 font-bold rounded px-2 py-1"
                 register={register("cupoMax", {
                   required: {
