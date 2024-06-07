@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ConfirmarRegistrarAlumno from "../ConfirmarRegistrarAlumno";
 import { useClases } from "@/hooks/clases/useClases";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
 
-function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
+function RegistrarAlumno({
+  setRegistrar,
+  fetchAlumnos,
+}: {
+  setRegistrar: any;
+  fetchAlumnos: () => void;
+}) {
   //useState para capturar la información del alumno
   const [nombre, setNombre] = useState("");
   const [aPaterno, setAPaterno] = useState("");
@@ -17,14 +30,50 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
   const [curp, setCurp] = useState("");
   const [clase, setClase] = useState("");
   const [data, setData] = useState();
-  const { inscribirAlumno } = useClases(state => state)
+  const { inscribirAlumno } = useClases((state) => state);
 
   //useState para almacenar las clases
   const [clases, setClases] = useState([]);
 
-  //useState para manejar modal de confirmación
-  const [confirmacionRegistrarAlumno, setConfirmacionRegistrarAlumno] =
-    useState(false);
+  const { onOpen, isOpen, onOpenChange } = useDisclosure();
+
+  const { inscribirPorCurp } = useClases();
+
+  const registrarConfirmar = (onClose: any) => {
+    fetch("api/alumno/alumno", {
+      method: "POST", //Metodo: POST porque vamos a hacer un nuevo registro
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data, //se envian los datos de el alumno
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          inscribirPorCurp(data?.curp, parseInt(data?.clase));
+          return response.json().then((data) => {
+            if (data.message === "Alumno registrado correctamente.") {
+              toast.success(data.message);
+              onClose();
+              fetchAlumnos();
+              setRegistrar(false);
+            } else {
+              toast.error(data.message);
+              onClose();
+            }
+          });
+        } else {
+          toast.error("Error al registrar al alumno.");
+          onClose();
+        }
+      })
+      .catch((e) => {
+        toast.error(
+          "Hubo un error al realizar la operación, revise su conexión."
+        );
+      });
+  };
 
   //useEffect para conseguir las clases con cupo disponible cada que se ejecute el componente
   useEffect(() => {
@@ -174,19 +223,62 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
     };
     setData(dataTemp);
 
-    //se abre modal de confirmación
-    setConfirmacionRegistrarAlumno(true);
+    onOpen();
   };
 
   return (
     <>
-      {confirmacionRegistrarAlumno && (
-        <ConfirmarRegistrarAlumno
-          setConfirmacionRegistrarAlumno={setConfirmacionRegistrarAlumno}
-          data={data}
-          setRegistrar={setRegistrar}
-        />
-      )}
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>
+                ¿Seguro que quiere registrar a {data?.nombre}?
+              </ModalHeader>
+              <ModalBody>
+                <div className="flex flex-col">
+                  <p>
+                    <span>Nombre: </span>
+                    {data.nombre} {data.aPaterno} {data.aMaterno}
+                  </p>
+                  <p>
+                    <span>Teléfono: </span>
+                    {data.contacto}
+                  </p>
+                  <p>
+                    <span>CURP: </span>
+                    {data.curp}
+                  </p>
+                  <p>
+                    <span>Fecha de Nacimiento: </span>
+                    {data.fechaNac}
+                  </p>
+                  <p>
+                    <span>Tutor: </span>
+                    {data.tutor}
+                  </p>
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <div className="flex flex-row gap-1">
+                  <button
+                    onClick={onClose}
+                    className="bg-zinc-500 text-white py-1 px-3 rounded-md hover:bg-zinc-600"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={() => registrarConfirmar(onClose)}
+                    className="bg-primary py-1 px-3 text-white rounded-md hover:bg-pink-800"
+                  >
+                    Aceptar
+                  </button>
+                </div>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
       <div className="absolute z-10 top-0 left-0 bg-black bg-opacity-50 h-screen w-screen flex items-center justify-center">
         <div className="bg-zinc-900 bg-opacity-80 text-white rounded-lg shadow-lg py-5 px-12 flex flex-col items-center w-9/12">
           <h1 className="font-bold text-3xl mb-5">Registrar Alumno</h1>
@@ -258,7 +350,9 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
                       Día
                     </option>
                     {dias.map((dia) => (
-                      <option key={dia} value={dia}>{dia}</option>
+                      <option key={dia} value={dia}>
+                        {dia}
+                      </option>
                     ))}
                   </select>
                   <select
@@ -317,7 +411,9 @@ function RegistrarAlumno({ setRegistrar }: { setRegistrar: any }) {
                 Seleccione una clase
               </option>
               {clases.map((clase: any) => (
-                <option key={clase.id} value={clase.id}>{clase.nombre}</option>
+                <option key={clase.id} value={clase.id}>
+                  {clase.nombre}
+                </option>
               ))}
             </select>
           </form>

@@ -110,7 +110,12 @@ function Index() {
                 height={20}
               />
             </form>
-            {registrar && <RegistrarAlumno setRegistrar={setRegistrar} />}
+            {registrar && (
+              <RegistrarAlumno
+                setRegistrar={setRegistrar}
+                fetchAlumnos={fetchAlumnos}
+              />
+            )}
             <button
               onClick={handleRegistrar}
               className="bg-pink-focus px-4 h-full text-md rounded-md font-semibold hover:shadow-md hover:shadow-pink-accent hover:-translate-y-1 transition-all duration-25 ease-out"
