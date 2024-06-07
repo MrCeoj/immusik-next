@@ -85,7 +85,11 @@ export const useClases = create<State>((set, get) => ({
       }else{
         throw new Error('Error al actualizar el estado')
       }
-      await fetch('/api/alumno/actualizarEstado')
+      await fetch('/api/alumno/actualizarEstado', {
+        method: 'PATCH'
+      }).catch((error) => {
+        throw new Error(error)
+      })
     }catch(error){}
   },
 
