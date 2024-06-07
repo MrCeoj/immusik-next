@@ -89,7 +89,7 @@ function Index() {
     <>
       <Navbar />
       <ToastContainer />
-      <div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pt-10 text-white">
+      <div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pt-10 text-white bg-cover">
         <div className="flex w-full items-end mb-1">
           <h1 className="text-5xl font-semibold mr-20">Alumnos</h1>
           <div className="flex h-3/4 items-center">

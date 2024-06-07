@@ -156,7 +156,7 @@ function Usuarios() {
           fetchUsuarios={fetchUsuarios}
         />
       )}
-      <div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pt-10 text-white">
+      <div className="h-screen bg-fondo w-screen flex justify-center items-center flex-col px-20 pt-10 text-white bg-cover">
         {cargando ? (
           <div>Cargando...</div>
         ) : (
