@@ -9,6 +9,7 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { convertirAMinutosYSegundos } from '@/lib/utils'
+import Link from 'next/link'
 
 // Componente que contiene el formulario de inicio de sesión
 export default function LoginUsuario() {
@@ -88,7 +89,7 @@ export default function LoginUsuario() {
 			<ToastContainer />
 			<form
 				onSubmit={onSubmit}
-				className="flex flex-col gap-4 bg-gray-300 p-8 rounded-md"
+				className="flex flex-col gap-4 bg-gray-300 py-8 rounded-md"
 			>
 				<div className="flex flex-col max-w-82 min-w-72">
 					<Label
@@ -139,8 +140,11 @@ export default function LoginUsuario() {
 					Acceder
 				</button>
 			</form>
+      <Link href="/registro" className='font-bold underline text-pink-accent block text-center'>
+        Registrarse
+      </Link>
 			{tiempoRestante && (
-				<p className="text-center mb-2">
+				<p className="text-center mt-2">
 					Intenta de nuevo en {convertirAMinutosYSegundos(tiempoRestante)}
 				</p>
 			)}

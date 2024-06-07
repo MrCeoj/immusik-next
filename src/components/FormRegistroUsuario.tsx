@@ -5,6 +5,7 @@ import Label from "./form/Label";
 import Input from "./form/Input";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useRouter } from "next/navigation";
 
 // Componente que contiene el formulario de registro
 export default function FormRegistroUsuario() {
@@ -14,6 +15,7 @@ export default function FormRegistroUsuario() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const router = useRouter();
 
   const onSubmit = handleSubmit(async (data) => {
     const res = await fetch("/api/usuario/registrar", {
@@ -36,7 +38,10 @@ export default function FormRegistroUsuario() {
     if (res.status === 500) {
       toast.error(resJSON.error, { toastId: resJSON.error });
     } else {
-      toast.success(resJSON.message, { toastId: resJSON.message });
+      toast.success(resJSON.message, { 
+        toastId: resJSON.message,
+        onClose: () => router.push("/login") 
+      });
     }
   });
 
