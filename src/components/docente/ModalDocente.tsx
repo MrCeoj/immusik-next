@@ -210,6 +210,10 @@ export default function ModalDocente({
                     value: true,
                     message: "El nombre de clase es requerida.",
                   },
+                  pattern: {
+                    value: /^[^\d]*$/,
+                    message: "El nombre no puede contener números.",
+                  },
                   value: toTitleCase(docente.nombre),
                 })}
               />
@@ -232,6 +236,10 @@ export default function ModalDocente({
                     value: true,
                     message: "El apellido es requerido.",
                   },
+                  pattern: {
+                    value: /^[^\d]*$/,
+                    message: "El apellido paterno no puede contener números.",
+                  },
                   value: toTitleCase(docente.aPaterno),
                 })}
               />
@@ -253,6 +261,10 @@ export default function ModalDocente({
                   required: {
                     value: true,
                     message: "El apellido es requerido.",
+                  },
+                  pattern: {
+                    value: /^[^\d]*$/,
+                    message: "El apellido materno no puede contener números.",
                   },
                   value: toTitleCase(docente.aMaterno),
                 })}
