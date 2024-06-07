@@ -29,7 +29,7 @@ export default function Login() {
 							height={400}
 						/>
 					</div>
-					<div className="bg-gray-300 rounded-md pt-6">
+					<div className="bg-gray-300 rounded-md p-6">
 						<h1 className="text-center text-primary text-4xl font-bold tracking-tight">
 							Iniciar sesión
 						</h1>

@@ -5,12 +5,14 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  useDisclosure,
   user,
 } from "@nextui-org/react";
 import { useScroll } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ConfirmarEditarUsuario from "./confirmarEditarUsuario";
 
 function EditarModal({
   isOpen,
@@ -35,6 +37,12 @@ function EditarModal({
   const [mensajeDeErrorNombre, setMensajeDeErrorNombre] = useState("");
   const [mensajeDeErrorClave, setMensajeDeErrorClave] = useState("");
   const [mensajeDeErrorCorreo, setMensajeDeErrorCorreo] = useState("");
+
+  const {
+    isOpen: isConfirmarOpen,
+    onOpen: onConfirmarOpen,
+    onOpenChange: onConfirmarOpenChange,
+  } = useDisclosure();
 
   //Cuando se abre este modal se establece la información a la que ya tiene el usuario.
   useEffect(() => {
@@ -68,6 +76,8 @@ function EditarModal({
     if (!correo.includes(".")) return true; //Si tiene .
     return false;
   };
+
+  const [data, setData] = useState();
 
   //Al momento de presionar editar
   const editar = (onClose: any) => {
@@ -104,7 +114,7 @@ function EditarModal({
 
     //Si correo no tiene . marca error
     if (!correo.includes(".")) {
-      setMensajeDeErrorCorreo("El correo debe cotener '.'");
+      setMensajeDeErrorCorreo("El correo debe contener '.'");
       error = true;
     }
 
@@ -142,28 +152,15 @@ function EditarModal({
 
     //Si no hay errores se hace fetch para modificar al usuario.
     if (!error) {
-      const data = {
+      const dataTemp = {
         id: usuario.id,
         nombre: nombre,
         contrasena: clave,
         correo: correo,
       };
-      fetch("/api/usuario/modificar", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }).then((response) => {
-        if (response.ok) {
-          fetchUsuarios(); //se hace fetch a usuarios para que se actualicen en la pagina.
-          onClose();
-        } else {
-          return response.json().then((data) => {
-            toast.error(data.message);
-          });
-        }
-      });
+
+      setData(dataTemp);
+      onConfirmarOpen();
     }
   };
 
@@ -172,6 +169,15 @@ function EditarModal({
       <ModalContent>
         {(onClose) => (
           <>
+            <ConfirmarEditarUsuario
+              isOpen={isConfirmarOpen}
+              onOpen={onConfirmarOpen}
+              onOpenChange={onConfirmarOpenChange}
+              data={data}
+              fetchUsuarios={fetchUsuarios}
+              usuario={usuario}
+              onClose2={onClose}
+            />
             <ModalHeader>Editar información de {usuario.nombre}</ModalHeader>
             <ModalBody>
               <div className="flex flex-col gap-3">
