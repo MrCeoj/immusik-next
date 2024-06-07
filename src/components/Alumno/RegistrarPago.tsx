@@ -69,15 +69,15 @@ function RegistrarPago({
       let conceptoForm = concepto.trim().toUpperCase();
       let metodoForm = metodo.toUpperCase();
 
-      // Validación para campos vacíos.
-      if (!fecha || !monto || !conceptoForm || !metodoForm) {
-        toast.error("No deje campos vacíos.");
-        return;
-      }
-
       // Validación de la fecha
       if (!esFechaValida(fecha)) {
         toast.error("Fecha no valida");
+        return;
+      }
+
+      // Validación para campos vacíos.
+      if (!fecha || !monto || !conceptoForm || !metodoForm) {
+        toast.error("No deje campos vacíos.");
         return;
       }
 
