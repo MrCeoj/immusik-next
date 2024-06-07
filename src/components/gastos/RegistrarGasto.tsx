@@ -11,7 +11,13 @@ import Select from "../form/Select";
 import TextArea from "../form/TextArea";
 import { convertirAStringFecha } from "@/lib/utils";
 
-function RegistrarClase({ actualizarGastos }: { actualizarGastos: any }) {
+function RegistrarClase({
+  actualizarGastos,
+  nuevosGastos,
+}: {
+  actualizarGastos: any;
+  nuevosGastos: () => void;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
   const context = sucursalContext((state: any) => state.context);
   const [monto, setMonto] = useState("");
@@ -60,7 +66,7 @@ function RegistrarClase({ actualizarGastos }: { actualizarGastos: any }) {
       toast.error(resJSON.message);
     } else {
       actualizarGastos();
-
+      nuevosGastos();
       toast.success(resJSON.message, {
         className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
         bodyClassName: "font-semibold text-sm text-green-500",

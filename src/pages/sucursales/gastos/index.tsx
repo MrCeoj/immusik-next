@@ -35,10 +35,15 @@ const Index = () => {
   // Obtener los gastos de la sucursal seleccionada
   useEffect(() => {
     if (context) {
-      fetchGastos(context.id)
+      fetchGastos(context.id);
       setCargando(false);
     }
   }, [context]);
+
+  //Se actualizan los gatos de la sucursal
+  const nuevosGastos = () => {
+    fetchGastos(context.id);
+  };
 
   // Este useEffect se ejecuta cuando se obtienen los gastos
   useEffect(() => {
@@ -131,7 +136,7 @@ const Index = () => {
       let [day, month, year] = dateString.split("/");
       return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     };
-    
+
     let monthlyGastos = gastos.filter((gasto) => {
       const date = parseDate(gasto.fecha);
       return date.getMonth() === month && date.getFullYear() === year;
@@ -195,6 +200,7 @@ const Index = () => {
                       <ModalGasto
                         gastoArgs={gasto}
                         actualizarGastos={handleCambio}
+                        nuevosGastos={nuevosGastos}
                       />
                     </div>
                   ))
@@ -216,7 +222,10 @@ const Index = () => {
               className="w-full text-xl py-1 flex justify-center"
               title="Registrar"
             >
-              <RegistrarGasto actualizarGastos={handleCambio} />
+              <RegistrarGasto
+                actualizarGastos={handleCambio}
+                nuevosGastos={nuevosGastos}
+              />
             </Tab>
           </Tabs>
         </div>

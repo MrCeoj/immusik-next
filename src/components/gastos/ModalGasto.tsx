@@ -20,9 +20,11 @@ import imgEditar from "@/img/image15.png";
 export default function ModalGasto({
   gastoArgs,
   actualizarGastos,
+  nuevosGastos,
 }: {
   gastoArgs: Gasto;
   actualizarGastos: any;
+  nuevosGastos: () => void;
 }) {
   const [gasto, setGasto] = useState<Gasto>(gastoArgs);
   // useState para guardar la visibilidad del modal
@@ -69,7 +71,7 @@ export default function ModalGasto({
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    if(!data.monto || data.monto === ""){
+    if (!data.monto || data.monto === "") {
       toast.error("Ingresar monto válido");
       return;
     }
@@ -96,6 +98,7 @@ export default function ModalGasto({
     else {
       // Actualiza la información de los gastos
       actualizarGastos();
+      nuevosGastos();
       toast.success("Gasto modificado correctamente", {
         className: "text-white px-6 py-4 border-0 rounded-md bg-green-500",
         bodyClassName: "font-semibold text-sm text-green-500",
